@@ -6,6 +6,6 @@ FactoryGirl.define do
     url "http://test.com/rss.xml"
     title "title"
     link_url "http://test.com/content"
-    describe "description"
+    description "description"
   end
 end

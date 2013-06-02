@@ -58,7 +58,7 @@ group :development, :test do
   gem 'pry'
   gem 'pry-rails'
   gem 'hirb-unicode'
-  gem 'tapp'
+  gem 'tapp', github: 'esminc/tapp'
   gem 'shoulda-matchers'
   gem 'fuubar'
 end
@@ -69,3 +69,4 @@ end
 
 gem 'devise', github: 'plataformatec/devise', branch: 'rails4'
 gem 'haml'
+gem 'kaminari'
