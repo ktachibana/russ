@@ -4,6 +4,8 @@ require 'rss'
 class RssSource < ActiveRecord::Base
   belongs_to :user
   has_many :items, dependent: :destroy
+  has_many :taggings, dependent: :destroy
+  has_many :tags, through: :taggings
 
   validates :user_id, presence: true
   validates :url, presence: true, length: { maximum: 2048 }

@@ -5,4 +5,5 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :validatable
 
   has_many :rss_sources, dependent: :destroy
+  has_many :tags, dependent: :destroy
 end

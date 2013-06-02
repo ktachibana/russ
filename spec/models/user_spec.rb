@@ -3,6 +3,7 @@ require 'spec_helper'
 describe User do
   describe 'associations' do
     it { should have_many(:rss_sources).dependent(:destroy) }
+    it { should have_many(:tags).dependent(:destroy) }
   end
 
   describe 'devise' do

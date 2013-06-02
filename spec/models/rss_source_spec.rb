@@ -18,6 +18,7 @@ describe RssSource do
   describe 'associations' do
     it { should belong_to(:user) }
     it { should have_many(:items).dependent(:destroy) }
+    it { should have_many(:tags).through(:taggings) }
   end
 
   describe '.by_url' do
