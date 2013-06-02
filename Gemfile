@@ -63,3 +63,5 @@ group :development, :test do
   gem 'fuubar'
   gem 'webmock'
 end
+
+gem 'devise', github: 'plataformatec/devise', branch: 'rails4'
