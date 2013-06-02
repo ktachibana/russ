@@ -6,16 +6,17 @@
 = link_to 'Reload all', update_all_feeds_path, method: :put
 = link_to 'Sign out', destroy_user_session_path, method: :delete
 
-- Feed.all.each do |feed|
-  .feed
-    = link_to feed.title, feed.link_url, target: '_blank'
+= form_tag root_path, method: :get do
+  - current_user.tags.each do |tag|
+    = link_to tag.name, params.merge(tag_id: tag.id)
+
 
 %h2 Items
 = paginate @items
 - @items.each do |item|
   %hr
   .rss
-    = item.feed.title
+    = link_to item.feed.title, item.feed.link_url
   .item
     .title
       = link_to item.title, item.link, target: '_blank'

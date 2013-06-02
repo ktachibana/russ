@@ -4,5 +4,8 @@ class RootController < ApplicationController
   def index
     user = current_user
     @items = Item.latest(user).page(params[:page])
+    params[:tag_id].if_true do |id|
+      @items = @items.by_tag_id(id)
+    end
   end
 end

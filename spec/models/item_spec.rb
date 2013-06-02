@@ -28,4 +28,21 @@ describe Item do
       Item.latest(user).map(&:title).should == %w[1 2 3]
     end
   end
+
+  describe '.by_tag_id' do
+    it '特定のタグのついたフィードのItemだけに絞り込む' do
+      tags = 2.times.map{ create(:tag) }
+      create(:feed, tags: [tags[0]]).tap do |feed|
+        create(:item, feed: feed, title: '1')
+      end
+      create(:feed, tags: tags).tap do |feed|
+        create(:item, feed: feed, title: '2')
+      end
+      create(:feed, tags: []).tap do |feed|
+        create(:item, feed: feed, title: '3')
+      end
+      Item.by_tag_id(tags[0].id).map(&:title).should =~ %w[1 2]
+      Item.by_tag_id(tags[1].id).map(&:title).should =~ %w[2]
+    end
+  end
 end

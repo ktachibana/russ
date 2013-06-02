@@ -28,7 +28,7 @@ class Feed < ActiveRecord::Base
   def load!
     self.class.load_rss(url) do |rss|
       rss.items.each do |loaded_item|
-        guid = loaded_item.guid.try(:content)
+        guid = loaded_item.try(:guid).try(:content)
 
         item = guid && items.find_by(guid: guid)
         item ||= items.find_by(link: loaded_item.link)
@@ -67,9 +67,9 @@ class Feed < ActiveRecord::Base
           title = child_attrs['text'] || child_attrs['title']
           url = child_attrs['xmlUrl']
           link_url = child_attrs['htmlUrl']
-          rss = user.feeds.create!(url: url, title: title, link_url: link_url)
-          rss.tags << tag
-          result << rss
+          feed = user.feeds.create!(url: url, title: title, link_url: link_url)
+          feed.tags << tag
+          result << feed
         end
       end
     end
