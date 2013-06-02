@@ -15,6 +15,11 @@ describe RssSource do
     it { should ensure_length_of(:description).is_at_most(4096) }
   end
 
+  describe 'associations' do
+    it { should belong_to(:user) }
+    it { should have_many(:items).dependent(:destroy) }
+  end
+
   describe '.by_url' do
     it 'urlを指定するとそのRSSをロードしてnewする' do
       WebMock.stub_request(:get, 'http://test.com/rss.xml').to_return(body: <<-EOS)
@@ -33,6 +38,88 @@ describe RssSource do
       source.url.should == 'http://test.com/rss.xml'
       source.link_url.should == 'http://test.com/content'
       source.description.should == 'My description'
+    end
+  end
+
+  describe '#load!' do
+    before do
+      WebMock.stub_request(:get, 'http://test.com/rss.xml').to_return(body: <<-EOS)
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>RSS Title</title>
+    <link>http://test.com/content</link>
+    <atom:link rel="self" type="application/rss+xml" href="http://test.com/rss.xml?rss=2.0"/>
+    <description>My description</description>
+
+    <item>
+      <title>Item Title</title>
+      <link>http://test.com/content/1</link>
+      <pubDate>Mon, 20 Feb 2012 16:04:19 +0900</pubDate>
+      <description><![CDATA[Item description]]></description>
+    </item>
+  </channel>
+</rss>
+      EOS
+    end
+
+    let!(:source) do
+      source = RssSource.by_url('http://test.com/rss.xml')
+      source.user = create(:user)
+      source.save!
+      source.load!
+      source
+    end
+
+    it 'RSSからアイテムを読み込む' do
+      source.should have(1).item
+      item = source.items.first
+      item.title.should == 'Item Title'
+      item.link.should == 'http://test.com/content/1'
+      item.published_at.should == Time.new(2012, 2, 20, 16, 4, 19)
+      item.description == 'Item description'
+    end
+
+    it '再度loadすると既存のものは更新になる' do
+      WebMock.stub_request(:get, 'http://test.com/rss.xml').to_return(body: <<-EOS)
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>RSS Title</title>
+    <link>http://test.com/content</link>
+    <atom:link rel="self" type="application/rss+xml" href="http://test.com/rss.xml?rss=2.0"/>
+    <description>My description</description>
+
+    <item>
+      <title>New Title</title>
+      <link>http://test.com/content/2</link>
+      <pubDate>Wed, 22 Feb 2012 18:24:29 +0900</pubDate>
+      <description><![CDATA[New item description]]></description>
+    </item>
+
+    <item>
+      <title>Item Title</title>
+      <link>http://test.com/content/1</link>
+      <pubDate>Mon, 20 Feb 2012 16:04:19 +0900</pubDate>
+      <description><![CDATA[Item description]]></description>
+    </item>
+  </channel>
+</rss>
+      EOS
+      source.load!
+      source.should have(2).items
+      source.items.order(:published_at)[0].tap do |item|
+        item.title.should == 'Item Title'
+        item.link.should == 'http://test.com/content/1'
+        item.published_at.should == Time.new(2012, 2, 20, 16, 4, 19)
+        item.description == 'Item description'
+      end
+      source.items.order(:published_at)[1].tap do |item|
+        item.title.should == 'New Title'
+        item.link.should == 'http://test.com/content/2'
+        item.published_at.should == Time.new(2012, 2, 22, 18, 24, 29)
+        item.description == 'New item description'
+      end
     end
   end
 end
