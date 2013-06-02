@@ -36,10 +36,15 @@ class RssSource < ActiveRecord::Base
         i.save
       end
     end
+  rescue OpenURI::HTTPError => e
+    Rails.logger.error(e)
+    nil # TODO エラーハンドリング
   end
 
   def self.import!(user, opml)
     doc = REXML::Document.new(opml)
+
+    result = []
     doc.elements.each('opml/body/outline') do |outline|
       attrs = outline.attributes
       title = attrs['text'] || attrs['title']
@@ -47,7 +52,7 @@ class RssSource < ActiveRecord::Base
       link_url = attrs['htmlUrl']
 
       if url && title
-        user.rss_sources.create!(url: url, title: title, link_url: link_url)
+        result << user.rss_sources.create!(url: url, title: title, link_url: link_url)
       else title
         tag = user.tags.find_or_initialize_by(name: title)
         tag.save!
@@ -59,9 +64,11 @@ class RssSource < ActiveRecord::Base
           link_url = child_attrs['htmlUrl']
           rss = user.rss_sources.create!(url: url, title: title, link_url: link_url)
           rss.tags << tag
+          result << rss
         end
       end
     end
+    result
   end
 
   private

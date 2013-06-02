@@ -2,7 +2,7 @@
 %p.alert= alert
 
 %h1= current_user.email
-
+= link_to 'Import OPML', upload_rss_sources_path
 = link_to 'Reload all', update_all_rss_sources_path, method: :put
 = link_to 'Sign out', destroy_user_session_path, method: :delete
 
@@ -13,6 +13,9 @@
 %h2 Items
 = paginate @items
 - @items.each do |item|
+  %hr
+  .rss
+    = item.rss_source.title
   .item
     .title
       = link_to item.title, item.link, target: '_blank'

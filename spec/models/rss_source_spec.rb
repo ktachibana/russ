@@ -140,14 +140,14 @@ describe RssSource do
     </body>
 </opml>
       EOS
-      RssSource.import!(create(:user), opml)
-      RssSource.find_by!(title: 'MyText').tap do |s|
+      result = RssSource.import!(create(:user), opml)
+      result[0].tap do |s|
         s.title.should == 'MyText'
         s.url.should == 'http://test.com/rss.xml'
         s.link_url.should == 'http://test.com/content'
         s.description.should be_nil
       end
-      RssSource.find_by!(title: 'Title').tap do |s|
+      result[1].tap do |s|
         s.title.should == 'Title'
         s.url.should == 'http://category.com/rss.xml'
         s.link_url.should == 'http://category.com/'

@@ -1,6 +1,4 @@
 class RssSourcesController < ApplicationController
-  before_filter :authenticate_user!
-
   def new
     @rss_source = RssSource.by_url(params[:url])
   end
@@ -9,7 +7,7 @@ class RssSourcesController < ApplicationController
     @rss_source = current_user.rss_sources.build(rss_source_params)
 
     if @rss_source.save
-      redirect_to(root_url)
+      redirect_to root_url
     else
       render :new
     end
@@ -19,6 +17,12 @@ class RssSourcesController < ApplicationController
     current_user.rss_sources.find_each do |source|
       source.load!
     end
+    redirect_to root_url
+  end
+
+  def import
+    imported_sources = RssSource.import!(current_user, params[:file].read)
+    imported_sources.each(&:load!)
     redirect_to root_url
   end
 

@@ -40,4 +40,23 @@ describe RssSourcesController do
       response.should redirect_to(root_url)
     end
   end
+
+  describe 'POST :import' do
+    let!(:opml_file) do
+      file = Tempfile.new('opml')
+      file.write(opml_data)
+      file.rewind
+      Rack::Test::UploadedFile.new(file.path, 'application/xml')
+    end
+    after { opml_file.close! }
+
+    it 'OPMLをアップロードしてインポートできる' do
+      expect {
+        mock_opml_rss!
+        post :import, file: Rack::Test::UploadedFile.new(opml_file, 'application/xml')
+      }.to change(RssSource, :count).by(2)
+
+      response.should redirect_to(root_url)
+    end
+  end
 end
