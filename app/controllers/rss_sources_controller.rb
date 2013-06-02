@@ -15,6 +15,13 @@ class RssSourcesController < ApplicationController
     end
   end
 
+  def update_all
+    current_user.rss_sources.find_each do |source|
+      source.load!
+    end
+    redirect_to root_url
+  end
+
 private
   def rss_source_params
     params.require(:rss_source).permit(:url, :title, :link_url, :description)

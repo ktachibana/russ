@@ -3,6 +3,7 @@
 
 %h1= current_user.email
 
+= link_to 'Reload all', update_all_rss_sources_path, method: :put
 = link_to 'Sign out', destroy_user_session_path, method: :delete
 
 - RssSource.all.each do |source|
