@@ -123,4 +123,38 @@ describe RssSource do
       end
     end
   end
+
+  describe '.import' do
+    it 'OPML形式のファイルからRSSをインポートできる' do
+      opml = <<-'EOS'
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+    <head>
+        <title>My Feed</title>
+    </head>
+    <body>
+        <outline text="MyText" title="MyTitle" type="rss" xmlUrl="http://test.com/rss.xml" htmlUrl="http://test.com/content"/>
+        <outline title="category title" text="category">
+            <outline title="Title" type="rss" xmlUrl="http://category.com/rss.xml" htmlUrl="http://category.com/"/>
+        </outline>
+    </body>
+</opml>
+      EOS
+      RssSource.import!(create(:user), opml)
+      RssSource.find_by!(title: 'MyText').tap do |s|
+        s.title.should == 'MyText'
+        s.url.should == 'http://test.com/rss.xml'
+        s.link_url.should == 'http://test.com/content'
+        s.description.should be_nil
+      end
+      RssSource.find_by!(title: 'Title').tap do |s|
+        s.title.should == 'Title'
+        s.url.should == 'http://category.com/rss.xml'
+        s.link_url.should == 'http://category.com/'
+        s.tags.should have(1).tag
+        s.tags[0].name.should == 'category'
+        s.description.should be_nil
+      end
+    end
+  end
 end

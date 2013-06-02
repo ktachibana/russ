@@ -1,5 +1,6 @@
 require 'open-uri'
 require 'rss'
+require 'rexml/document'
 
 class RssSource < ActiveRecord::Base
   belongs_to :user
@@ -37,7 +38,33 @@ class RssSource < ActiveRecord::Base
     end
   end
 
-private
+  def self.import!(user, opml)
+    doc = REXML::Document.new(opml)
+    doc.elements.each('opml/body/outline') do |outline|
+      attrs = outline.attributes
+      title = attrs['text'] || attrs['title']
+      url = attrs['xmlUrl']
+      link_url = attrs['htmlUrl']
+
+      if url && title
+        user.rss_sources.create!(url: url, title: title, link_url: link_url)
+      else title
+        tag = user.tags.find_or_initialize_by(name: title)
+        tag.save!
+
+        outline.elements.each('outline') do |child|
+          child_attrs = child.attributes
+          title = child_attrs['text'] || child_attrs['title']
+          url = child_attrs['xmlUrl']
+          link_url = child_attrs['htmlUrl']
+          rss = user.rss_sources.create!(url: url, title: title, link_url: link_url)
+          rss.tags << tag
+        end
+      end
+    end
+  end
+
+  private
   def self.load_rss(url)
     open(url) do |rss_body|
       return yield RSS::Parser.parse(rss_body)
