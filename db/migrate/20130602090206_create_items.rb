@@ -3,7 +3,7 @@ class CreateItems < ActiveRecord::Migration
     create_table :items do |t|
       t.references :feed, index: true, null: false
       t.string :title
-      t.string :link
+      t.string :link, limit: 2048
       t.string :guid
       t.datetime :published_at
       t.string :description
