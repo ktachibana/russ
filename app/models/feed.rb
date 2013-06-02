@@ -28,12 +28,17 @@ class Feed < ActiveRecord::Base
   def load!
     self.class.load_rss(url) do |rss|
       rss.items.each do |loaded_item|
-        i = items.find_or_initialize_by(link: loaded_item.link)
-        i.link = loaded_item.link
-        i.title = loaded_item.title
-        i.published_at = loaded_item.date
-        i.description = loaded_item.description
-        i.save
+        guid = loaded_item.guid.try(:content)
+
+        item = guid && items.find_by(guid: guid)
+        item ||= items.find_by(link: loaded_item.link)
+        item ||= items.build
+        item.link = loaded_item.link
+        item.title = loaded_item.title
+        item.guid = guid
+        item.published_at = loaded_item.date
+        item.description = loaded_item.description
+        item.save
       end
     end
   rescue OpenURI::HTTPError => e

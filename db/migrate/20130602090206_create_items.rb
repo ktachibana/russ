@@ -4,6 +4,7 @@ class CreateItems < ActiveRecord::Migration
       t.references :feed, index: true, null: false
       t.string :title
       t.string :link
+      t.string :guid
       t.datetime :published_at
       t.string :description
 

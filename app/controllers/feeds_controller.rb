@@ -22,7 +22,10 @@ class FeedsController < ApplicationController
 
   def import
     imported_feed = Feed.import!(current_user, params[:file].read)
-    imported_feed.each(&:load!)
+    imported_feed.each do |feed|
+      sleep(2)
+      feed.load!
+    end
     redirect_to root_url
   end
 
