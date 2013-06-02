@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RssSource do
+describe Feed do
   describe 'validations' do
     it { should validate_presence_of(:user_id) }
 
@@ -34,11 +34,11 @@ describe RssSource do
   </channel>
 </rss>
       EOS
-      source = RssSource.by_url('http://test.com/rss.xml')
-      source.title.should == 'RSS Title'
-      source.url.should == 'http://test.com/rss.xml'
-      source.link_url.should == 'http://test.com/content'
-      source.description.should == 'My description'
+      feed = Feed.by_url('http://test.com/rss.xml')
+      feed.title.should == 'RSS Title'
+      feed.url.should == 'http://test.com/rss.xml'
+      feed.link_url.should == 'http://test.com/content'
+      feed.description.should == 'My description'
     end
   end
 
@@ -64,17 +64,17 @@ describe RssSource do
       EOS
     end
 
-    let!(:source) do
-      source = RssSource.by_url('http://test.com/rss.xml')
-      source.user = create(:user)
-      source.save!
-      source.load!
-      source
+    let!(:feed) do
+      feed = Feed.by_url('http://test.com/rss.xml')
+      feed.user = create(:user)
+      feed.save!
+      feed.load!
+      feed
     end
 
     it 'RSSからアイテムを読み込む' do
-      source.should have(1).item
-      item = source.items.first
+      feed.should have(1).item
+      item = feed.items.first
       item.title.should == 'Item Title'
       item.link.should == 'http://test.com/content/1'
       item.published_at.should == Time.new(2012, 2, 20, 16, 4, 19)
@@ -107,15 +107,15 @@ describe RssSource do
   </channel>
 </rss>
       EOS
-      source.load!
-      source.should have(2).items
-      source.items.order(:published_at)[0].tap do |item|
+      feed.load!
+      feed.should have(2).items
+      feed.items.order(:published_at)[0].tap do |item|
         item.title.should == 'Item Title'
         item.link.should == 'http://test.com/content/1'
         item.published_at.should == Time.new(2012, 2, 20, 16, 4, 19)
         item.description == 'Item description'
       end
-      source.items.order(:published_at)[1].tap do |item|
+      feed.items.order(:published_at)[1].tap do |item|
         item.title.should == 'New Title'
         item.link.should == 'http://test.com/content/2'
         item.published_at.should == Time.new(2012, 2, 22, 18, 24, 29)
@@ -140,20 +140,20 @@ describe RssSource do
     </body>
 </opml>
       EOS
-      result = RssSource.import!(create(:user), opml)
-      result[0].tap do |s|
-        s.title.should == 'MyText'
-        s.url.should == 'http://test.com/rss.xml'
-        s.link_url.should == 'http://test.com/content'
-        s.description.should be_nil
+      result = Feed.import!(create(:user), opml)
+      result[0].tap do |feed|
+        feed.title.should == 'MyText'
+        feed.url.should == 'http://test.com/rss.xml'
+        feed.link_url.should == 'http://test.com/content'
+        feed.description.should be_nil
       end
-      result[1].tap do |s|
-        s.title.should == 'Title'
-        s.url.should == 'http://category.com/rss.xml'
-        s.link_url.should == 'http://category.com/'
-        s.tags.should have(1).tag
-        s.tags[0].name.should == 'category'
-        s.description.should be_nil
+      result[1].tap do |feed|
+        feed.title.should == 'Title'
+        feed.url.should == 'http://category.com/rss.xml'
+        feed.link_url.should == 'http://category.com/'
+        feed.tags.should have(1).tag
+        feed.tags[0].name.should == 'category'
+        feed.description.should be_nil
       end
     end
   end

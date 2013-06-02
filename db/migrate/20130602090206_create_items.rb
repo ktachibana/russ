@@ -1,7 +1,7 @@
 class CreateItems < ActiveRecord::Migration
   def change
     create_table :items do |t|
-      t.references :rss_source, index: true, null: false
+      t.references :feed, index: true, null: false
       t.string :title
       t.string :link
       t.datetime :published_at

@@ -1,4 +1,4 @@
 class Tagging < ActiveRecord::Base
   belongs_to :tag
-  belongs_to :rss_source
+  belongs_to :feed
 end

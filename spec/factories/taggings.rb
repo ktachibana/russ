@@ -3,6 +3,6 @@
 FactoryGirl.define do
   factory :tagging do
     tag nil
-    rss_source nil
+    feed nil
   end
 end

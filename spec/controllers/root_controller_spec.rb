@@ -17,9 +17,9 @@ describe RootController do
     end
 
     it '最近のItemを取得する' do
-      create(:rss_source, user: user).tap do |s|
+      create(:feed, user: user).tap do |feed|
         26.times do |i|
-          create(:item, rss_source: s, title: i.to_s, published_at: i.days.ago)
+          create(:item, feed: feed, title: i.to_s, published_at: i.days.ago)
         end
       end
 

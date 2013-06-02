@@ -1,40 +1,40 @@
 require 'spec_helper'
 
-describe RssSourcesController do
+describe FeedsController do
   let!(:user) { create(:user) }
   before { sign_in(user) }
 
   describe 'GET :new' do
-    it 'RssSourceの情報をURLからロードできる' do
+    it 'Feedの情報をURLからロードできる' do
       mock_rss!
 
       get :new, url: mock_rss_url
 
       response.should be_success
-      assigns(:rss_source).should be_present
+      assigns(:feed).should be_present
     end
   end
 
   describe 'POST :create' do
-    it 'RssSourceを登録できる' do
+    it 'Feedを登録できる' do
       expect {
-        post :create, rss_source: attributes_for(:rss_source)
-      }.to change(RssSource, :count).by(1)
+        post :create, feed: attributes_for(:feed)
+      }.to change(Feed, :count).by(1)
     end
 
     it 'パラメータが不正だと登録されない' do
       expect {
-        post :create, rss_source: attributes_for(:rss_source).except(:title)
-      }.to_not change(RssSource, :count)
+        post :create, feed: attributes_for(:feed).except(:title)
+      }.to_not change(Feed, :count)
       response.should render_template(:new)
     end
   end
 
   describe 'PUT :update_all' do
-    it '全RssSourceを再読み込みできる' do
+    it '全Feedを再読み込みできる' do
       @count = 0
-      2.times { create(:rss_source, user: user) }
-      RssSource.any_instance.stub(:load!){ @count += 1 }
+      2.times { create(:feed, user: user) }
+      Feed.any_instance.stub(:load!){ @count += 1 }
       put :update_all
       @count.should == 2
       response.should redirect_to(root_url)
@@ -54,7 +54,7 @@ describe RssSourcesController do
       expect {
         mock_opml_rss!
         post :import, file: Rack::Test::UploadedFile.new(opml_file, 'application/xml')
-      }.to change(RssSource, :count).by(2)
+      }.to change(Feed, :count).by(2)
 
       response.should redirect_to(root_url)
     end

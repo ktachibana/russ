@@ -1,6 +1,6 @@
-class CreateRssSources < ActiveRecord::Migration
+class CreateFeeds < ActiveRecord::Migration
   def change
-    create_table :rss_sources do |t|
+    create_table :feeds do |t|
       t.references :user, index: true, null: false
       t.string :url, null: false
       t.string :title, null: false

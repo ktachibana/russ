@@ -1,5 +1,5 @@
 Russ::Application.routes.draw do
-  resources :rss_sources do
+  resources :feeds do
     collection do
       put :update_all
       get :upload

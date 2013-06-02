@@ -12,6 +12,6 @@ describe Tag do
 
   describe 'associations' do
     it { should belong_to(:user) }
-    it { should have_many(:rss_sources).through(:taggings) }
+    it { should have_many(:feeds).through(:taggings) }
   end
 end

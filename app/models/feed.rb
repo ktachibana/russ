@@ -2,7 +2,7 @@ require 'open-uri'
 require 'rss'
 require 'rexml/document'
 
-class RssSource < ActiveRecord::Base
+class Feed < ActiveRecord::Base
   belongs_to :user
   has_many :items, dependent: :destroy
   has_many :taggings, dependent: :destroy
@@ -52,7 +52,7 @@ class RssSource < ActiveRecord::Base
       link_url = attrs['htmlUrl']
 
       if url && title
-        result << user.rss_sources.create!(url: url, title: title, link_url: link_url)
+        result << user.feeds.create!(url: url, title: title, link_url: link_url)
       else title
         tag = user.tags.find_or_initialize_by(name: title)
         tag.save!
@@ -62,7 +62,7 @@ class RssSource < ActiveRecord::Base
           title = child_attrs['text'] || child_attrs['title']
           url = child_attrs['xmlUrl']
           link_url = child_attrs['htmlUrl']
-          rss = user.rss_sources.create!(url: url, title: title, link_url: link_url)
+          rss = user.feeds.create!(url: url, title: title, link_url: link_url)
           rss.tags << tag
           result << rss
         end

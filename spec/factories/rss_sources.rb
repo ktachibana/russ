@@ -1,7 +1,7 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
-  factory :rss_source do
+  factory :feed do
     user
     url "http://test.com/rss.xml"
     title "title"
