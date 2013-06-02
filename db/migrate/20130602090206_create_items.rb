@@ -6,7 +6,7 @@ class CreateItems < ActiveRecord::Migration
       t.string :link, limit: 2048
       t.string :guid
       t.datetime :published_at
-      t.string :description
+      t.text :description
 
       t.timestamps
     end
