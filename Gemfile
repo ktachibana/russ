@@ -54,7 +54,7 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'rb-fsevent'
   gem 'growl'
-  gem 'spring'
+  gem 'spring', github: "jonleighton/spring"
   gem 'pry'
   gem 'pry-rails'
   gem 'hirb-unicode'
