@@ -1,0 +1,10 @@
+%p.notice= notice
+%p.alert= alert
+
+%h1= current_user.email
+
+= link_to 'Sign out', destroy_user_session_path, method: :delete
+
+- RssSource.all.each do |source|
+  .source
+    = link_to source.title, source.link_url, target: '_blank'

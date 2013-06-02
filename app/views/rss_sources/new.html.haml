@@ -1,0 +1,7 @@
+= form_for @rss_source do |f|
+  .title
+    = f.text_field :title, size: 40
+  = f.hidden_field :url
+  = f.hidden_field :link_url
+  = f.hidden_field :description
+  = f.submit

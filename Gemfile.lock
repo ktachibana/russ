@@ -81,6 +81,8 @@ GEM
     guard-rspec (3.0.1)
       guard (>= 1.8)
       rspec (~> 2.13)
+    haml (4.0.3)
+      tilt
     hike (1.2.2)
     hirb (0.7.1)
     hirb-unicode (0.0.5)
@@ -212,6 +214,7 @@ DEPENDENCIES
   growl
   guard
   guard-rspec
+  haml
   hirb-unicode
   jbuilder (~> 1.0.1)
   jquery-rails

@@ -61,7 +61,11 @@ group :development, :test do
   gem 'tapp'
   gem 'shoulda-matchers'
   gem 'fuubar'
+end
+
+group :test do
   gem 'webmock'
 end
 
 gem 'devise', github: 'plataformatec/devise', branch: 'rails4'
+gem 'haml'

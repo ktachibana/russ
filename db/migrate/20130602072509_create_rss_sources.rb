@@ -1,10 +1,11 @@
 class CreateRssSources < ActiveRecord::Migration
   def change
     create_table :rss_sources do |t|
-      t.references :user, index: true
-      t.string :title
-      t.string :url
-      t.string :describe
+      t.references :user, index: true, null: false
+      t.string :url, null: false
+      t.string :title, null: false
+      t.string :link_url
+      t.text :description
 
       t.timestamps
     end
