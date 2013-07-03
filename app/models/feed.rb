@@ -25,6 +25,13 @@ class Feed < ActiveRecord::Base
     end
   end
 
+  def self.load_all!
+    find_each do |feed|
+      sleep(5)
+      feed.load!
+    end
+  end
+
   def load!
     self.class.load_rss(url) do |rss|
       rss.items.each do |loaded_item|
