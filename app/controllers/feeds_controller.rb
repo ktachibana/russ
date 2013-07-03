@@ -21,11 +21,12 @@ class FeedsController < ApplicationController
   end
 
   def import
-    imported_feed = Feed.import!(current_user, params[:file].read)
-    imported_feed.each do |feed|
-      sleep(2)
-      feed.load!
+    if params[:file].blank?
+      flash[:alert] = 'Select OPML file.'
+      return redirect_to(upload_feeds_path)
     end
+
+    Feed.import!(current_user, params[:file].read)
     redirect_to root_url
   end
 

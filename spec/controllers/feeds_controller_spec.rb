@@ -58,5 +58,11 @@ describe FeedsController do
 
       response.should redirect_to(root_url)
     end
+
+    it 'アップロードするファイルを選択しないとflashメッセージを表示' do
+      post :import
+      flash[:alert].should == 'Select OPML file.'
+      response.should redirect_to(upload_feeds_path)
+    end
   end
 end
