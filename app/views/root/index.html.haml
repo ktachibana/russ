@@ -3,7 +3,6 @@
 
 %h1= current_user.email
 = link_to 'Import OPML', upload_feeds_path
-= link_to 'Reload all', update_all_feeds_path, method: :put
 = link_to 'Sign out', destroy_user_session_path, method: :delete
 
 = form_tag root_path, method: :get do

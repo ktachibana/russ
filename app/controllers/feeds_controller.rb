@@ -13,13 +13,6 @@ class FeedsController < ApplicationController
     end
   end
 
-  def update_all
-    current_user.feeds.find_each do |feed|
-      feed.load!
-    end
-    redirect_to root_url
-  end
-
   def import
     if params[:file].blank?
       flash[:alert] = 'Select OPML file.'

@@ -30,17 +30,6 @@ describe FeedsController do
     end
   end
 
-  describe 'PUT :update_all' do
-    it '全Feedを再読み込みできる' do
-      @count = 0
-      2.times { create(:feed, user: user) }
-      Feed.any_instance.stub(:load!){ @count += 1 }
-      put :update_all
-      @count.should == 2
-      response.should redirect_to(root_url)
-    end
-  end
-
   describe 'POST :import' do
     let!(:opml_file) do
       file = Tempfile.new('opml')
