@@ -72,4 +72,4 @@ end
 gem 'devise', github: 'plataformatec/devise', branch: 'rails4'
 gem 'haml'
 gem 'kaminari'
-gem 'whenever'
+gem 'whenever', require: false, github: 'iTakeshi/whenever', branch: 'rails4'
