@@ -5,7 +5,7 @@ ruby '2.0.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0.rc1'
 
-gem 'pg'
+gem 'sqlite3'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0.rc1'
@@ -40,7 +40,6 @@ end
 # gem 'debugger', group: [:development, :test]
 
 group :development, :test do
-  gem 'sqlite3'
   gem 'powder'
   gem 'rspec'
   gem 'rspec-rails'
@@ -67,6 +66,7 @@ gem 'devise', github: 'plataformatec/devise', branch: 'rails4'
 gem 'haml'
 gem 'kaminari'
 gem 'whenever', require: false, github: 'iTakeshi/whenever', branch: 'rails4'
-gem 'capistrano'
-gem 'capistrano_colors'
+gem 'capistrano', require: false
+gem 'capistrano_colors', require: false
+gem 'capistrano-rbenv', require: false
 gem 'unicorn'

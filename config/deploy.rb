@@ -1,9 +1,18 @@
+require "bundler/capistrano"
+require 'capistrano-rbenv'
 set :application, 'russ'
 set :repository,  'https://github.com/ktachibana/russ.git'
-set :scm, :git
 set :deploy_via, :copy
+set :scm, :git
+set :user, 'tachibana'
+
+set :rbenv_path, '/usr/local/rbenv'
+set :rbenv_ruby_version, File.read('.ruby-version').strip
+
+default_run_options[:pty] = true
 
 server "192.168.0.6", :web, :app, :db
+
 
 # if you want to clean up old releases on each deploy uncomment this:
 # after "deploy:restart", "deploy:cleanup"
