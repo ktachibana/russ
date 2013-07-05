@@ -11,7 +11,7 @@ set :rbenv_ruby_version, File.read('.ruby-version').strip
 
 default_run_options[:pty] = true
 
-server "192.168.0.6", :web, :app, :db
+server "192.168.0.6", :web, :app, :db, primary: true
 
 
 # if you want to clean up old releases on each deploy uncomment this:
