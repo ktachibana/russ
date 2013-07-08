@@ -5,7 +5,6 @@ set :repository, 'https://github.com/ktachibana/russ.git'
 set :deploy_via, :copy
 set :scm, :git
 set :user, 'tachibana'
-
 set :rbenv_path, '/usr/local/rbenv'
 set :rbenv_ruby_version, File.read('.ruby-version').strip
 
@@ -22,11 +21,16 @@ set :whenever_command, 'bundle exec whenever'
 # if you're still using the script/reaper helper you will need
 # these http://github.com/rails/irs_process_scripts
 
-# If you are using Passenger mod_rails uncomment this:
-# namespace :deploy do
-#   task :start do ; end
-#   task :stop do ; end
-#   task :restart, :roles => :app, :except => { :no_release => true } do
-#     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
-#   end
-# end
+namespace :deploy do
+  [:start, :stop, :restart].each do |action|
+    desc "#{action} application server."
+    task action, roles: :app do
+      sudo "god #{action} #{application}"
+    end
+  end
+
+  desc 'setup sqlite3 db directory.'
+  task :db_setup, roles: :db do
+    run "mkdir -p -m 775 #{shared_path}/db"
+  end
+end
