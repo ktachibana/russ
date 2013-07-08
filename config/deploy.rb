@@ -1,4 +1,4 @@
-require "bundler/capistrano"
+require 'bundler/capistrano'
 require 'capistrano-rbenv'
 set :application, 'russ'
 set :repository, 'https://github.com/ktachibana/russ.git'
@@ -13,6 +13,8 @@ default_run_options[:pty] = true
 
 server "192.168.0.6", :web, :app, :db, primary: true
 
+require 'whenever/capistrano'
+set :whenever_command, 'bundle exec whenever'
 
 # if you want to clean up old releases on each deploy uncomment this:
 # after "deploy:restart", "deploy:cleanup"
