@@ -34,3 +34,10 @@ namespace :deploy do
     run "mkdir -p -m 775 #{shared_path}/db"
   end
 end
+
+%w[deploy:start deploy:restart].each do |task|
+  after task do
+    sleep 10
+    run 'curl -s http://localhost:8088/users/sign_in > /dev/null 2>&1'
+  end
+end
