@@ -26,6 +26,7 @@ class Feed < ActiveRecord::Base
   end
 
   def self.load_all!
+    puts Time.now
     find_each do |feed|
       sleep(5)
       feed.load!
