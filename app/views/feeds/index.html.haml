@@ -6,9 +6,10 @@
     - Tag.all.each do |tag|
       %th= tag.name
     %th
+    %th
   - @feeds.each do |feed|
-    %tr
-      = form_for feed do |f|
+    %tr{ class: "_#{feed.id}" }
+      = form_for feed, remote: true do |f|
         %td.title
           = f.text_field :title, size: 50
         %td.sample
@@ -19,3 +20,4 @@
               = ff.check_box :tag_id, { checked: (ff.object.persisted?) }, tag.id, ''
         %td
           = f.submit
+        %td.response

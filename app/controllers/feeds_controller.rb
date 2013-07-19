@@ -18,13 +18,17 @@ class FeedsController < ApplicationController
   end
 
   def update
-    feed = current_user.feeds.find(params[:id])
-    feed.assign_attributes(feeds_params)
-    feed.taggings.each do |tagging|
+    @feed = current_user.feeds.find(params[:id])
+    @feed.assign_attributes(feeds_params)
+    @feed.taggings.each do |tagging|
       tagging.mark_for_destruction if tagging.tag_id.blank?
     end
-    feed.save!
-    redirect_to action: :index
+    @feed.save!
+    respond_to do |format|
+      format.js
+      format.html { redirect_to action: :index }
+    end
+
   end
 
   def import
