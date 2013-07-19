@@ -1,8 +1,9 @@
 %h1= current_user.email
 = link_to 'Import OPML', upload_feeds_path
+= link_to 'Feeds', feeds_path
 = link_to 'Sign out', destroy_user_session_path, method: :delete
 
-= form_tag root_path, method: :get do
+.tags
   - current_user.tags.each do |tag|
     = link_to tag.name, params.merge(tag_id: tag.id)
 

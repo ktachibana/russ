@@ -4,6 +4,18 @@ describe FeedsController do
   let!(:user) { create(:user) }
   before { sign_in(user) }
 
+  describe 'GET :index' do
+    render_views
+
+    it 'Feed一覧を取得する' do
+      feeds = create_list(:feed, 2, user: user)
+      create(:feed, user: create(:user))
+      get :index
+      response.should be_success
+      assigns(:feeds).should =~ feeds
+    end
+  end
+
   describe 'GET :new' do
     it 'Feedの情報をURLからロードできる' do
       mock_rss!
@@ -27,6 +39,25 @@ describe FeedsController do
         post :create, feed: attributes_for(:feed).except(:title)
       }.to_not change(Feed, :count)
       response.should render_template(:new)
+    end
+  end
+
+  describe 'POST :update' do
+    let(:feed) { create(:feed, user: user) }
+    let(:tag) { create(:tag, user: user) }
+
+    it 'Feedを更新できる' do
+      put :update, id: feed.id, feed: { title: 'NewTitle', taggings_attributes: { '0' => { tag_id: tag.id } } }
+      feed.reload
+      feed.title.should == 'NewTitle'
+      feed.tags.should == [tag]
+    end
+
+    it 'Feedを削除できる' do
+      feed.update_attributes!(tags: [tag])
+      put :update, id: feed.id, feed: { taggings_attributes: { '0' => { id: feed.taggings.first.id, tag_id: '' } } }
+      feed.reload
+      feed.tags.should == []
     end
   end
 

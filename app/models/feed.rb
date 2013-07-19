@@ -7,6 +7,7 @@ class Feed < ActiveRecord::Base
   has_many :items, dependent: :destroy
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings
+  accepts_nested_attributes_for :taggings, allow_destroy: true
 
   validates :user_id, presence: true
   validates :url, presence: true, length: { maximum: 2048 }

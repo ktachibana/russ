@@ -1,0 +1,21 @@
+%h1 Feeds
+%table
+  %tr
+    %th= Feed.human_attribute_name :title
+    %th Sample
+    - Tag.all.each do |tag|
+      %th= tag.name
+    %th
+  - @feeds.each do |feed|
+    %tr
+      = form_for feed do |f|
+        %td.title
+          = f.text_field :title, size: 50
+        %td.sample
+          = truncate(feed.items.first.try(:title), length: 30)
+        - Tag.all.each do |tag|
+          %td.tag
+            = f.fields_for :taggings, feed.taggings.find_or_initialize_by(tag_id: tag.id) do |ff|
+              = ff.check_box :tag_id, { checked: (ff.object.persisted?) }, tag.id, ''
+        %td
+          = f.submit

@@ -21,6 +21,32 @@ describe Feed do
     it { should have_many(:tags).through(:taggings) }
   end
 
+  describe '#taggings_attributes=' do
+    let(:user) { create(:user) }
+    let(:feed) { create(:feed, user: user) }
+
+    it '一括して追加できる' do
+      tags = create_list(:tag, 2, user: user)
+      feed.update_attributes!(taggings_attributes: tags.map { |tag| { tag_id: tag.id } })
+      feed.tags.should == tags
+    end
+
+    it '削除できる' do
+      tags = create_list(:tag, 4, user: user)
+      feed.update_attributes!(tags: tags[0..1])
+      feed.tags.should == tags.values_at(0, 1)
+      feed.reload
+      feed.update_attributes!(taggings_attributes: [
+          { id: feed.taggings.find_by(tag: tags[0]).id, tag_id: tags[0].id },
+          { id: feed.taggings.find_by(tag: tags[1]).id, _destroy: true },
+          { tag_id: tags[2].id },
+          { tag_id: tags[3].id, _destroy: true }
+      ])
+      feed.tags.should == tags.values_at(0, 2)
+      Tagging.should have(2).items
+    end
+  end
+
   describe '.by_url' do
     it 'urlを指定するとそのRSSをロードしてnewする' do
       WebMock.stub_request(:get, 'http://test.com/rss.xml').to_return(body: <<-EOS)

@@ -1,4 +1,8 @@
 class FeedsController < ApplicationController
+  def index
+    @feeds = current_user.feeds
+  end
+
   def new
     @feed = Feed.by_url(params[:url])
   end
@@ -13,6 +17,16 @@ class FeedsController < ApplicationController
     end
   end
 
+  def update
+    feed = current_user.feeds.find(params[:id])
+    feed.assign_attributes(feeds_params)
+    feed.taggings.each do |tagging|
+      tagging.mark_for_destruction if tagging.tag_id.blank?
+    end
+    feed.save!
+    redirect_to action: :index
+  end
+
   def import
     if params[:file].blank?
       flash[:alert] = 'Select OPML file.'
@@ -25,6 +39,6 @@ class FeedsController < ApplicationController
 
 private
   def feeds_params
-    params.require(:feed).permit(:url, :title, :link_url, :description)
+    params.require(:feed).permit(:url, :title, :link_url, :description, taggings_attributes: %i[id tag_id])
   end
 end
