@@ -1,6 +1,6 @@
 class FeedsController < ApplicationController
   def index
-    @feeds = current_user.feeds
+    @feeds = current_user.feeds.includes(:taggings, :items)
   end
 
   def new

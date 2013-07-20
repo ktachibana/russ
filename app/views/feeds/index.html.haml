@@ -7,6 +7,7 @@
       %th= tag.name
     %th
     %th
+  - tags = Tag.all
   - @feeds.each do |feed|
     %tr{ class: "_#{feed.id}" }
       = form_for feed, remote: true do |f|
@@ -14,9 +15,9 @@
           = f.text_field :title, size: 50
         %td.sample
           = truncate(feed.items.first.try(:title), length: 30)
-        - Tag.all.each do |tag|
+        - tags.each do |tag|
           %td.tag
-            = f.fields_for :taggings, feed.taggings.find_or_initialize_by(tag_id: tag.id) do |ff|
+            = f.fields_for :taggings, feed.taggings.find{|t| t.tag_id == tag.id} || Tagging.new(tag_id: tag.id) do |ff|
               = ff.check_box :tag_id, { checked: (ff.object.persisted?) }, tag.id, ''
         %td
           = f.submit
