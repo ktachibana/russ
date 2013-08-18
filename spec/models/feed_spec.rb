@@ -45,6 +45,12 @@ describe Feed do
       feed.tags.should == tags.values_at(0, 2)
       Tagging.should have(2).items
     end
+
+    it 'フィードとタグを一括して登録できる' do
+      tag = create(:tag, user: user)
+      feed = Feed.create(attributes_for(:feed, user_id: user.id, taggings_attributes: [{ tag_id: tag.id }]))
+      feed.tags.should == [tag]
+    end
   end
 
   describe '.by_url' do

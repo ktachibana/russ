@@ -2,6 +2,7 @@
 = link_to 'Import OPML', upload_feeds_path
 = link_to 'Feeds', feeds_path
 = link_to 'Sign out', destroy_user_session_path, method: :delete
+= link_to 'RuSS (Bookmarklet)', "javascript:location.href='#{new_feed_url(url: '')}'+escape(location.href);"
 
 .tags
   - current_user.tags.each do |tag|

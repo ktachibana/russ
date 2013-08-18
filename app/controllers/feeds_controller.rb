@@ -9,8 +9,12 @@ class FeedsController < ApplicationController
 
   def create
     @feed = current_user.feeds.build(feeds_params)
+    @feed.taggings.each do |tagging|
+      tagging.mark_for_destruction if tagging.tag_id.blank?
+    end
 
     if @feed.save
+      @feed.load!
       redirect_to root_url
     else
       render :new

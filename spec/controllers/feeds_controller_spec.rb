@@ -30,6 +30,7 @@ describe FeedsController do
   describe 'POST :create' do
     it 'Feedを登録できる' do
       expect {
+        Feed.any_instance.should_receive(:load!)
         post :create, feed: attributes_for(:feed)
       }.to change(Feed, :count).by(1)
     end
@@ -39,6 +40,14 @@ describe FeedsController do
         post :create, feed: attributes_for(:feed).except(:title)
       }.to_not change(Feed, :count)
       response.should render_template(:new)
+    end
+
+    it 'tag_idがblankの場合は無視される', :focus do
+      tag = create(:tag, user: user)
+      Feed.any_instance.should_receive(:load!)
+      post :create, feed: attributes_for(:feed, taggings_attributes: [{ tag_id: '' }, { tag_id: tag.id }])
+      response.should redirect_to(root_url)
+      assigns(:feed).reload.tags.should == [tag]
     end
   end
 

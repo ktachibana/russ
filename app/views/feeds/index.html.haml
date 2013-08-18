@@ -3,11 +3,11 @@
   %tr
     %th= Feed.human_attribute_name :title
     %th Sample
-    - Tag.all.each do |tag|
+    - current_user.tags.all.each do |tag|
       %th= tag.name
     %th
     %th
-  - tags = Tag.all
+  - tags = current_user.tags
   - @feeds.each do |feed|
     %tr{ class: "_#{feed.id}" }
       = form_for feed, remote: true do |f|
