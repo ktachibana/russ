@@ -14,7 +14,7 @@
     - current_user.tags.each do |tag|
       %span.tag
         = f.fields_for :taggings, Tagging.new(tag_id: tag.id) do |ff|
-          = ff.check_box :tag_id, { checked: true }, tag.id, ''
+          = ff.check_box :tag_id, { checked: false }, tag.id, ''
           = ff.label :tag_id, ff.object.tag.name
 
   = f.submit
