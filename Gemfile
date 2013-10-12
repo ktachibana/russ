@@ -63,7 +63,7 @@ group :test do
   gem 'webmock'
 end
 
-gem 'devise', github: 'plataformatec/devise', branch: 'rails4'
+gem 'devise'
 gem 'haml'
 gem 'kaminari'
 gem 'whenever', require: false, github: 'iTakeshi/whenever', branch: 'rails4'

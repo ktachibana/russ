@@ -42,7 +42,7 @@ describe FeedsController do
       response.should render_template(:new)
     end
 
-    it 'tag_idがblankの場合は無視される', :focus do
+    it 'tag_idがblankの場合は無視される' do
       tag = create(:tag, user: user)
       Feed.any_instance.should_receive(:load!)
       post :create, feed: attributes_for(:feed, taggings_attributes: [{ tag_id: '' }, { tag_id: tag.id }])
