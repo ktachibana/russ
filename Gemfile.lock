@@ -1,21 +1,12 @@
 GIT
-  remote: git://github.com/esminc/tapp.git
+  remote: https://github.com/esminc/tapp.git
   revision: 0657747e166e8845384d9ea849e4e00b62307e40
   specs:
     tapp (1.4.0)
       thor
 
 GIT
-  remote: git://github.com/iTakeshi/whenever.git
-  revision: 04e96f765af3a0761294fd888bc1fc728b5bfb1d
-  branch: rails4
-  specs:
-    whenever (0.8.2)
-      activesupport (>= 2.3.4)
-      chronic (>= 0.6.3)
-
-GIT
-  remote: git://github.com/jonleighton/spring.git
+  remote: https://github.com/jonleighton/spring.git
   revision: ab1abb2ed8a441a5f9df77815ff43d80c0472408
   specs:
     spring (0.0.11)
@@ -246,6 +237,9 @@ GEM
     webmock (1.14.0)
       addressable (>= 2.2.7)
       crack (>= 0.3.2)
+    whenever (0.8.4)
+      activesupport (>= 2.3.4)
+      chronic (>= 0.6.3)
 
 PLATFORMS
   ruby
@@ -286,4 +280,4 @@ DEPENDENCIES
   uglifier (>= 1.3.0)
   unicorn
   webmock
-  whenever!
+  whenever

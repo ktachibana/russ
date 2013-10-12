@@ -50,11 +50,11 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'rb-fsevent'
   gem 'growl'
-  gem 'spring', github: "jonleighton/spring"
+  gem 'spring', git: 'https://github.com/jonleighton/spring.git'
   gem 'pry'
   gem 'pry-rails'
   gem 'hirb-unicode'
-  gem 'tapp', github: 'esminc/tapp'
+  gem 'tapp', git: 'https://github.com/esminc/tapp.git'
   gem 'shoulda-matchers'
   gem 'fuubar'
   gem 'capistrano', require: false
@@ -69,5 +69,5 @@ end
 gem 'devise'
 gem 'haml'
 gem 'kaminari'
-gem 'whenever', require: false, github: 'iTakeshi/whenever', branch: 'rails4'
+gem 'whenever', require: false
 gem 'unicorn'
