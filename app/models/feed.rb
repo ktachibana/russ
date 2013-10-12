@@ -50,7 +50,7 @@ class Feed < ActiveRecord::Base
         item.save
       end
     end
-  rescue OpenURI::HTTPError => e
+  rescue => e
     Rails.logger.error(e)
     nil # TODO エラーハンドリング
   end

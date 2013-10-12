@@ -197,6 +197,12 @@ describe Feed do
         item.description == 'New item description'
       end
     end
+
+    it 'エラーが起きたときはログを出力する' do
+      Feed.stub(:load_rss).and_raise('error!')
+      Rails.logger.should_receive(:error).with { |e| e.message.should == 'error!' }
+      feed.load!
+    end
   end
 
   describe '.import' do
