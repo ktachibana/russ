@@ -57,6 +57,9 @@ group :development, :test do
   gem 'tapp', github: 'esminc/tapp'
   gem 'shoulda-matchers'
   gem 'fuubar'
+  gem 'capistrano', require: false
+  gem 'capistrano_colors', require: false
+  gem 'capistrano-rbenv', require: false
 end
 
 group :test do
@@ -67,7 +70,4 @@ gem 'devise'
 gem 'haml'
 gem 'kaminari'
 gem 'whenever', require: false, github: 'iTakeshi/whenever', branch: 'rails4'
-gem 'capistrano', require: false
-gem 'capistrano_colors', require: false
-gem 'capistrano-rbenv', require: false
 gem 'unicorn'
