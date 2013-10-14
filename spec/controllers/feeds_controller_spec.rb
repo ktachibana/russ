@@ -27,6 +27,15 @@ describe FeedsController do
     end
   end
 
+  describe 'GET :show' do
+    let(:feed) { create(:feed, user: user) }
+
+    it 'Feedを表示できる' do
+      get :show, id: feed.id
+      assigns(:feed).should == feed
+    end
+  end
+
   describe 'POST :create' do
     it 'Feedを登録できる' do
       expect {

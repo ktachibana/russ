@@ -4,7 +4,7 @@
   %tr
     %th= Feed.human_attribute_name :title
     %th Latest
-    - current_user.tags.all.each do |tag|
+    - current_user.tags.each do |tag|
       %th= tag.name
     %th
     %th
@@ -22,5 +22,6 @@
               = ff.check_box :tag_id, { checked: (ff.object.persisted?) }, tag.id, ''
         %td
           = f.submit
+          = link_to '■', f.object
         %td.response
 = paginate @feeds

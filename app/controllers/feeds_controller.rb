@@ -3,6 +3,11 @@ class FeedsController < ApplicationController
     @feeds = current_user.feeds.includes(:taggings, :items).page(params[:page])
   end
 
+  def show
+    @feed =current_user.feeds.find(params[:id])
+    @items = @feed.items.page(params[:page])
+  end
+
   def new
     @feed = Feed.by_url(params[:url])
   end

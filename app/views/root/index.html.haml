@@ -15,6 +15,7 @@
   %hr
   .rss
     = link_to item.feed.title, item.feed.link_url
+    = link_to '■', item.feed
   .item
     .title
       = link_to item.title, item.link, target: '_blank'
