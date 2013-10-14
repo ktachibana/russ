@@ -19,11 +19,15 @@ class Feed < ActiveRecord::Base
     load_rss(url) do |rss|
       new do |m|
         m.url = url
-        m.title = rss.channel.title
-        m.description = rss.channel.description
-        m.link_url = rss.channel.link
+        m.update_by_rss!(rss)
       end
     end
+  end
+
+  def update_by_rss!(rss)
+    self.title = rss.channel.title
+    self.description = rss.channel.description
+    self.link_url = rss.channel.link
   end
 
   def self.load_all!
@@ -36,6 +40,7 @@ class Feed < ActiveRecord::Base
 
   def load!
     self.class.load_rss(url) do |rss|
+      update_by_rss!(rss)
       rss.items.each do |loaded_item|
         guid = loaded_item.try(:guid).try(:content)
 

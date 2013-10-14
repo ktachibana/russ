@@ -120,10 +120,10 @@ describe Feed do
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>RSS Title</title>
-    <link>http://test.com/content</link>
+    <title>New Title</title>
+    <link>http://test.com/new-content</link>
     <atom:link rel="self" type="application/rss+xml" href="http://test.com/rss.xml?rss=2.0"/>
-    <description>My description</description>
+    <description>New description</description>
 
     <item>
       <title>New Title</title>
@@ -144,6 +144,11 @@ describe Feed do
 </rss>
       EOS
       feed.load!
+
+      feed.title.should == 'New Title'
+      feed.description.should == 'New description'
+      feed.link_url.should == 'http://test.com/new-content'
+
       feed.should have(2).items
       feed.items.order(:published_at)[0].tap do |item|
         item.title.should == 'Item Title'
