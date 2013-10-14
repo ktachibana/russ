@@ -3,17 +3,7 @@
     %li{ class: ('active' if tag.id.to_s == params[:tag_id]) }
       = link_to tag.name, params.merge(tag_id: tag.id)
 
-= paginate @items
-
-- @items.each do |item|
-  .panel.panel-default
-    .panel-heading
-      = link_to item.title, item.link, target: '_blank'
-      .pull-right
-        %small
-          = link_to item.feed.title, item.feed.link_url
-          = link_to '■', item.feed
-    .panel-body
-      = simple_format item.description
+.items
+  = render @items
 
 = paginate @items

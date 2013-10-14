@@ -1,12 +1,7 @@
-%h1
-  = link_to @feed.title, @feed.link_url
+%h1.page-header= link_to @feed.title, @feed.link_url
 
-= paginate @items
+= @feed.description
 
-%ul
-  - @items.each do |item|
-    %li.item
-      %h2.title= link_to item.title, item.link
-      .description= simple_format item.description
+%p= render @items, hide_feed: true
 
 = paginate @items
