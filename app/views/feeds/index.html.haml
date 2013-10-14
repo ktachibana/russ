@@ -1,5 +1,5 @@
-%h1 Feeds
-= paginate @feeds
+%h1.page-header Feeds
+
 %table
   %tr
     %th= Feed.human_attribute_name :title
@@ -24,4 +24,5 @@
           = f.submit
           = link_to '■', f.object
         %td.response
+
 = paginate @feeds
