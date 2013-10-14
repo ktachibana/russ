@@ -148,6 +148,7 @@ describe Feed do
       feed.title.should == 'New Title'
       feed.description.should == 'New description'
       feed.link_url.should == 'http://test.com/new-content'
+      feed.should_not be_changed
 
       feed.should have(2).items
       feed.items.order(:published_at)[0].tap do |item|

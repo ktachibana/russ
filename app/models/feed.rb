@@ -41,6 +41,8 @@ class Feed < ActiveRecord::Base
   def load!
     self.class.load_rss(url) do |rss|
       update_by_rss!(rss)
+      save
+
       rss.items.each do |loaded_item|
         guid = loaded_item.try(:guid).try(:content)
 
