@@ -4,14 +4,16 @@
       = link_to tag.name, params.merge(tag_id: tag.id)
 
 = paginate @items
+
 - @items.each do |item|
-  %hr
-  .rss
-    = link_to item.feed.title, item.feed.link_url
-    = link_to '■', item.feed
-  .item
-    .title
+  .panel.panel-default
+    .panel-heading
       = link_to item.title, item.link, target: '_blank'
-    .body
+      .pull-right
+        %small
+          = link_to item.feed.title, item.feed.link_url
+          = link_to '■', item.feed
+    .panel-body
       = simple_format item.description
+
 = paginate @items
