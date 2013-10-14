@@ -1,8 +1,8 @@
-.tags
+%ul.nav.nav-pills
   - current_user.tags.each do |tag|
-    = link_to tag.name, params.merge(tag_id: tag.id)
+    %li{ class: ('active' if tag.id.to_s == params[:tag_id]) }
+      = link_to tag.name, params.merge(tag_id: tag.id)
 
-%h2 Items
 = paginate @items
 - @items.each do |item|
   %hr
