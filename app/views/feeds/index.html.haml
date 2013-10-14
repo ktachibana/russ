@@ -1,8 +1,9 @@
 %h1 Feeds
+= paginate @feeds
 %table
   %tr
     %th= Feed.human_attribute_name :title
-    %th Sample
+    %th Latest
     - current_user.tags.all.each do |tag|
       %th= tag.name
     %th
@@ -13,7 +14,7 @@
       = form_for feed, remote: true do |f|
         %td.title
           = f.text_field :title, size: 50
-        %td.sample
+        %td.latest
           = truncate(feed.items.first.try(:title), length: 30)
         - tags.each do |tag|
           %td.tag
@@ -22,3 +23,4 @@
         %td
           = f.submit
         %td.response
+= paginate @feeds
