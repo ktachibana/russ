@@ -59,6 +59,10 @@ group :development, :test do
   gem 'capistrano-rbenv', require: false
 end
 
+group :development do
+  gem 'rails-erd'
+end
+
 group :test do
   gem 'webmock'
 end
