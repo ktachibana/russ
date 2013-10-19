@@ -19,7 +19,7 @@
         %td.title
           = f.text_field :title, size: 50
         %td.latest
-          = truncate(feed.items.first.try(:title), length: 30)
+          = link_to truncate(feed.items.first.try(:title), length: 30), feed, target: '_blank'
         - tags.each do |tag|
           %td.tag
             = f.fields_for :taggings, feed.taggings.find{|t| t.tag_id == tag.id} || Tagging.new(tag_id: tag.id) do |ff|
