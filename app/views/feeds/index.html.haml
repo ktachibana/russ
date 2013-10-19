@@ -1,17 +1,21 @@
 %h1.page-header Feeds
 
-%table
+%table.table.table-hover
   %tr
+    %th
     %th= Feed.human_attribute_name :title
     %th Latest
     - current_user.tags.each do |tag|
       %th= tag.name
     %th
     %th
+    %th
   - tags = current_user.tags
   - @feeds.each do |feed|
     %tr{ class: "_#{feed.id}" }
-      = form_for feed, remote: true do |f|
+      = form_for feed, remote: true, class: %w[form form-inline] do |f|
+        %td
+          = link_to '■', f.object
         %td.title
           = f.text_field :title, size: 50
         %td.latest
@@ -21,9 +25,11 @@
             = f.fields_for :taggings, feed.taggings.find{|t| t.tag_id == tag.id} || Tagging.new(tag_id: tag.id) do |ff|
               = ff.check_box :tag_id, { checked: (ff.object.persisted?) }, tag.id, ''
         %td
-          = f.submit 'Update'
-          = link_to 'Delete', feed_path(feed), method: :delete
-          = link_to '■', f.object
+          = f.button class: %w[btn btn-primary btn-sm] do
+            %span.glyphicon.glyphicon-ok
+        %td
+          = link_to feed_path(feed), method: :delete, class: %w[btn btn-sm btn-danger] do
+            &cross;
         %td.response
 
 = paginate @feeds
