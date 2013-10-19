@@ -103,4 +103,19 @@ describe FeedsController do
       response.should redirect_to(upload_feeds_path)
     end
   end
+
+  describe '#destroy' do
+    let!(:feed) { create(:feed, user: user) }
+
+    it 'Feedを削除できる' do
+      expect {
+        delete :destroy, id: feed.id
+      }.to change(Feed, :count).by(-1)
+    end
+
+    it 'Feed一覧にリダイレクトする' do
+      delete :destroy, id: feed.id
+      response.should redirect_to(feeds_path)
+    end
+  end
 end

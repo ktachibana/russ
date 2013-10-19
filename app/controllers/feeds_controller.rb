@@ -50,7 +50,12 @@ class FeedsController < ApplicationController
     redirect_to root_url
   end
 
-private
+  def destroy
+    Feed.destroy(params[:id])
+    redirect_to(Feed)
+  end
+
+  private
   def feeds_params
     params.require(:feed).permit(:url, :title, :link_url, :description, taggings_attributes: %i[id tag_id])
   end

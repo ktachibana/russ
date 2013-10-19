@@ -21,7 +21,8 @@
             = f.fields_for :taggings, feed.taggings.find{|t| t.tag_id == tag.id} || Tagging.new(tag_id: tag.id) do |ff|
               = ff.check_box :tag_id, { checked: (ff.object.persisted?) }, tag.id, ''
         %td
-          = f.submit
+          = f.submit 'Update'
+          = link_to 'Delete', feed_path(feed), method: :delete
           = link_to '■', f.object
         %td.response
 
