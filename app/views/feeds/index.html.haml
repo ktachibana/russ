@@ -28,7 +28,7 @@
           = f.button class: %w[btn btn-primary btn-sm] do
             %span.glyphicon.glyphicon-ok
         %td
-          = link_to feed_path(feed), method: :delete, class: %w[btn btn-sm btn-danger] do
+          = link_to feed_path(feed), method: :delete, class: %w[btn btn-sm btn-danger], data: { confirm: 'delete?' } do
             &cross;
         %td.response
 
