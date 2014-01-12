@@ -151,17 +151,17 @@ describe Feed do
       feed.should_not be_changed
 
       feed.should have(2).items
-      feed.items.order(:published_at)[0].tap do |item|
-        item.title.should == 'Item Title'
-        item.link.should == 'http://test.com/content/1'
-        item.published_at.should == Time.new(2012, 2, 20, 16, 4, 19)
-        item.description == 'Item description'
-      end
-      feed.items.order(:published_at)[1].tap do |item|
+      feed.items[0].tap do |item|
         item.title.should == 'New Title'
         item.link.should == 'http://test.com/content/2'
         item.published_at.should == Time.new(2012, 2, 22, 18, 24, 29)
         item.description == 'New item description'
+      end
+      feed.items[1].tap do |item|
+        item.title.should == 'Item Title'
+        item.link.should == 'http://test.com/content/1'
+        item.published_at.should == Time.new(2012, 2, 20, 16, 4, 19)
+        item.description == 'Item description'
       end
     end
 
@@ -194,13 +194,13 @@ describe Feed do
 
       feed.load!
       feed.should have(2).items
-      feed.items.order(:published_at)[0].tap do |item|
-        item.link.should == 'http://test.com/content/1'
-        item.description == 'Item description UPDATED'
-      end
-      feed.items.order(:published_at)[1].tap do |item|
+      feed.items[0].tap do |item|
         item.link.should == 'http://test.com/content/2'
         item.description == 'New item description'
+      end
+      feed.items[1].tap do |item|
+        item.link.should == 'http://test.com/content/1'
+        item.description == 'Item description UPDATED'
       end
     end
 

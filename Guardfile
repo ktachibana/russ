@@ -13,4 +13,3 @@ guard :rspec, cmd: 'bundle exec spring rspec' do
   watch(%r{^spec/support/(.+)\.rb$})                  { "spec" }
   watch('app/controllers/application_controller.rb')  { "spec/controllers" }
 end
-
