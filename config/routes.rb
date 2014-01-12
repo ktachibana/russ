@@ -1,4 +1,4 @@
-Russ::Application.routes.draw do
+Rails.application.routes.draw do
   resources :feeds do
     collection do
       put :update_all
