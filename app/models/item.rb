@@ -8,10 +8,10 @@ class Item < ActiveRecord::Base
   scope :search, ->(conditions) {
     scope = all
     conditions[:tag_ids].presence.try do |tag_ids|
-      scope = scope.by_tag_id(tag_ids)
+      scope = scope.by_tag_ids(tag_ids)
     end
     scope = scope.page(conditions[:page])
     scope
   }
-  scope :by_tag_id, ->(tag_id) { joins(feed: :taggings).merge(Tagging.where(tag_id: tag_id)) }
+  scope :by_tag_ids, ->(tag_ids) { joins(feed: :taggings).merge(Tagging.where(tag_id: tag_ids)) }
 end

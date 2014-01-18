@@ -1,10 +1,10 @@
 class FeedsController < ApplicationController
   def index
-    @feeds = current_user.feeds.includes(:taggings, :items).order(:id).page(params[:page])
+    @feeds = feeds.includes(:taggings, :items).order(:id).search(params)
   end
 
   def show
-    @feed =current_user.feeds.find(params[:id])
+    @feed =feeds.find(params[:id])
     @items = @feed.items.page(params[:page])
   end
 
@@ -13,7 +13,7 @@ class FeedsController < ApplicationController
   end
 
   def create
-    @feed = current_user.feeds.build(feeds_params)
+    @feed = feeds.build(feeds_params)
     @feed.taggings.each do |tagging|
       tagging.mark_for_destruction if tagging.tag_id.blank?
     end
@@ -27,7 +27,7 @@ class FeedsController < ApplicationController
   end
 
   def update
-    @feed = current_user.feeds.find(params[:id])
+    @feed = feeds.find(params[:id])
     @feed.assign_attributes(feeds_params)
     @feed.taggings.each do |tagging|
       tagging.mark_for_destruction if tagging.tag_id.blank?
@@ -56,7 +56,12 @@ class FeedsController < ApplicationController
   end
 
   private
+
   def feeds_params
     params.require(:feed).permit(:url, :title, :link_url, :description, taggings_attributes: %i[id tag_id])
+  end
+
+  def feeds
+    current_user.feeds
   end
 end

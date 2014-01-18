@@ -32,20 +32,20 @@ describe Item do
     end
   end
 
-  describe '.by_tag_id' do
+  describe '.by_tag_ids' do
     it '特定のタグのついたフィードのItemだけに絞り込む' do
       tags = 2.times.map{ create(:tag) }
-      create(:feed, tags: [tags[0]]).tap do |feed|
+      create(:feed, tags: [tags[0]]) do |feed|
         create(:item, feed: feed, title: '1')
       end
-      create(:feed, tags: tags).tap do |feed|
+      create(:feed, tags: tags) do |feed|
         create(:item, feed: feed, title: '2')
       end
-      create(:feed, tags: []).tap do |feed|
+      create(:feed, tags: []) do |feed|
         create(:item, feed: feed, title: '3')
       end
-      Item.by_tag_id(tags[0].id).map(&:title).should =~ %w[1 2]
-      Item.by_tag_id(tags[1].id).map(&:title).should =~ %w[2]
+      Item.by_tag_ids(tags[0].id).map(&:title).should =~ %w[1 2]
+      Item.by_tag_ids(tags[1].id).map(&:title).should =~ %w[2]
     end
   end
 

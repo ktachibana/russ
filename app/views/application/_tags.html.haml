@@ -1,0 +1,7 @@
+%ul.nav.nav-pills
+  - tag_ids = params[:tag_ids] || []
+  - current_user.tags.each do |tag|
+    - tag_id = tag.id.to_s
+    - active = tag_id.in?(tag_ids)
+    %li{ class: ('active' if active) }
+      = link_to tag.name, params.merge(tag_ids: active ? tag_ids - [tag_id] : (tag_ids + [tag_id]))

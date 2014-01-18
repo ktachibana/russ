@@ -14,6 +14,14 @@ describe FeedsController do
       response.should be_success
       assigns(:feeds).should =~ feeds
     end
+
+    it '特定のタグがついたFeedだけに絞り込める' do
+      tags = create_list(:tag, 2, user: user)
+      feeds = tags.map { |tag| create(:feed, user: user, tags: [tag]) }
+      get :index, tag_ids: [tags[0].id]
+      response.should be_success
+      assigns(:feeds).should == [feeds[0]]
+    end
   end
 
   describe 'GET :new' do

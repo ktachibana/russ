@@ -15,6 +15,18 @@ class Feed < ActiveRecord::Base
   validates :link_url, presence: true, length: { maximum: 2048 }
   validates :description, length: { maximum: 4096 }
 
+  scope :search, ->(conditions) {
+    scope = all
+    conditions[:tag_ids].presence.try do |tag_ids|
+      scope = scope.by_tag_ids(tag_ids)
+    end
+    scope = scope.page(conditions[:page])
+    scope
+  }
+  scope :by_tag_ids, ->(tag_ids) {
+    where(id: joins(:taggings).merge(Tagging.where(tag_id: tag_ids)).group('feeds.id').having('count(*) = ?', [tag_ids.count]))
+  }
+
   module FileLoadable
     extend ActiveSupport::Concern
 

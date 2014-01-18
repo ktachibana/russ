@@ -53,6 +53,18 @@ describe Feed do
     end
   end
 
+  describe '.by_tag_id' do
+    it '特定のタグのついたものだけに絞り込む' do
+      tags = create_list(:tag, 2)
+      feeds = [tags.values_at(0), tags, []].map do |tags|
+        create(:feed, tags: tags)
+      end
+      Feed.by_tag_ids([tags[0].id]).should =~ feeds.values_at(0, 1)
+      Feed.by_tag_ids(tags.map(&:id)).should =~ feeds.values_at(1)
+      Feed.by_tag_ids(tags.map(&:id).reverse).should =~ feeds.values_at(1)
+    end
+  end
+
   describe '.by_url' do
     it 'urlを指定するとそのRSSをロードしてnewする' do
       WebMock.stub_request(:get, 'http://test.com/rss.xml').to_return(body: <<-EOS)
