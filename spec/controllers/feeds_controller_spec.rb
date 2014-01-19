@@ -32,6 +32,12 @@ describe FeedsController do
       response.should be_success
       assigns(:feed).should be_present
     end
+
+    it '同じURLのフィードを登録しようとするとリダイレクト' do
+      feed = create(:feed, user: user, url: mock_rss_url)
+      get :new, url: mock_rss_url
+      response.should redirect_to(feed_path(feed))
+    end
   end
 
   describe 'GET :show' do

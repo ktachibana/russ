@@ -9,7 +9,11 @@ class FeedsController < ApplicationController
   end
 
   def new
-    @feed = Feed.by_url(params[:url])
+    url = params[:url]
+    owned_feeds.find_by(url: url).try do |feed|
+      return redirect_to(feed)
+    end
+    @feed = Feed.by_url(url)
   end
 
   def create
