@@ -63,6 +63,7 @@ end
 
 group :development do
   gem 'rails-erd'
+  gem 'i18n-generators'
 end
 
 group :test do
