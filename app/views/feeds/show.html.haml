@@ -1,6 +1,8 @@
 %h1.page-header= link_to @feed.title, @feed.link_url
 
-= @feed.description
+%p= @feed.description
+%small
+  = link_to @feed.url, @feed.url, target: '_blank'
 
 %p= render @items, hide_feed: true
 

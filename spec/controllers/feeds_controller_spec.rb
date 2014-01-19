@@ -37,6 +37,7 @@ describe FeedsController do
       feed = create(:feed, user: user, url: mock_rss_url)
       get :new, url: mock_rss_url
       response.should redirect_to(feed_path(feed))
+      flash[:notice].should == I18n.t('messages.feed_already_registed', url: mock_rss_url)
     end
   end
 

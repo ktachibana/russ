@@ -202,3 +202,5 @@ ja:
   views:
     pagination:
       truncate: '&hellip;'
+  messages:
+    feed_already_registed: '%{url}はすでに登録されています。'
