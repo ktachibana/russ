@@ -16,9 +16,8 @@ describe FeedsController do
     end
 
     it '特定のタグがついたFeedだけに絞り込める' do
-      tags = create_list(:tag, 2, user: user)
-      feeds = tags.map { |tag| create(:feed, user: user, tags: [tag]) }
-      get :index, tag_ids: [tags[0].id]
+      feeds = %w(tag1 tag2).map { |tag| create(:feed, user: user, tag_list: tag) }
+      get :index, tag: %w(tag1)
       response.should be_success
       assigns(:feeds).should == [feeds[0]]
     end
@@ -59,31 +58,30 @@ describe FeedsController do
       response.should render_template(:new)
     end
 
-    it 'tag_idがblankの場合は無視される' do
-      tag = create(:tag, user: user)
+    it 'タグを登録できる' do
       Feed.any_instance.should_receive(:load!)
-      post :create, feed: attributes_for(:feed, taggings_attributes: [{ tag_id: '' }, { tag_id: tag.id }])
+      post :create, feed: attributes_for(:feed, tag_list: 'tag1, tag2')
       response.should redirect_to(root_url)
-      assigns(:feed).reload.tags.should == [tag]
+      assigns(:feed).reload.tag_list.should =~ %w(tag1 tag2)
     end
   end
 
   describe 'POST :update' do
     let(:feed) { create(:feed, user: user) }
-    let(:tag) { create(:tag, user: user) }
 
     it 'Feedを更新できる' do
-      put :update, id: feed.id, feed: { title: 'NewTitle', taggings_attributes: { '0' => { tag_id: tag.id } } }
+      put :update, id: feed.id, feed: { title: 'NewTitle', tag_list: 'tag1, tag2' }
       feed.reload
       feed.title.should == 'NewTitle'
-      feed.tags.should == [tag]
+      feed.tag_list.should == %w(tag1 tag2)
     end
 
     it 'Feedを削除できる' do
-      feed.update_attributes!(tags: [tag])
-      put :update, id: feed.id, feed: { taggings_attributes: { '0' => { id: feed.taggings.first.id, tag_id: '' } } }
+      feed.update_attributes!(tag_list: %w(tag1 tag2))
+      put :update, id: feed.id, feed: { tag_list: 'tag1' }
       feed.reload
-      feed.tags.should == []
+      feed.tag_list.should == %w(tag1)
+      ActsAsTaggableOn::Tagging.count.should == 1
     end
   end
 

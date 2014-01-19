@@ -7,25 +7,21 @@
     %th
     %th= Feed.human_attribute_name :title
     %th Latest
-    - current_user.tags.each do |tag|
-      %th= tag.name
+    %th= Feed.human_attribute_name :tags
+    %th Apply
+    %th Delete
     %th
-    %th
-    %th
-  - tags = current_user.tags
   - @feeds.each do |feed|
     %tr{ class: "_#{feed.id}" }
       = form_for feed, remote: true, class: %w[form form-inline] do |f|
         %td
           = link_to '■', f.object
         %td.title
-          = f.text_field :title, size: 50
+          = f.text_field :title, size: 50, class: 'form-control'
         %td.latest
           = link_to truncate(feed.items.first.try(:title), length: 30), feed, target: '_blank'
-        - tags.each do |tag|
-          %td.tag
-            = f.fields_for :taggings, feed.taggings.find{|t| t.tag_id == tag.id} || Tagging.new(tag_id: tag.id) do |ff|
-              = ff.check_box :tag_id, { checked: (ff.object.persisted?) }, tag.id, ''
+        %td.tag
+          = f.text_field :tag_list, class: 'form-control'
         %td
           = f.button class: %w[btn btn-primary btn-sm] do
             %span.glyphicon.glyphicon-ok

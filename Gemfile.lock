@@ -34,6 +34,8 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    acts-as-taggable-on (3.0.1)
+      rails (>= 3, < 5)
     addressable (2.3.5)
     arel (5.0.0)
     atomic (1.1.14)
@@ -250,6 +252,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  acts-as-taggable-on
   capistrano
   capistrano-rbenv
   capistrano_colors
