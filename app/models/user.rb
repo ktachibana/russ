@@ -4,6 +4,5 @@ class User < ActiveRecord::Base
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :validatable, :rememberable
 
-  acts_as_tagger
   has_many :feeds, dependent: :destroy
 end

@@ -76,7 +76,7 @@ describe FeedsController do
       feed.tag_list.should == %w(tag1 tag2)
     end
 
-    it 'Feedを削除できる' do
+    it 'Taggingを削除できる' do
       feed.update_attributes!(tag_list: %w(tag1 tag2))
       put :update, id: feed.id, feed: { tag_list: 'tag1' }
       feed.reload
