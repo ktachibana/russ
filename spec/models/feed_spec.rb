@@ -18,50 +18,44 @@ describe Feed do
   describe 'associations' do
     it { should belong_to(:user) }
     it { should have_many(:items).dependent(:destroy) }
-    it { should have_many(:tags).through(:taggings) }
+    it { should have_many(:tags) }
   end
 
-  describe '#taggings_attributes=' do
+  describe '.acts_as_tagging_on' do
     let(:user) { create(:user) }
     let(:feed) { create(:feed, user: user) }
 
     it '一括して追加できる' do
-      tags = create_list(:tag, 2, user: user)
-      feed.update_attributes!(taggings_attributes: tags.map { |tag| { tag_id: tag.id } })
-      feed.tags.should == tags
+      feed.update_attributes!(tag_list: %w(tag1 tag2))
+      feed.tags.map(&:name).should == %w(tag1 tag2)
     end
 
     it '削除できる' do
-      tags = create_list(:tag, 4, user: user)
-      feed.update_attributes!(tags: tags[0..1])
-      feed.tags.should == tags.values_at(0, 1)
+      feed.update_attributes!(tag_list: %w(tag1 tag2))
+      ActsAsTaggableOn::Tag.pluck(:name).should == %w(tag1 tag2)
+
       feed.reload
-      feed.update_attributes!(taggings_attributes: [
-          { id: feed.taggings.find_by(tag: tags[0]).id, tag_id: tags[0].id },
-          { id: feed.taggings.find_by(tag: tags[1]).id, _destroy: true },
-          { tag_id: tags[2].id },
-          { tag_id: tags[3].id, _destroy: true }
-      ])
-      feed.tags.should == tags.values_at(0, 2)
-      Tagging.should have(2).items
+      feed.update_attributes!(tag_list: %w(tag1 tag3))
+      feed.tags.map(&:name).should == %w(tag1 tag3)
+      ActsAsTaggableOn::Tagging.count.should == 2
     end
 
     it 'フィードとタグを一括して登録できる' do
-      tag = create(:tag, user: user)
-      feed = Feed.create(attributes_for(:feed, user_id: user.id, taggings_attributes: [{ tag_id: tag.id }]))
-      feed.tags.should == [tag]
+      feed = Feed.create(attributes_for(:feed, user_id: user.id, tag_list: 'tagname'))
+      feed.tag_list.should == %w(tagname)
     end
   end
 
-  describe '.by_tag_id' do
-    it '特定のタグのついたものだけに絞り込む' do
-      tags = create_list(:tag, 2)
-      feeds = [tags.values_at(0), tags, []].map do |tags|
-        create(:feed, tags: tags)
+  describe '.search' do
+    describe '.by_tag_id' do
+      it '特定のタグのついたものだけに絞り込む' do
+        feeds = ['tag1', 'tag1, tag2', []].map do |tags|
+          create(:feed, tag_list: tags)
+        end
+        Feed.search(tag: %w(tag1)).should =~ feeds.values_at(0, 1)
+        Feed.search(tag: %w(tag1 tag2)).should =~ feeds.values_at(1)
+        Feed.search(tag: %w(tag2 tag1)).should =~ feeds.values_at(1)
       end
-      Feed.by_tag_ids([tags[0].id]).should =~ feeds.values_at(0, 1)
-      Feed.by_tag_ids(tags.map(&:id)).should =~ feeds.values_at(1)
-      Feed.by_tag_ids(tags.map(&:id).reverse).should =~ feeds.values_at(1)
     end
   end
 
@@ -250,8 +244,8 @@ describe Feed do
         feed.title.should == 'Title'
         feed.url.should == 'http://category.com/rss.xml'
         feed.link_url.should == 'http://category.com/'
-        feed.tags.should have(1).tag
-        feed.tags[0].name.should == 'category'
+        feed.should have(1).tag
+        feed.tag_list.should == %w(category)
         feed.description.should be_nil
       end
     end

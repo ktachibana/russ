@@ -5,9 +5,7 @@ require 'rexml/document'
 class Feed < ActiveRecord::Base
   belongs_to :user
   has_many :items, dependent: :destroy
-  has_many :taggings, dependent: :destroy
-  has_many :tags, through: :taggings
-  accepts_nested_attributes_for :taggings, allow_destroy: true
+  acts_as_taggable
 
   validates :user_id, presence: true
   validates :url, presence: true, length: { maximum: 2048 }
@@ -17,14 +15,11 @@ class Feed < ActiveRecord::Base
 
   scope :search, ->(conditions) {
     scope = all
-    conditions[:tag_ids].presence.try do |tag_ids|
-      scope = scope.by_tag_ids(tag_ids)
+    conditions[:tag].presence.try do |tag_names|
+      scope = scope.tagged_with(tag_names)
     end
     scope = scope.page(conditions[:page])
     scope
-  }
-  scope :by_tag_ids, ->(tag_ids) {
-    where(id: joins(:taggings).merge(Tagging.where(tag_id: tag_ids)).group('feeds.id').having('count(*) = ?', [tag_ids.count]))
   }
 
   module FileLoadable
@@ -100,16 +95,12 @@ class Feed < ActiveRecord::Base
       if url && title
         result << user.feeds.create!(url: url, title: title, link_url: link_url)
       else title
-        tag = user.tags.find_or_initialize_by(name: title)
-        tag.save!
-
         outline.elements.each('outline') do |child|
           child_attrs = child.attributes
-          title = child_attrs['text'] || child_attrs['title']
+          feed_title = child_attrs['text'] || child_attrs['title']
           url = child_attrs['xmlUrl']
           link_url = child_attrs['htmlUrl']
-          feed = user.feeds.create!(url: url, title: title, link_url: link_url)
-          feed.tags << tag
+          feed = user.feeds.create!(url: url, title: feed_title, link_url: link_url, tag_list: [title])
           result << feed
         end
       end

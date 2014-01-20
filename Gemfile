@@ -63,6 +63,7 @@ end
 
 group :development do
   gem 'rails-erd'
+  gem 'i18n-generators'
 end
 
 group :test do
@@ -74,3 +75,4 @@ gem 'haml'
 gem 'kaminari'
 gem 'whenever', require: false
 gem 'unicorn'
+gem 'acts-as-taggable-on'

@@ -1,20 +1,20 @@
-= form_for @feed do |f|
-  .title
-    = f.text_field :title, size: 40
-  = f.hidden_field :url
+= form_for @feed, class: 'form' do |f|
   .link_url
     = f.hidden_field :link_url
     = link_to f.object.link_url, f.object.link_url, target: '_blank'
+  .form-group
+    = f.label :title
+    = f.text_field :title, class: 'form-control'
+  = f.hidden_field :url
+  .form-group
+    %div
+      = f.label :tags
+      = f.text_field :tag_list, class: 'form-control'
+    .owned-tags
+      - current_user.feeds.tag_counts.each do |tag|
+        %span.label.label-default= tag.name
   .description
     = f.hidden_field :description
-    = simple_format f.object.description
-  .tags
-    .text
-      Tags:
-    - current_user.tags.each do |tag|
-      %span.tag
-        = f.fields_for :taggings, Tagging.new(tag_id: tag.id) do |ff|
-          = ff.check_box :tag_id, { checked: false }, tag.id, ''
-          = ff.label :tag_id, ff.object.tag.name
+    .well= simple_format f.object.description
 
-  = f.submit
+  = f.submit class: 'btn btn-primary'

@@ -6,12 +6,11 @@ class Item < ActiveRecord::Base
   default_scope { order(published_at: :desc) }
   scope :user, ->(user) { joins(:feed).includes(:feed).merge(Feed.where(user_id: user.id)) }
   scope :search, ->(conditions) {
-    scope = all
-    conditions[:tag_ids].presence.try do |tag_ids|
-      scope = scope.by_tag_ids(tag_ids)
+    scope = self
+    conditions[:tag].presence.try do |tags|
+      scope = scope.joins(:feed).merge(Feed.tagged_with(tags))
     end
     scope = scope.page(conditions[:page])
     scope
   }
-  scope :by_tag_ids, ->(tag_ids) { joins(feed: :taggings).merge(Tagging.where(tag_id: tag_ids)) }
 end
