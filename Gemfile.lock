@@ -39,13 +39,17 @@ GEM
     atomic (1.1.14)
     bcrypt-ruby (3.1.2)
     builder (3.2.2)
-    capistrano (3.0.1)
-      i18n
-      rake (>= 10.0.0)
-      sshkit (>= 0.0.23)
-    capistrano-rbenv (2.0.1)
-      capistrano (~> 3.0)
-      sshkit (~> 1.3)
+    capistrano (2.15.5)
+      highline
+      net-scp (>= 1.0.0)
+      net-sftp (>= 2.0.0)
+      net-ssh (>= 2.0.14)
+      net-ssh-gateway (>= 1.1.0)
+    capistrano-platform-resources (0.1.3)
+      capistrano (< 3)
+    capistrano-rbenv (1.0.5)
+      capistrano (< 3)
+      capistrano-platform-resources (>= 0.1.3)
     capistrano_colors (0.5.5)
     celluloid (0.15.2)
       timers (~> 1.1.0)
@@ -92,6 +96,7 @@ GEM
       rspec (>= 2.14, < 4.0)
     haml (4.0.5)
       tilt
+    highline (1.6.20)
     hike (1.2.3)
     hirb (0.7.1)
     hirb-unicode (0.0.5)
@@ -124,7 +129,11 @@ GEM
     multi_json (1.8.4)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
+    net-sftp (2.1.2)
+      net-ssh (>= 2.6.5)
     net-ssh (2.7.0)
+    net-ssh-gateway (1.2.0)
+      net-ssh (>= 2.6.5)
     orm_adapter (0.5.0)
     polyglot (0.3.3)
     powder (0.2.0)
@@ -209,12 +218,6 @@ GEM
       activesupport (>= 3.0)
       sprockets (~> 2.8)
     sqlite3 (1.3.8)
-    sshkit (1.3.0)
-      net-scp (>= 1.1.2)
-      net-ssh
-      term-ansicolor
-    term-ansicolor (1.2.2)
-      tins (~> 0.8)
     therubyracer (0.12.0)
       libv8 (~> 3.16.14.0)
       ref
@@ -223,7 +226,6 @@ GEM
       atomic
     tilt (1.4.1)
     timers (1.1.0)
-    tins (0.13.1)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
@@ -250,7 +252,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  capistrano
+  capistrano (~> 2.15.5)
   capistrano-rbenv
   capistrano_colors
   coffee-rails

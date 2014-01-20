@@ -56,7 +56,7 @@ group :development, :test do
   gem 'tapp', git: 'https://github.com/esminc/tapp.git'
   gem 'shoulda-matchers'
   gem 'fuubar'
-  gem 'capistrano', require: false
+  gem 'capistrano', '~> 2.15.5', require: false
   gem 'capistrano_colors', require: false
   gem 'capistrano-rbenv', require: false
 end
