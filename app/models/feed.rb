@@ -5,6 +5,7 @@ require 'rexml/document'
 class Feed < ActiveRecord::Base
   belongs_to :user
   has_many :items, dependent: :destroy
+  has_one :latest_item, class_name: 'Item'
   acts_as_taggable
 
   validates :user_id, presence: true
@@ -21,6 +22,10 @@ class Feed < ActiveRecord::Base
     scope = scope.page(conditions[:page])
     scope
   }
+
+  def tags_string
+    tags.map(&:name).join(', ')
+  end
 
   module FileLoadable
     extend ActiveSupport::Concern

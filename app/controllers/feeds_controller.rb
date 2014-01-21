@@ -1,6 +1,6 @@
 class FeedsController < ApplicationController
   def index
-    @feeds = owned_feeds.order(:id).search(params)
+    @feeds = owned_feeds.includes(:latest_item, :tags).order(:id).search(params)
   end
 
   def show
@@ -17,7 +17,7 @@ class FeedsController < ApplicationController
   end
 
   def create
-    @feed = owned_feeds.build(feeds_params)
+    @feed = owned_feeds.build(feed_params)
 
     if @feed.save
       @feed.load!
@@ -29,7 +29,7 @@ class FeedsController < ApplicationController
 
   def update
     @feed = owned_feeds.find(params[:id])
-    @feed.update_attributes!(feeds_params)
+    @feed.update_attributes!(feed_params)
     respond_to do |format|
       format.js
       format.html { redirect_to action: :index }
@@ -56,11 +56,7 @@ class FeedsController < ApplicationController
     current_user.feeds
   end
 
-  def feeds_params
+  def feed_params
     params.require(:feed).permit(:url, :title, :link_url, :description, :tag_list)
-  end
-
-  def feeds
-    current_user.feeds
   end
 end

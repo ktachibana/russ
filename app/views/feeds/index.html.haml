@@ -19,9 +19,9 @@
         %td.title
           = f.text_field :title, size: 50, class: 'form-control'
         %td.latest
-          = link_to truncate(feed.items.first.try(:title), length: 30), feed, target: '_blank'
+          = link_to truncate(feed.latest_item.try(:title), length: 30), feed, target: '_blank'
         %td.tag
-          = f.text_field :tag_list, class: 'form-control'
+          = f.text_field :tag_list, class: 'form-control', value: feed.tags_string
         %td
           = f.button class: %w[btn btn-primary btn-sm] do
             %span.glyphicon.glyphicon-ok
