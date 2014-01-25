@@ -1,4 +1,15 @@
 GIT
+  remote: https://github.com/bshelton229/rails-erd.git
+  revision: 5cd4e5d4b86520eae5f9d8845ffb214ee92e9d92
+  branch: mavericks
+  specs:
+    rails-erd (1.1.0)
+      activerecord (>= 3.0)
+      activesupport (>= 3.0)
+      choice (~> 0.1.6)
+      ruby-graphviz (~> 1.0.4)
+
+GIT
   remote: https://github.com/esminc/tapp.git
   revision: 0657747e166e8845384d9ea849e4e00b62307e40
   specs:
@@ -180,11 +191,6 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 4.1.0.beta1)
       sprockets-rails (~> 2.0.0)
-    rails-erd (1.1.0)
-      activerecord (>= 3.0)
-      activesupport (>= 3.0)
-      choice (~> 0.1.6)
-      ruby-graphviz (~> 1.0.4)
     railties (4.1.0.beta1)
       actionpack (= 4.1.0.beta1)
       activesupport (= 4.1.0.beta1)
@@ -303,7 +309,7 @@ DEPENDENCIES
   pry
   pry-rails
   rails (= 4.1.0.beta1)
-  rails-erd
+  rails-erd!
   rb-fsevent
   rspec
   rspec-rails

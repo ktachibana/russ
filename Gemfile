@@ -62,7 +62,7 @@ group :development, :test do
 end
 
 group :development do
-  gem 'rails-erd'
+  gem 'rails-erd', git: 'https://github.com/bshelton229/rails-erd.git', branch: 'mavericks'
   gem 'i18n-generators'
 end
 
