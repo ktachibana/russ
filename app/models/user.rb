@@ -5,4 +5,5 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :validatable, :rememberable
 
   has_many :feeds, dependent: :destroy
+  has_one :subscription, dependent: :destroy
 end

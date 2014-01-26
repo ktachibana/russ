@@ -3,6 +3,7 @@ require 'spec_helper'
 describe User do
   describe 'associations' do
     it { should have_many(:feeds).dependent(:destroy) }
+    it { should have_one(:subscription).dependent(:destroy) }
   end
 
   describe 'devise' do
