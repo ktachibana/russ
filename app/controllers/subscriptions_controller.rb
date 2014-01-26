@@ -1,6 +1,6 @@
-class FeedsController < ApplicationController
+class SubscriptionsController < ApplicationController
   def index
-    @feeds = owned_feeds.includes(:latest_item, :tags).order(:id).search(params)
+    @subscriptions = owned_feeds.includes({ feed: :latest_item }, :tags).order(:id).search(params)
   end
 
   def show
@@ -53,7 +53,7 @@ class FeedsController < ApplicationController
 
   private
   def owned_feeds
-    current_user.feeds
+    current_user.subscriptions
   end
 
   def feed_params

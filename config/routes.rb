@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :feeds do
+  resources :subscriptions do
     collection do
       put :update_all
       get :upload

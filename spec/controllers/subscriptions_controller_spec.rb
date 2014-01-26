@@ -1,25 +1,25 @@
 require 'spec_helper'
 
-describe FeedsController do
+describe SubscriptionsController do
   let!(:user) { create(:user) }
   before { sign_in(user) }
 
   describe 'GET :index' do
     render_views
 
-    it 'Feed一覧を取得する' do
-      feeds = create_list(:feed, 2, user: user)
-      create(:feed, user: create(:user))
+    it 'Subscription一覧を取得する' do
+      subscriptions = create_list(:subscription, 2, user: user)
+      create(:subscription, user: create(:user))
       get :index
       response.should be_success
-      assigns(:feeds).should =~ feeds
+      assigns(:subscriptions).should =~ subscriptions
     end
 
     it '特定のタグがついたFeedだけに絞り込める' do
-      feeds = %w(tag1 tag2).map { |tag| create(:feed, user: user, tag_list: tag) }
+      subscriptions = %w(tag1 tag2).map { |tag| create(:subscription, user: user, tag_list: tag) }
       get :index, tag: %w(tag1)
       response.should be_success
-      assigns(:feeds).should == [feeds[0]]
+      assigns(:subscriptions).should == [subscriptions[0]]
     end
   end
 
