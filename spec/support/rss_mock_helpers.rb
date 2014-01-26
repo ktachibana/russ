@@ -1,6 +1,8 @@
 module RssMockHelpers
-  def mock_rss!
-    WebMock.stub_request(:get, mock_rss_url).to_return(body: rss_data)
+  def mock_rss!(url = nil)
+    url ||= mock_rss_url
+    WebMock.stub_request(:get, url).to_return(body: rss_data)
+    url
   end
 
   def rss_data

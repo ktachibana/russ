@@ -59,7 +59,7 @@ describe Feed do
     end
   end
 
-  describe '.by_url' do
+  describe '.load_by_url' do
     it 'urlを指定するとそのRSSをロードしてnewする' do
       WebMock.stub_request(:get, 'http://test.com/rss.xml').to_return(body: <<-EOS)
 <?xml version="1.0" encoding="utf-8"?>
@@ -72,7 +72,7 @@ describe Feed do
   </channel>
 </rss>
       EOS
-      feed = Feed.by_url('http://test.com/rss.xml')
+      feed = Feed.load_by_url('http://test.com/rss.xml')
       feed.title.should == 'RSS Title'
       feed.url.should == 'http://test.com/rss.xml'
       feed.link_url.should == 'http://test.com/content'
@@ -104,7 +104,7 @@ describe Feed do
     end
 
     let!(:feed) do
-      feed = Feed.by_url('http://test.com/rss.xml')
+      feed = Feed.load_by_url('http://test.com/rss.xml')
       feed.user = create(:user)
       feed.save!
       feed.load!

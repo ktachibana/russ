@@ -13,7 +13,7 @@ class FeedsController < ApplicationController
     owned_feeds.find_by(url: url).try do |feed|
       return redirect_to(feed, notice: I18n.t('messages.feed_already_registed', url: url))
     end
-    @feed = Feed.by_url(url)
+    @feed = Feed.load_by_url(url)
   end
 
   def create

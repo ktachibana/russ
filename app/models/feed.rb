@@ -61,7 +61,7 @@ class Feed < ActiveRecord::Base
     end
 
     module ClassMethods
-      def by_url(url)
+      def load_by_url(url)
         load_rss(url) do |rss|
           new do |m|
             m.url = url
