@@ -1,6 +1,6 @@
 # More info at https://github.com/guard/guard#readme
 
-guard :rspec, cmd: 'bundle exec spring rspec' do
+guard :rspec, cmd: 'bundle exec spring rspec', failed_mode: :none do
   watch(%r{^spec/.+_spec\.rb$})
   watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
   watch('spec/spec_helper.rb')  { "spec" }
