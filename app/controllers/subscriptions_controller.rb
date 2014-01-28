@@ -1,26 +1,26 @@
 class SubscriptionsController < ApplicationController
   def index
-    @subscriptions = owned_feeds.includes({ feed: :latest_item }, :tags).order(:id).search(params)
+    @subscriptions = owned_subscriptions.includes({ feed: :latest_item }, :tags).order(:id).search(params)
   end
 
   def show
-    @feed = owned_feeds.find(params[:id])
-    @items = @feed.items.page(params[:page])
+    @subscription = owned_subscriptions.find(params[:id])
+    @items = @subscription.feed.items.page(params[:page])
   end
 
   def new
     url = params[:url]
-    owned_feeds.find_by(url: url).try do |feed|
-      return redirect_to(feed, notice: I18n.t('messages.feed_already_registed', url: url))
+    owned_subscriptions.joins(:feed).merge(Feed.where(url: url)).first.try do |subscription|
+      return redirect_to(subscription, notice: I18n.t('messages.feed_already_registed', url: url))
     end
-    @feed = Feed.load_by_url(url)
+    feed = Feed.find_or_initialize_by(url: url)
+    feed.load! if feed.new_record?
+    @subscription = current_user.subscriptions.build(feed: feed)
   end
 
   def create
-    @feed = owned_feeds.build(feed_params)
-
-    if @feed.save
-      @feed.load!
+    @subscription = owned_subscriptions.build(subscription_params.permit(:title, :tag_list, feed_attributes: [:url]))
+    if @subscription.subscribe
       redirect_to root_url
     else
       render :new
@@ -28,8 +28,8 @@ class SubscriptionsController < ApplicationController
   end
 
   def update
-    @feed = owned_feeds.find(params[:id])
-    @feed.update_attributes!(feed_params)
+    @subscription = owned_subscriptions.find(params[:id])
+    @subscription.update_attributes!(subscription_params.permit(:title, :tag_list))
     respond_to do |format|
       format.js
       format.html { redirect_to action: :index }
@@ -39,7 +39,7 @@ class SubscriptionsController < ApplicationController
   def import
     if params[:file].blank?
       flash[:alert] = 'Select OPML file.'
-      return redirect_to(upload_feeds_path)
+      return redirect_to(upload_subscriptions_path)
     end
 
     Feed.import!(current_user, params[:file].read)
@@ -47,16 +47,16 @@ class SubscriptionsController < ApplicationController
   end
 
   def destroy
-    Feed.destroy(params[:id])
-    redirect_to(Feed)
+    Subscription.destroy(params[:id])
+    redirect_to(Subscription)
   end
 
   private
-  def owned_feeds
+  def owned_subscriptions
     current_user.subscriptions
   end
 
-  def feed_params
-    params.require(:feed).permit(:url, :title, :link_url, :description, :tag_list)
+  def subscription_params
+    params.require(:subscription)
   end
 end

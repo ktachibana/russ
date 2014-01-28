@@ -8,6 +8,8 @@ class Feed < ActiveRecord::Base
   has_one :latest_item, class_name: 'Item'
   acts_as_taggable
 
+  accepts_nested_attributes_for :items
+
   validates :user_id, presence: true
   validates :url, presence: true, length: { maximum: 2048 }
   validates :title, presence: true, length: { maximum: 255 }
@@ -15,7 +17,7 @@ class Feed < ActiveRecord::Base
   validates :description, length: { maximum: 4096 }
 
   scope :search, ->(conditions) {
-    scope = all
+    scope = self
     conditions[:tag].presence.try do |tag_names|
       scope = scope.tagged_with(tag_names)
     end
@@ -39,21 +41,23 @@ class Feed < ActiveRecord::Base
     def load!
       self.class.load_rss(url) do |rss|
         update_by_rss!(rss)
-        save
 
-        rss.items.each do |loaded_item|
+        attributes = rss.items.map do |loaded_item|
           guid = loaded_item.try(:guid).try(:content)
 
           item = guid && items.find_by(guid: guid)
           item ||= items.find_by(link: loaded_item.link)
-          item ||= items.build
-          item.link = loaded_item.link
-          item.title = loaded_item.title
-          item.guid = guid
-          item.published_at = loaded_item.date
-          item.description = loaded_item.description
-          item.save
+          {
+            link: loaded_item.link,
+            title: loaded_item.title,
+            guid: guid,
+            published_at: loaded_item.date,
+            description: loaded_item.description
+          }.tap do |attributes|
+            attributes[:id] = item.id if item
+          end
         end
+        self.items_attributes = attributes
       end
     rescue => e
       Rails.logger.error(e)

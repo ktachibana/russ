@@ -15,7 +15,7 @@ describe SubscriptionsController do
       assigns(:subscriptions).should =~ subscriptions
     end
 
-    it '特定のタグがついたFeedだけに絞り込める' do
+    it '特定のタグがついたSubscriptionだけに絞り込める' do
       subscriptions = %w(tag1 tag2).map { |tag| create(:subscription, user: user, tag_list: tag) }
       get :index, tag: %w(tag1)
       response.should be_success
@@ -30,65 +30,80 @@ describe SubscriptionsController do
       get :new, url: mock_rss_url
 
       response.should be_success
-      assigns(:feed).should be_present
+      subscription = assigns(:subscription)
+      subscription.should be_present
+      subscription.feed.title.should == 'RSS Title'
     end
 
-    it '同じURLのフィードを登録しようとするとリダイレクト' do
-      feed = create(:feed, user: user, url: mock_rss_url)
+    it '登録済みのフィードのURLを指定するとリダイレクト' do
+      subscription = create(:subscription, user: user, feed: create(:feed, user: user, url: mock_rss_url))
       get :new, url: mock_rss_url
-      response.should redirect_to(feed_path(feed))
+      response.should redirect_to(subscription_path(subscription))
       flash[:notice].should == I18n.t('messages.feed_already_registed', url: mock_rss_url)
+    end
+
+    it '既存のフィードのURLを指定したときは再読み込みはしない' do
+      feed = create(:feed, user: user)
+      WebMock.stub_request(:get, feed.url).to_raise('test fail')
+      get :new, url: feed.url
+      response.should be_success
     end
   end
 
   describe 'GET :show' do
-    let(:feed) { create(:feed, user: user) }
+    let(:subscription) { create(:subscription, user: user) }
 
     it 'Feedを表示できる' do
-      get :show, id: feed.id
-      assigns(:feed).should == feed
+      get :show, id: subscription.id
+      assigns(:subscription).should == subscription
     end
   end
 
   describe 'POST :create' do
-    it 'Feedを登録できる' do
+    it 'Subscriptionを登録できる' do
+      mock_rss!
       expect {
-        Feed.any_instance.should_receive(:load!)
-        post :create, feed: attributes_for(:feed)
-      }.to change(Feed, :count).by(1)
+        post :create, subscription: { title: '', tag_list: '', feed_attributes: { url: mock_rss_url } }
+      }.to change(Subscription, :count).by(1)
     end
 
     it 'パラメータが不正だと登録されない' do
       expect {
-        post :create, feed: attributes_for(:feed).except(:title)
-      }.to_not change(Feed, :count)
+        post :create, subscription: { title: '', tag_list: '' }
+      }.to_not change(Subscription, :count)
       response.should render_template(:new)
     end
 
     it 'タグを登録できる' do
-      Feed.any_instance.should_receive(:load!)
-      post :create, feed: attributes_for(:feed, tag_list: 'tag1, tag2')
+      mock_rss!
+      post :create, subscription: { title: '', tag_list: 'tag1, tag2', feed_attributes: { url: mock_rss_url }}
       response.should redirect_to(root_url)
-      assigns(:feed).reload.tag_list.should =~ %w(tag1 tag2)
+      assigns(:subscription).reload.tag_list.should =~ %w(tag1 tag2)
     end
   end
 
   describe 'POST :update' do
-    let(:feed) { create(:feed, user: user) }
+    let(:subscription) { create(:subscription, user: user) }
 
-    it 'Feedを更新できる' do
-      put :update, id: feed.id, feed: { title: 'NewTitle', tag_list: 'tag1, tag2' }
-      feed.reload
-      feed.title.should == 'NewTitle'
-      feed.tag_list.should == %w(tag1 tag2)
+    it 'Subscriptionを更新できる' do
+      put :update, id: subscription.id, subscription: { title: 'NewTitle', tag_list: 'tag1, tag2' }
+      subscription.reload
+      subscription.title.should == 'NewTitle'
+      subscription.tag_list.should == %w(tag1 tag2)
     end
 
-    it 'Taggingを削除できる' do
-      feed.update_attributes!(tag_list: %w(tag1 tag2))
-      put :update, id: feed.id, feed: { tag_list: 'tag1' }
-      feed.reload
-      feed.tag_list.should == %w(tag1)
+    it 'タグを削除できる' do
+      subscription.update_attributes!(tag_list: %w(tag1 tag2))
+      put :update, id: subscription.id, subscription: { tag_list: 'tag1' }
+      subscription.reload
+      subscription.tag_list.should == %w(tag1)
       ActsAsTaggableOn::Tagging.count.should == 1
+    end
+
+    it 'フィードのURLは変更できない' do
+      expect {
+        put :update, id: subscription.id, subscription: { feed_attributes: { url: 'http://new.com/rss.xml' } }
+      }.not_to change { subscription.reload.feed.url }
     end
   end
 
@@ -113,22 +128,22 @@ describe SubscriptionsController do
     it 'アップロードするファイルを選択しないとflashメッセージを表示' do
       post :import
       flash[:alert].should == 'Select OPML file.'
-      response.should redirect_to(upload_feeds_path)
+      response.should redirect_to(upload_subscriptions_path)
     end
   end
 
   describe '#destroy' do
-    let!(:feed) { create(:feed, user: user) }
+    let!(:subscription) { create(:subscription, user: user) }
 
-    it 'Feedを削除できる' do
+    it 'Subscriptionを削除できる' do
       expect {
-        delete :destroy, id: feed.id
-      }.to change(Feed, :count).by(-1)
+        delete :destroy, id: subscription.id
+      }.to change(Subscription, :count).by(-1)
     end
 
     it 'Feed一覧にリダイレクトする' do
-      delete :destroy, id: feed.id
-      response.should redirect_to(feeds_path)
+      delete :destroy, id: subscription.id
+      response.should redirect_to(subscriptions_path)
     end
   end
 end

@@ -25,15 +25,15 @@
             = link_to 'RuSS', root_path, class: 'navbar-brand'
           .collapse.navbar-collapse.navbar-ex1-collapse
             %ul.nav.navbar-nav
-              %li= link_to 'Feeds', feeds_path
+              %li= link_to 'Feeds', subscriptions_path
             %ul.nav.navbar-nav.navbar-right
               %li.dropdown
                 = link_to '#', class: 'dropdown-toggle', data: { toggle: :dropdown } do
                   = current_user.email
                   %b.caret
                 %ul.dropdown-menu
-                  %li= link_to 'RuSS (Bookmarklet)', "javascript:location.href='#{new_feed_url(url: '')}'+escape(location.href);"
-                  %li= link_to 'Import OPML', upload_feeds_path
+                  %li= link_to 'RuSS (Bookmarklet)', "javascript:location.href='#{new_subscription_url(url: '')}'+escape(location.href);"
+                  %li= link_to 'Import OPML', upload_subscriptions_path
                   %li= link_to 'Sign out', destroy_user_session_path, method: :delete
       = yield
     = javascript_include_tag 'application'

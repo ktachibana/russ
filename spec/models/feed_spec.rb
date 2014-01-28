@@ -104,9 +104,9 @@ describe Feed do
     end
 
     let!(:feed) do
-      feed = Feed.load_by_url('http://test.com/rss.xml')
+      feed = Feed.new(url: 'http://test.com/rss.xml')
       feed.user = create(:user)
-      feed.save!
+      #feed.save!
       feed.load!
       feed
     end
@@ -122,6 +122,7 @@ describe Feed do
     end
 
     it '再度loadすると既存のものは更新になる' do
+      feed.save!
       WebMock.stub_request(:get, 'http://test.com/rss.xml').to_return(body: <<-EOS)
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -141,7 +142,7 @@ describe Feed do
 
     <item>
       <title>Item Title</title>
-      <link>http://test.com/content/1</link>
+      <link>http://test.com/content/3</link>
       <guid>2</guid>
       <pubDate>Mon, 20 Feb 2012 16:04:19 +0900</pubDate>
       <description><![CDATA[Item description]]></description>
@@ -154,7 +155,7 @@ describe Feed do
       feed.title.should == 'New Title'
       feed.description.should == 'New description'
       feed.link_url.should == 'http://test.com/new-content'
-      feed.should_not be_changed
+      feed.should be_changed
 
       feed.should have(2).items
       feed.items[0].tap do |item|
@@ -165,13 +166,14 @@ describe Feed do
       end
       feed.items[1].tap do |item|
         item.title.should == 'Item Title'
-        item.link.should == 'http://test.com/content/1'
+        item.link.should == 'http://test.com/content/3'
         item.published_at.should == Time.new(2012, 2, 20, 16, 4, 19)
         item.description == 'Item description'
       end
     end
 
     it 'guidが無い時はlinkで重複を判断する' do
+      feed.save!
       WebMock.stub_request(:get, 'http://test.com/rss.xml').to_return(body: <<-EOS)
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -199,6 +201,8 @@ describe Feed do
       EOS
 
       feed.load!
+      feed.save!
+      feed.reload
       feed.should have(2).items
       feed.items[0].tap do |item|
         item.link.should == 'http://test.com/content/2'

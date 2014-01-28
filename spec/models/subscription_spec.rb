@@ -9,7 +9,6 @@ describe Subscription do
 
   describe 'validations' do
     it { should validate_presence_of(:user_id) }
-    it { should validate_presence_of(:feed_id) }
     it { should validate_uniqueness_of(:feed_id).scoped_to(:user_id) }
   end
 
