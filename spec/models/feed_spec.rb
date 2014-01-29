@@ -19,6 +19,7 @@ describe Feed do
     it { should belong_to(:user) }
     it { should have_many(:items).dependent(:destroy) }
     it { should have_many(:tags) }
+    it { should have_many(:subscriptions).dependent(:destroy) }
   end
 
   describe '.acts_as_tagging_on' do
@@ -106,7 +107,7 @@ describe Feed do
     let!(:feed) do
       feed = Feed.new(url: 'http://test.com/rss.xml')
       feed.user = create(:user)
-      #feed.save!
+      #subscription.save!
       feed.load!
       feed
     end
@@ -238,19 +239,19 @@ describe Feed do
 </opml>
       EOS
       result = Feed.import!(create(:user), opml)
-      result[0].tap do |feed|
-        feed.title.should == 'MyText'
-        feed.url.should == 'http://test.com/rss.xml'
-        feed.link_url.should == 'http://test.com/content'
-        feed.description.should be_nil
+      result[0].tap do |subscription|
+        subscription.feed.title.should == 'MyText'
+        subscription.feed.url.should == 'http://test.com/rss.xml'
+        subscription.feed.link_url.should == 'http://test.com/content'
+        subscription.feed.description.should be_nil
       end
-      result[1].tap do |feed|
-        feed.title.should == 'Title'
-        feed.url.should == 'http://category.com/rss.xml'
-        feed.link_url.should == 'http://category.com/'
-        feed.should have(1).tag
-        feed.tag_list.should == %w(category)
-        feed.description.should be_nil
+      result[1].tap do |subscription|
+        subscription.feed.title.should == 'Title'
+        subscription.feed.url.should == 'http://category.com/rss.xml'
+        subscription.feed.link_url.should == 'http://category.com/'
+        subscription.feed.description.should be_nil
+        subscription.should have(1).tag
+        subscription.tag_list.should == %w(category)
       end
     end
   end

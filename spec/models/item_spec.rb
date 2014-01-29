@@ -9,7 +9,9 @@ describe Item do
     describe ':tag' do
       it 'tagパラメータでタグ検索できる' do
         items = [%w(a), %w(a b), nil].map do |tag|
-          create(:item, feed: create(:feed, tag_list: tag))
+          create(:item) do |item|
+            create(:subscription, feed: item.feed, tag_list: tag)
+          end
         end
         Item.search(tag: %w(a b)).should =~ items.values_at(1)
         Item.search(tag: %w(a)).should =~ items.values_at(0, 1)
@@ -43,15 +45,15 @@ describe Item do
       user = create(:user)
       other_user = create(:user)
 
-      create(:feed, user: user) do |feed|
-        create(:item, feed: feed, title: '3')
+      create(:subscription, user: user) do |subscription|
+        create(:item, feed: subscription.feed, title: '3')
       end
-      create(:feed, user: user) do |feed|
-        create(:item, feed: feed, title: '2')
-        create(:item, feed: feed, title: '1')
+      create(:subscription, user: user) do |subscription|
+        create(:item, feed: subscription.feed, title: '2')
+        create(:item, feed: subscription.feed, title: '1')
       end
-      create(:feed, user: other_user) do |feed|
-        create(:item, feed: feed, title: '4')
+      create(:subscription, user: other_user) do |subscription|
+        create(:item, feed: subscription.feed, title: '4')
       end
 
       Item.user(user).map(&:title).should =~ %w[1 2 3]

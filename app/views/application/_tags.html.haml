@@ -1,5 +1,5 @@
 - tag_names = params[:tag] || []
-- current_user.feeds.tag_counts.each do |tag|
+- current_user.subscriptions.tag_counts.each do |tag|
   - active = tag.name.in?(tag_names)
   .btn-group.btn-group-sm.tag-button
     = link_to "#{tag.name} (#{tag.count})", params.merge(tag: [tag.name]), class: %W(btn) + (active ? %w(btn-info active) : %w(btn-default))

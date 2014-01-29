@@ -1,12 +1,13 @@
 - hide_feed = local_assigns[:hide_feed]
+- subscription = item.feed.subscriptions.find_by(user: current_user)
 .panel.panel-default
   .panel-heading
     = link_to item.title, item.link, target: '_blank'
     - unless hide_feed
       .pull-right
         %small
-          = link_to item.feed.title, item.feed.link_url
-          = link_to '■', item.feed
+          = link_to subscription.user_title, item.feed.link_url
+          = link_to '■', subscription
     .clearfix
   .panel-body
     = simple_format item.description

@@ -5,6 +5,8 @@ describe RootController do
   before { sign_in(user) }
 
   describe 'GET :index' do
+    render_views
+
     it 'サインインが必要' do
       sign_out(user)
       get :index
@@ -17,9 +19,9 @@ describe RootController do
     end
 
     it '最近のItemを取得する' do
-      create(:feed, user: user).tap do |feed|
+      create(:subscription, user: user).tap do |subscription|
         26.times do |i|
-          create(:item, feed: feed, title: i.to_s, published_at: i.days.ago)
+          create(:item, feed: subscription.feed, title: i.to_s, published_at: i.days.ago)
         end
       end
 

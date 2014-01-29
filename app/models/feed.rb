@@ -5,6 +5,7 @@ require 'rexml/document'
 class Feed < ActiveRecord::Base
   belongs_to :user
   has_many :items, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
   has_one :latest_item, class_name: 'Item'
   acts_as_taggable
 
@@ -102,15 +103,16 @@ class Feed < ActiveRecord::Base
       link_url = attrs['htmlUrl']
 
       if url && title
-        result << user.feeds.create!(url: url, title: title, link_url: link_url)
+        feed = Feed.create!(url: url, title: title, link_url: link_url, user: user)
+        result << user.subscriptions.create!(feed: feed)
       else title
         outline.elements.each('outline') do |child|
           child_attrs = child.attributes
           feed_title = child_attrs['text'] || child_attrs['title']
           url = child_attrs['xmlUrl']
           link_url = child_attrs['htmlUrl']
-          feed = user.feeds.create!(url: url, title: feed_title, link_url: link_url, tag_list: [title])
-          result << feed
+          feed = Feed.create!(url: url, title: feed_title, link_url: link_url, user: user)
+          result << user.subscriptions.create!(feed: feed, tag_list: [title])
         end
       end
     end

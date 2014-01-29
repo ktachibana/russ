@@ -4,8 +4,8 @@ class User < ActiveRecord::Base
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :validatable, :rememberable
 
-  has_many :feeds, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
+  has_many :feeds, through: :subscriptions
 
   def subscribe(url, options = {})
     ActiveRecord::Base.transaction do

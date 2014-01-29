@@ -1,8 +1,8 @@
-%h1.page-header= link_to @feed.title, @feed.link_url
+%h1.page-header= link_to @subscription.user_title, @subscription.feed.link_url
 
-%p= @feed.description
+%p= @subscription.feed.description
 %small
-  = link_to @feed.url, @feed.url, target: '_blank'
+  = link_to @subscription.feed.url, @subscription.feed.url, target: '_blank'
 
 %p= render @items, hide_feed: true
 

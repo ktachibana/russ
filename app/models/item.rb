@@ -2,11 +2,11 @@ class Item < ActiveRecord::Base
   belongs_to :feed
 
   default_scope { order(published_at: :desc) }
-  scope :user, ->(user) { joins(:feed).includes(:feed).merge(Feed.where(user_id: user.id)) }
+  scope :user, ->(user) { joins(feed: :subscriptions).includes(feed: :subscriptions).merge(Subscription.where(user_id: user.id)) }
   scope :search, ->(conditions) {
     scope = self
     conditions[:tag].presence.try do |tags|
-      scope = scope.joins(:feed).merge(Feed.tagged_with(tags))
+      scope = scope.joins(feed: :subscriptions).merge(Subscription.tagged_with(tags))
     end
     scope = scope.page(conditions[:page])
     scope
