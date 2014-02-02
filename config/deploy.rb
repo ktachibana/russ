@@ -1,5 +1,6 @@
 require 'bundler/capistrano'
 require 'capistrano-rbenv'
+require 'dotenv/capistrano'
 set :application, 'russ'
 set :repository, 'https://github.com/ktachibana/russ.git'
 set :deploy_via, :copy

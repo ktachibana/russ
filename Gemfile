@@ -76,3 +76,4 @@ gem 'kaminari'
 gem 'whenever', require: false
 gem 'unicorn'
 gem 'acts-as-taggable-on'
+gem 'dotenv-rails'
