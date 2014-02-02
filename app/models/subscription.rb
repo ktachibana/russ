@@ -24,7 +24,6 @@ class Subscription < ActiveRecord::Base
     if persisted_feed
       self.feed = persisted_feed
     else
-      feed.user = user
       feed.load!
       feed.save!
     end

@@ -36,14 +36,14 @@ describe SubscriptionsController do
     end
 
     it '登録済みのフィードのURLを指定するとリダイレクト' do
-      subscription = create(:subscription, user: user, feed: create(:feed, user: user, url: mock_rss_url))
+      subscription = create(:subscription, user: user, feed: create(:feed, url: mock_rss_url))
       get :new, url: mock_rss_url
       response.should redirect_to(subscription_path(subscription))
       flash[:notice].should == I18n.t('messages.feed_already_registed', url: mock_rss_url)
     end
 
     it '既存のフィードのURLを指定したときは再読み込みはしない' do
-      feed = create(:feed, user: user)
+      feed = create(:feed)
       WebMock.stub_request(:get, feed.url).to_raise('test fail')
       get :new, url: feed.url
       response.should be_success

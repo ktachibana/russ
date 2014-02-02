@@ -3,7 +3,6 @@ require 'rss'
 require 'rexml/document'
 
 class Feed < ActiveRecord::Base
-  belongs_to :user
   has_many :items, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
   has_one :latest_item, class_name: 'Item'
@@ -11,7 +10,6 @@ class Feed < ActiveRecord::Base
 
   accepts_nested_attributes_for :items
 
-  validates :user_id, presence: true
   validates :url, presence: true, length: { maximum: 2048 }
   validates :title, presence: true, length: { maximum: 255 }
   validates :link_url, presence: true, length: { maximum: 2048 }
@@ -103,7 +101,7 @@ class Feed < ActiveRecord::Base
       link_url = attrs['htmlUrl']
 
       if url && title
-        feed = Feed.create!(url: url, title: title, link_url: link_url, user: user)
+        feed = Feed.create!(url: url, title: title, link_url: link_url)
         result << user.subscriptions.create!(feed: feed)
       else title
         outline.elements.each('outline') do |child|
@@ -111,7 +109,8 @@ class Feed < ActiveRecord::Base
           feed_title = child_attrs['text'] || child_attrs['title']
           url = child_attrs['xmlUrl']
           link_url = child_attrs['htmlUrl']
-          feed = Feed.create!(url: url, title: feed_title, link_url: link_url, user: user)
+
+          feed = Feed.create!(url: url, title: feed_title, link_url: link_url)
           result << user.subscriptions.create!(feed: feed, tag_list: [title])
         end
       end

@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe Feed do
   describe 'validations' do
-    it { should validate_presence_of(:user_id) }
-
     it { should validate_presence_of(:url) }
     it { should ensure_length_of(:url).is_at_most(2048) }
 
@@ -16,15 +14,13 @@ describe Feed do
   end
 
   describe 'associations' do
-    it { should belong_to(:user) }
     it { should have_many(:items).dependent(:destroy) }
     it { should have_many(:tags) }
     it { should have_many(:subscriptions).dependent(:destroy) }
   end
 
   describe '.acts_as_tagging_on' do
-    let(:user) { create(:user) }
-    let(:feed) { create(:feed, user: user) }
+    let(:feed) { create(:feed) }
 
     it '一括して追加できる' do
       feed.update_attributes!(tag_list: %w(tag1 tag2))
@@ -42,8 +38,10 @@ describe Feed do
     end
 
     it 'フィードとタグを一括して登録できる' do
-      feed = Feed.create(attributes_for(:feed, user_id: user.id, tag_list: 'tagname'))
+      feed = Feed.create(attributes_for(:feed, tag_list: 'tagname'))
       feed.tag_list.should == %w(tagname)
+      Feed.count.should == 1
+      ActsAsTaggableOn::Tagging.count.should == 1
     end
   end
 
@@ -105,11 +103,7 @@ describe Feed do
     end
 
     let!(:feed) do
-      feed = Feed.new(url: 'http://test.com/rss.xml')
-      feed.user = create(:user)
-      #subscription.save!
-      feed.load!
-      feed
+      build(:feed, url: 'http://test.com/rss.xml').tap(&:load!)
     end
 
     it 'RSSからアイテムを読み込む' do

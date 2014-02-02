@@ -6,11 +6,4 @@ class User < ActiveRecord::Base
 
   has_many :subscriptions, dependent: :destroy
   has_many :feeds, through: :subscriptions
-
-  def subscribe(url, options = {})
-    ActiveRecord::Base.transaction do
-      feed = feeds.find_by(url: url) || feeds.load_by_url(url).tap(&:save!)
-      return subscriptions.create!(options.merge(feed: feed))
-    end
-  end
 end
