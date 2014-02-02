@@ -24,6 +24,8 @@ describe SubscriptionsController do
   end
 
   describe 'GET :new' do
+    render_views
+
     it 'Feedの情報をURLからロードできる' do
       mock_rss!
 

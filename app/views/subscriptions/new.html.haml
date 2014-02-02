@@ -1,20 +1,19 @@
-= form_for @feed, class: 'form' do |f|
-  .link_url
-    = f.hidden_field :link_url
-    = link_to f.object.link_url, f.object.link_url, target: '_blank'
+= form_for @subscription, class: 'form' do |f|
+  .feed
+    = f.fields_for :feed do |ff|
+      = ff.hidden_field :url
+      = link_to ff.object.link_url, target: '_blank' do
+        %h1= ff.object.title
+      .description.well= simple_format ff.object.description
   .form-group
     = f.label :title
-    = f.text_field :title, class: 'form-control'
-  = f.hidden_field :url
+    = f.text_field :title, class: 'form-control', placeholder: @subscription.feed.title
   .form-group
     %div
       = f.label :tags
       = f.text_field :tag_list, class: 'form-control'
     .owned-tags
-      - current_user.feeds.tag_counts.each do |tag|
+      - current_user.subscriptions.tag_counts.each do |tag|
         %span.label.label-default= tag.name
-  .description
-    = f.hidden_field :description
-    .well= simple_format f.object.description
 
   = f.submit class: 'btn btn-primary'
