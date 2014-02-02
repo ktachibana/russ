@@ -81,29 +81,11 @@ describe Feed do
 
   describe '#load!' do
     before do
-      WebMock.stub_request(:get, 'http://test.com/rss.xml').to_return(body: <<-EOS)
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>RSS Title</title>
-    <link>http://test.com/content</link>
-    <atom:link rel="self" type="application/rss+xml" href="http://test.com/rss.xml?rss=2.0"/>
-    <description>My description</description>
-
-    <item>
-      <title>Item Title</title>
-      <link>http://test.com/content/1</link>
-      <guid>1</guid>
-      <pubDate>Mon, 20 Feb 2012 16:04:19 +0900</pubDate>
-      <description><![CDATA[Item description]]></description>
-    </item>
-  </channel>
-</rss>
-      EOS
+      WebMock.stub_request(:get, 'http://test.com/rss.xml').to_return(body: rss_data_one_item)
     end
 
     let!(:feed) do
-      build(:feed, url: 'http://test.com/rss.xml').tap(&:load!)
+      Feed.new(url: 'http://test.com/rss.xml').tap(&:load!)
     end
 
     it 'RSSからアイテムを読み込む' do
@@ -118,33 +100,7 @@ describe Feed do
 
     it '再度loadすると既存のものは更新になる' do
       feed.save!
-      WebMock.stub_request(:get, 'http://test.com/rss.xml').to_return(body: <<-EOS)
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>New Title</title>
-    <link>http://test.com/new-content</link>
-    <atom:link rel="self" type="application/rss+xml" href="http://test.com/rss.xml?rss=2.0"/>
-    <description>New description</description>
-
-    <item>
-      <title>New Title</title>
-      <link>http://test.com/content/2</link>
-      <guid>1</guid>
-      <pubDate>Wed, 22 Feb 2012 18:24:29 +0900</pubDate>
-      <description><![CDATA[New item description]]></description>
-    </item>
-
-    <item>
-      <title>Item Title</title>
-      <link>http://test.com/content/3</link>
-      <guid>2</guid>
-      <pubDate>Mon, 20 Feb 2012 16:04:19 +0900</pubDate>
-      <description><![CDATA[Item description]]></description>
-    </item>
-  </channel>
-</rss>
-      EOS
+      WebMock.stub_request(:get, 'http://test.com/rss.xml').to_return(body: rss_data_two_items)
       feed.load!
 
       feed.title.should == 'New Title'
@@ -213,6 +169,21 @@ describe Feed do
       Feed.stub(:load_rss).and_raise('error!')
       Rails.logger.should_receive(:error).with { |e| e.message.should == 'error!' }
       feed.load!
+    end
+  end
+
+  describe '.load_all!' do
+    before { Feed.stub(:sleep) }
+    let!(:feed) do
+      WebMock.stub_request(:get, mock_rss_url).to_return(body: rss_data_one_item)
+      Feed.new(url: mock_rss_url).tap(&:load!).tap(&:save!)
+    end
+
+    it 'すべてのFeedを更新する' do
+      WebMock.stub_request(:get, mock_rss_url).to_return(body: rss_data_two_items)
+      expect {
+        Feed.load_all!
+      }.to change(Item, :count).from(1).to(2)
     end
   end
 

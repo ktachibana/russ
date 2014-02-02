@@ -78,6 +78,7 @@ class Feed < ActiveRecord::Base
         find_each do |feed|
           sleep(5)
           feed.load!
+          feed.save
         end
       end
 
