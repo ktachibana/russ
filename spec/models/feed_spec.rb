@@ -58,27 +58,6 @@ describe Feed do
     end
   end
 
-  describe '.load_by_url' do
-    it 'urlを指定するとそのRSSをロードしてnewする' do
-      WebMock.stub_request(:get, 'http://test.com/rss.xml').to_return(body: <<-EOS)
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>RSS Title</title>
-    <link>http://test.com/content</link>
-    <atom:link rel="self" type="application/rss+xml" href="http://test.com/rss.xml?rss=2.0"/>
-    <description>My description</description>
-  </channel>
-</rss>
-      EOS
-      feed = Feed.load_by_url('http://test.com/rss.xml')
-      feed.title.should == 'RSS Title'
-      feed.url.should == 'http://test.com/rss.xml'
-      feed.link_url.should == 'http://test.com/content'
-      feed.description.should == 'My description'
-    end
-  end
-
   describe '#load!' do
     before do
       WebMock.stub_request(:get, 'http://test.com/rss.xml').to_return(body: rss_data_one_item)
@@ -89,6 +68,11 @@ describe Feed do
     end
 
     it 'RSSからアイテムを読み込む' do
+      feed.title.should == 'RSS Title'
+      feed.url.should == 'http://test.com/rss.xml'
+      feed.link_url.should == 'http://test.com/content'
+      feed.description.should == 'My description'
+
       feed.should have(1).item
       item = feed.items.first
       item.title.should == 'Item Title'

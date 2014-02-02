@@ -64,15 +64,6 @@ class Feed < ActiveRecord::Base
     end
 
     module ClassMethods
-      def load_by_url(url)
-        load_rss(url) do |rss|
-          new do |m|
-            m.url = url
-            m.update_by_rss!(rss)
-          end
-        end
-      end
-
       def load_all!
         logger.info('start load_all!')
         find_each do |feed|
