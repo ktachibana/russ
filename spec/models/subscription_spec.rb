@@ -12,6 +12,15 @@ describe Subscription do
     it { should validate_uniqueness_of(:feed_id).scoped_to(:user_id) }
   end
 
+  describe '.default_scope' do
+    it 'created_atの新しい順' do
+      subscriptions = [3, 1, 2].map do |n|
+        create(:subscription, created_at: n.days.ago)
+      end
+      Subscription.all.should == subscriptions.values_at(1, 2, 0)
+    end
+  end
+
   describe '#user_title' do
     subject { subscription.user_title }
     let(:subscription) { create(:subscription, title: title) }

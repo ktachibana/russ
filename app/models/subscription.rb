@@ -8,6 +8,8 @@ class Subscription < ActiveRecord::Base
   validates :user_id, presence: true
   validates :feed_id, uniqueness: { scope: :user_id }
 
+  default_scope -> { order(created_at: :desc) }
+
   scope :search, ->(conditions) {
     scope = self
     conditions[:tag].presence.try do |tag_names|
