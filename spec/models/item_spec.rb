@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Item do
   describe 'associations' do
-    it { should belong_to(:feed) }
+    it { is_expected.to belong_to(:feed) }
   end
 
   describe '.search' do
@@ -13,10 +13,10 @@ describe Item do
             create(:subscription, feed: item.feed, tag_list: tag)
           end
         end
-        Item.search(tag: %w(a b)).should =~ items.values_at(1)
-        Item.search(tag: %w(a)).should =~ items.values_at(0, 1)
-        Item.search(tag: %w(b)).should =~ items.values_at(1)
-        Item.search(tag: %w()).should =~ items
+        expect(Item.search(tag: %w(a b))).to match_array(items.values_at(1))
+        expect(Item.search(tag: %w(a))).to match_array(items.values_at(0, 1))
+        expect(Item.search(tag: %w(b))).to match_array(items.values_at(1))
+        expect(Item.search(tag: %w())).to match_array(items)
       end
     end
 
@@ -24,9 +24,9 @@ describe Item do
       let(:per_page) { Kaminari.config.default_per_page }
       it 'ページを絞る' do
         create_list(:item, per_page + 1)
-        Item.search(page: 1).count.should == per_page
-        Item.search(page: 2).count.should == 1
-        Item.search(page: nil).count.should == per_page
+        expect(Item.search(page: 1).count).to eq(per_page)
+        expect(Item.search(page: 2).count).to eq(1)
+        expect(Item.search(page: nil).count).to eq(per_page)
       end
     end
   end
@@ -36,7 +36,7 @@ describe Item do
       items = [3, 1, 2].map do |n|
         create(:item, published_at: n.days.ago)
       end
-      Item.all.should == items.values_at(1, 2, 0)
+      expect(Item.all).to eq(items.values_at(1, 2, 0))
     end
   end
 
@@ -56,7 +56,7 @@ describe Item do
         create(:item, feed: subscription.feed, title: '4')
       end
 
-      Item.user(user).map(&:title).should =~ %w[1 2 3]
+      expect(Item.user(user).map(&:title)).to match_array(%w[1 2 3])
     end
   end
 end

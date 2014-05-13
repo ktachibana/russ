@@ -2,14 +2,14 @@ require 'spec_helper'
 
 describe Subscription do
   describe 'associations' do
-    it { should belong_to(:user) }
-    it { should belong_to(:feed) }
-    it { should have_many(:tags).class_name('ActsAsTaggableOn::Tag') }
+    it { is_expected.to belong_to(:user) }
+    it { is_expected.to belong_to(:feed) }
+    it { is_expected.to have_many(:tags).class_name('ActsAsTaggableOn::Tag') }
   end
 
   describe 'validations' do
-    it { should validate_presence_of(:user_id) }
-    it { should validate_uniqueness_of(:feed_id).scoped_to(:user_id) }
+    it { is_expected.to validate_presence_of(:user_id) }
+    it { is_expected.to validate_uniqueness_of(:feed_id).scoped_to(:user_id) }
   end
 
   describe '.default_scope' do
@@ -17,7 +17,7 @@ describe Subscription do
       subscriptions = [3, 1, 2].map do |n|
         create(:subscription, created_at: n.days.ago)
       end
-      Subscription.all.should == subscriptions.values_at(1, 2, 0)
+      expect(Subscription.all).to eq(subscriptions.values_at(1, 2, 0))
     end
   end
 
@@ -29,7 +29,7 @@ describe Subscription do
       let(:title) { nil }
 
       it 'feedのtitleを返す' do
-        should == subscription.feed.title
+        is_expected.to eq(subscription.feed.title)
       end
     end
 
@@ -37,7 +37,7 @@ describe Subscription do
       let(:title) { 'MyTitle' }
 
       it 'titleを返す' do
-        should == subscription.title
+        is_expected.to eq(subscription.title)
       end
     end
   end

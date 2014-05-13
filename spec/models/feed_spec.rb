@@ -2,21 +2,21 @@ require 'spec_helper'
 
 describe Feed do
   describe 'validations' do
-    it { should validate_presence_of(:url) }
-    it { should ensure_length_of(:url).is_at_most(2048) }
+    it { is_expected.to validate_presence_of(:url) }
+    it { is_expected.to ensure_length_of(:url).is_at_most(2048) }
 
-    it { should validate_presence_of(:title) }
-    it { should ensure_length_of(:title).is_at_most(255) }
+    it { is_expected.to validate_presence_of(:title) }
+    it { is_expected.to ensure_length_of(:title).is_at_most(255) }
 
-    it { should ensure_length_of(:link_url).is_at_most(2048) }
+    it { is_expected.to ensure_length_of(:link_url).is_at_most(2048) }
 
-    it { should ensure_length_of(:description).is_at_most(4096) }
+    it { is_expected.to ensure_length_of(:description).is_at_most(4096) }
   end
 
   describe 'associations' do
-    it { should have_many(:items).dependent(:destroy) }
-    it { should have_many(:tags) }
-    it { should have_many(:subscriptions).dependent(:destroy) }
+    it { is_expected.to have_many(:items).dependent(:destroy) }
+    it { is_expected.to have_many(:tags) }
+    it { is_expected.to have_many(:subscriptions).dependent(:destroy) }
   end
 
   describe '.acts_as_tagging_on' do
@@ -24,24 +24,24 @@ describe Feed do
 
     it '一括して追加できる' do
       feed.update_attributes!(tag_list: %w(tag1 tag2))
-      feed.tags.map(&:name).should == %w(tag1 tag2)
+      expect(feed.tags.map(&:name)).to eq(%w(tag1 tag2))
     end
 
     it '削除できる' do
       feed.update_attributes!(tag_list: %w(tag1 tag2))
-      ActsAsTaggableOn::Tag.pluck(:name).should == %w(tag1 tag2)
+      expect(ActsAsTaggableOn::Tag.pluck(:name)).to eq(%w(tag1 tag2))
 
       feed.reload
       feed.update_attributes!(tag_list: %w(tag1 tag3))
-      feed.tags.map(&:name).should == %w(tag1 tag3)
-      ActsAsTaggableOn::Tagging.count.should == 2
+      expect(feed.tags.map(&:name)).to eq(%w(tag1 tag3))
+      expect(ActsAsTaggableOn::Tagging.count).to eq(2)
     end
 
     it 'フィードとタグを一括して登録できる' do
       feed = Feed.create(attributes_for(:feed, tag_list: 'tagname'))
-      feed.tag_list.should == %w(tagname)
-      Feed.count.should == 1
-      ActsAsTaggableOn::Tagging.count.should == 1
+      expect(feed.tag_list).to eq(%w(tagname))
+      expect(Feed.count).to eq(1)
+      expect(ActsAsTaggableOn::Tagging.count).to eq(1)
     end
   end
 
@@ -51,9 +51,9 @@ describe Feed do
         feeds = ['tag1', 'tag1, tag2', []].map do |tags|
           create(:feed, tag_list: tags)
         end
-        Feed.search(tag: %w(tag1)).should =~ feeds.values_at(0, 1)
-        Feed.search(tag: %w(tag1 tag2)).should =~ feeds.values_at(1)
-        Feed.search(tag: %w(tag2 tag1)).should =~ feeds.values_at(1)
+        expect(Feed.search(tag: %w(tag1))).to match_array(feeds.values_at(0, 1))
+        expect(Feed.search(tag: %w(tag1 tag2))).to match_array(feeds.values_at(1))
+        expect(Feed.search(tag: %w(tag2 tag1))).to match_array(feeds.values_at(1))
       end
     end
   end
@@ -68,17 +68,17 @@ describe Feed do
     end
 
     it 'RSSからアイテムを読み込む' do
-      feed.title.should == 'RSS Title'
-      feed.url.should == 'http://test.com/rss.xml'
-      feed.link_url.should == 'http://test.com/content'
-      feed.description.should == 'My description'
+      expect(feed.title).to eq('RSS Title')
+      expect(feed.url).to eq('http://test.com/rss.xml')
+      expect(feed.link_url).to eq('http://test.com/content')
+      expect(feed.description).to eq('My description')
 
-      feed.should have(1).item
+      expect(feed.items.size).to eq(1)
       item = feed.items.first
-      item.title.should == 'Item Title'
-      item.link.should == 'http://test.com/content/1'
-      item.guid.should == '1'
-      item.published_at.should == Time.new(2012, 2, 20, 16, 4, 19)
+      expect(item.title).to eq('Item Title')
+      expect(item.link).to eq('http://test.com/content/1')
+      expect(item.guid).to eq('1')
+      expect(item.published_at).to eq(Time.new(2012, 2, 20, 16, 4, 19))
       item.description == 'Item description'
     end
 
@@ -87,22 +87,22 @@ describe Feed do
       WebMock.stub_request(:get, 'http://test.com/rss.xml').to_return(body: rss_data_two_items)
       feed.load!
 
-      feed.title.should == 'New Title'
-      feed.description.should == 'New description'
-      feed.link_url.should == 'http://test.com/new-content'
-      feed.should be_changed
+      expect(feed.title).to eq('New Title')
+      expect(feed.description).to eq('New description')
+      expect(feed.link_url).to eq('http://test.com/new-content')
+      expect(feed).to be_changed
 
-      feed.should have(2).items
+      expect(feed.items.size).to eq(2)
       feed.items[0].tap do |item|
-        item.title.should == 'New Title'
-        item.link.should == 'http://test.com/content/2'
-        item.published_at.should == Time.new(2012, 2, 22, 18, 24, 29)
+        expect(item.title).to eq('New Title')
+        expect(item.link).to eq('http://test.com/content/2')
+        expect(item.published_at).to eq(Time.new(2012, 2, 22, 18, 24, 29))
         item.description == 'New item description'
       end
       feed.items[1].tap do |item|
-        item.title.should == 'Item Title'
-        item.link.should == 'http://test.com/content/3'
-        item.published_at.should == Time.new(2012, 2, 20, 16, 4, 19)
+        expect(item.title).to eq('Item Title')
+        expect(item.link).to eq('http://test.com/content/3')
+        expect(item.published_at).to eq(Time.new(2012, 2, 20, 16, 4, 19))
         item.description == 'Item description'
       end
     end
@@ -138,26 +138,26 @@ describe Feed do
       feed.load!
       feed.save!
       feed.reload
-      feed.should have(2).items
+      expect(feed.items.size).to eq(2)
       feed.items[0].tap do |item|
-        item.link.should == 'http://test.com/content/2'
+        expect(item.link).to eq('http://test.com/content/2')
         item.description == 'New item description'
       end
       feed.items[1].tap do |item|
-        item.link.should == 'http://test.com/content/1'
+        expect(item.link).to eq('http://test.com/content/1')
         item.description == 'Item description UPDATED'
       end
     end
 
     it 'エラーが起きたときはログを出力する' do
-      Feed.stub(:load_rss).and_raise('error!')
-      Rails.logger.should_receive(:error).with { |e| e.message.should == 'error!' }
+      allow(Feed).to receive(:load_rss).and_raise('error!')
+      expect(Rails.logger).to receive(:error).with(satisfy { |e| expect(e.message).to eq('error!') })
       feed.load!
     end
   end
 
   describe '.load_all!' do
-    before { Feed.stub(:sleep) }
+    before { allow(Feed).to receive(:sleep) }
     let!(:feed) do
       WebMock.stub_request(:get, mock_rss_url).to_return(body: rss_data_one_item)
       Feed.new(url: mock_rss_url).tap(&:load!).tap(&:save!)
@@ -220,18 +220,18 @@ describe Feed do
       EOS
       result = Feed.import!(create(:user), opml)
       result[0].tap do |subscription|
-        subscription.feed.title.should == 'MyText'
-        subscription.feed.url.should == 'http://test.com/rss.xml'
-        subscription.feed.link_url.should == 'http://test.com/content'
-        subscription.feed.description.should be_nil
+        expect(subscription.feed.title).to eq('MyText')
+        expect(subscription.feed.url).to eq('http://test.com/rss.xml')
+        expect(subscription.feed.link_url).to eq('http://test.com/content')
+        expect(subscription.feed.description).to be_nil
       end
       result[1].tap do |subscription|
-        subscription.feed.title.should == 'Title'
-        subscription.feed.url.should == 'http://category.com/rss.xml'
-        subscription.feed.link_url.should == 'http://category.com/'
-        subscription.feed.description.should be_nil
-        subscription.should have(1).tag
-        subscription.tag_list.should == %w(category)
+        expect(subscription.feed.title).to eq('Title')
+        expect(subscription.feed.url).to eq('http://category.com/rss.xml')
+        expect(subscription.feed.link_url).to eq('http://category.com/')
+        expect(subscription.feed.description).to be_nil
+        expect(subscription.tags.size).to eq(1)
+        expect(subscription.tag_list).to eq(%w(category))
       end
     end
   end

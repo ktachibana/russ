@@ -11,15 +11,15 @@ describe SubscriptionsController do
       subscriptions = create_list(:subscription, 2, user: user)
       create(:subscription, user: create(:user))
       get :index
-      response.should be_success
-      assigns(:subscriptions).should =~ subscriptions
+      expect(response).to be_success
+      expect(assigns(:subscriptions)).to match_array(subscriptions)
     end
 
     it '特定のタグがついたSubscriptionだけに絞り込める' do
       subscriptions = %w(tag1 tag2).map { |tag| create(:subscription, user: user, tag_list: tag) }
       get :index, tag: %w(tag1)
-      response.should be_success
-      assigns(:subscriptions).should == [subscriptions[0]]
+      expect(response).to be_success
+      expect(assigns(:subscriptions)).to eq([subscriptions[0]])
     end
   end
 
@@ -31,24 +31,24 @@ describe SubscriptionsController do
 
       get :new, url: mock_rss_url
 
-      response.should be_success
+      expect(response).to be_success
       subscription = assigns(:subscription)
-      subscription.should be_present
-      subscription.feed.title.should == 'RSS Title'
+      expect(subscription).to be_present
+      expect(subscription.feed.title).to eq('RSS Title')
     end
 
     it '登録済みのフィードのURLを指定するとリダイレクト' do
       subscription = create(:subscription, user: user, feed: create(:feed, url: mock_rss_url))
       get :new, url: mock_rss_url
-      response.should redirect_to(subscription_path(subscription))
-      flash[:notice].should == I18n.t('messages.feed_already_registed', url: mock_rss_url)
+      expect(response).to redirect_to(subscription_path(subscription))
+      expect(flash[:notice]).to eq(I18n.t('messages.feed_already_registed', url: mock_rss_url))
     end
 
     it '既存のフィードのURLを指定したときは再読み込みはしない' do
       feed = create(:feed)
       WebMock.stub_request(:get, feed.url).to_raise('test fail')
       get :new, url: feed.url
-      response.should be_success
+      expect(response).to be_success
     end
   end
 
@@ -57,7 +57,7 @@ describe SubscriptionsController do
 
     it 'Feedを表示できる' do
       get :show, id: subscription.id
-      assigns(:subscription).should == subscription
+      expect(assigns(:subscription)).to eq(subscription)
     end
   end
 
@@ -73,14 +73,14 @@ describe SubscriptionsController do
       expect {
         post :create, subscription: { title: '', tag_list: '' }
       }.to_not change(Subscription, :count)
-      response.should render_template(:new)
+      expect(response).to render_template(:new)
     end
 
     it 'タグを登録できる' do
       mock_rss!
       post :create, subscription: { title: '', tag_list: 'tag1, tag2', feed_attributes: { url: mock_rss_url }}
-      response.should redirect_to(root_url)
-      assigns(:subscription).reload.tag_list.should =~ %w(tag1 tag2)
+      expect(response).to redirect_to(root_url)
+      expect(assigns(:subscription).reload.tag_list).to match_array(%w(tag1 tag2))
     end
   end
 
@@ -90,16 +90,16 @@ describe SubscriptionsController do
     it 'Subscriptionを更新できる' do
       put :update, id: subscription.id, subscription: { title: 'NewTitle', tag_list: 'tag1, tag2' }
       subscription.reload
-      subscription.title.should == 'NewTitle'
-      subscription.tag_list.should == %w(tag1 tag2)
+      expect(subscription.title).to eq('NewTitle')
+      expect(subscription.tag_list).to eq(%w(tag1 tag2))
     end
 
     it 'タグを削除できる' do
       subscription.update_attributes!(tag_list: %w(tag1 tag2))
       put :update, id: subscription.id, subscription: { tag_list: 'tag1' }
       subscription.reload
-      subscription.tag_list.should == %w(tag1)
-      ActsAsTaggableOn::Tagging.count.should == 1
+      expect(subscription.tag_list).to eq(%w(tag1))
+      expect(ActsAsTaggableOn::Tagging.count).to eq(1)
     end
 
     it 'フィードのURLは変更できない' do
@@ -124,13 +124,13 @@ describe SubscriptionsController do
         post :import, file: Rack::Test::UploadedFile.new(opml_file, 'application/xml')
       }.to change(Feed, :count).by(2)
 
-      response.should redirect_to(root_url)
+      expect(response).to redirect_to(root_url)
     end
 
     it 'アップロードするファイルを選択しないとflashメッセージを表示' do
       post :import
-      flash[:alert].should == 'Select OPML file.'
-      response.should redirect_to(upload_subscriptions_path)
+      expect(flash[:alert]).to eq('Select OPML file.')
+      expect(response).to redirect_to(upload_subscriptions_path)
     end
   end
 
@@ -145,7 +145,7 @@ describe SubscriptionsController do
 
     it 'Feed一覧にリダイレクトする' do
       delete :destroy, id: subscription.id
-      response.should redirect_to(subscriptions_path)
+      expect(response).to redirect_to(subscriptions_path)
     end
   end
 end
