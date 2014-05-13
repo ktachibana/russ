@@ -21,7 +21,7 @@ describe RootController do
     it '最近のItemを取得する' do
       create(:subscription, user: user).tap do |subscription|
         26.times do |i|
-          create(:item, feed: subscription.feed, title: i.to_s, created_at: i.days.ago)
+          create(:item, feed: subscription.feed, title: i.to_s, published_at: i.days.ago)
         end
       end
 

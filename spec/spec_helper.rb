@@ -51,4 +51,8 @@ RSpec.configure do |config|
   config.before do
     FactoryGirl.reload
   end
+
+  config.after do
+    Timecop.return
+  end
 end

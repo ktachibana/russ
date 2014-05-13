@@ -32,9 +32,9 @@ describe Item do
   end
 
   describe '.default_scope' do
-    it 'created_atの新しい順' do
+    it 'published_atの新しい順' do
       items = [3, 1, 2].map do |n|
-        create(:item, created_at: n.days.ago)
+        create(:item, published_at: n.days.ago)
       end
       Item.all.should == items.values_at(1, 2, 0)
     end

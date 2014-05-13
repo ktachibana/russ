@@ -59,6 +59,7 @@ group :development, :test do
   gem 'capistrano', '~> 2.15.5', require: false
   gem 'capistrano_colors', require: false
   gem 'capistrano-rbenv', require: false
+  gem 'timecop'
 end
 
 group :development do

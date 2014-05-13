@@ -171,6 +171,37 @@ describe Feed do
     end
   end
 
+  describe '#to_item_attributes' do
+    subject { feed.to_item_attributes(item) }
+    let(:feed) { build(:feed) }
+    let(:item) { build(:parsed_item) }
+
+    it 'parseされたフィードの項目からItemの属性を取得する' do
+      expect(subject[:link]).to eq item.link
+      expect(subject[:title]).to eq item.title
+      expect(subject[:published_at]).to eq item.date
+      expect(subject[:description]).to eq item.description
+    end
+
+    # 遠い未来の日付が設定されていて、ソートでずっとトップに居座る項目が作られたことがあるため
+    context 'dateが未来のとき' do
+      before { Timecop.freeze }
+      let(:item) { build(:parsed_item, date: 1.days.from_now) }
+
+      it 'published_atは現在時刻になる' do
+        expect(subject[:published_at]).to eq Time.current
+      end
+    end
+
+    context 'dateがnilのとき' do
+      let(:item) { build(:parsed_item, date: nil) }
+
+      it 'published_atはnilになる' do
+        expect(subject[:published_at]).to be nil
+      end
+    end
+  end
+
   describe '.import' do
     it 'OPML形式のファイルからRSSをインポートできる' do
       opml = <<-'EOS'

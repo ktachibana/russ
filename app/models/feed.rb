@@ -42,25 +42,30 @@ class Feed < ActiveRecord::Base
         update_by_rss!(rss)
 
         attributes = rss.items.map do |loaded_item|
-          guid = loaded_item.try(:guid).try(:content)
-
-          item = guid && items.find_by(guid: guid)
-          item ||= items.find_by(link: loaded_item.link)
-          {
-            link: loaded_item.link,
-            title: loaded_item.title,
-            guid: guid,
-            published_at: loaded_item.date,
-            description: loaded_item.description
-          }.tap do |attributes|
-            attributes[:id] = item.id if item
-          end
+          to_item_attributes(loaded_item)
         end
         self.items_attributes = attributes
       end
     rescue => e
       Rails.logger.error(e)
       nil # TODO エラーハンドリング
+    end
+
+    def to_item_attributes(parsed_item)
+      guid = parsed_item.try(:guid).try(:content)
+
+      item = guid && items.find_by(guid: guid)
+      item ||= items.find_by(link: parsed_item.link)
+
+      {
+          link: parsed_item.link,
+          title: parsed_item.title,
+          guid: guid,
+          published_at: parsed_item.date.try { |d| [d, Time.current].min },
+          description: parsed_item.description
+      }.tap do |attributes|
+        attributes[:id] = item.id if item
+      end
     end
 
     module ClassMethods
