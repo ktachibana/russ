@@ -39,8 +39,8 @@ end
 
 group :development, :test do
   gem 'powder'
-  gem 'rspec', '2.99.0.beta2'
-  gem 'rspec-rails', '2.99.0.beta2'
+  gem 'rspec', '3.0.0.beta2'
+  gem 'rspec-rails', '3.0.0.beta2'
   gem 'minitest' #  for warning
   gem 'factory_girl'
   gem 'factory_girl_rails'
