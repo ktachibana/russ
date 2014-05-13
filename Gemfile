@@ -55,7 +55,7 @@ group :development, :test do
   gem 'hirb-unicode'
   gem 'tapp', git: 'https://github.com/esminc/tapp.git'
   gem 'shoulda-matchers'
-  gem 'fuubar'
+  gem 'fuubar', '2.0.0.beta2'
   gem 'capistrano', '~> 2.15.5', require: false
   gem 'capistrano_colors', require: false
   gem 'capistrano-rbenv', require: false

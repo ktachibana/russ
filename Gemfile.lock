@@ -104,8 +104,8 @@ GEM
       railties (>= 3.0.0)
     ffi (1.9.3)
     formatador (0.2.4)
-    fuubar (1.3.3)
-      rspec (>= 2.14.0, < 3.1.0)
+    fuubar (2.0.0.beta2)
+      rspec (~> 3.0.beta)
       ruby-progressbar (~> 1.4)
     growl (1.0.3)
     guard (2.6.1)
@@ -314,7 +314,7 @@ DEPENDENCIES
   execjs
   factory_girl
   factory_girl_rails
-  fuubar
+  fuubar (= 2.0.0.beta2)
   growl
   guard
   guard-rspec
