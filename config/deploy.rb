@@ -29,11 +29,6 @@ namespace :deploy do
       sudo "god #{action} #{application}"
     end
   end
-
-  desc 'setup sqlite3 db directory.'
-  task :db_setup, roles: :db do
-    run "mkdir -p -m 775 #{shared_path}/db"
-  end
 end
 
 %w[deploy:start deploy:restart].each do |task|
