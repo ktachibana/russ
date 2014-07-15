@@ -1,5 +1,5 @@
 - hide_feed = local_assigns[:hide_feed]
-- subscription = item.feed.subscriptions.find_by(user: current_user)
+- subscription = item.feed.subscriptions.find { |s| s.user_id == current_user.id }
 .panel.panel-default
   .panel-heading
     = link_to item.title, item.link, target: '_blank'
