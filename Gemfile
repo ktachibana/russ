@@ -60,6 +60,8 @@ group :development, :test do
   gem 'capistrano_colors', require: false
   gem 'capistrano-rbenv', require: false
   gem 'timecop'
+  gem 'rubocop'
+  gem 'guard-rubocop'
 end
 
 group :development do
