@@ -52,6 +52,7 @@ class SubscriptionsController < ApplicationController
   end
 
   private
+
   def owned_subscriptions
     current_user.subscriptions
   end

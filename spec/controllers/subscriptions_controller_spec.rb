@@ -64,21 +64,21 @@ describe SubscriptionsController do
   describe 'POST :create' do
     it 'Subscriptionを登録できる' do
       mock_rss!
-      expect {
+      expect do
         post :create, subscription: { title: '', tag_list: '', feed_attributes: { url: mock_rss_url } }
-      }.to change(Subscription, :count).by(1)
+      end.to change(Subscription, :count).by(1)
     end
 
     it 'パラメータが不正だと登録されない' do
-      expect {
+      expect do
         post :create, subscription: { title: '', tag_list: '' }
-      }.to_not change(Subscription, :count)
+      end.to_not change(Subscription, :count)
       expect(response).to render_template(:new)
     end
 
     it 'タグを登録できる' do
       mock_rss!
-      post :create, subscription: { title: '', tag_list: 'tag1, tag2', feed_attributes: { url: mock_rss_url }}
+      post :create, subscription: { title: '', tag_list: 'tag1, tag2', feed_attributes: { url: mock_rss_url } }
       expect(response).to redirect_to(root_url)
       expect(assigns(:subscription).reload.tag_list).to match_array(%w(tag1 tag2))
     end
@@ -103,9 +103,9 @@ describe SubscriptionsController do
     end
 
     it 'フィードのURLは変更できない' do
-      expect {
+      expect do
         put :update, id: subscription.id, subscription: { feed_attributes: { url: 'http://new.com/rss.xml' } }
-      }.not_to change { subscription.reload.feed.url }
+      end.not_to change { subscription.reload.feed.url }
     end
   end
 
@@ -119,10 +119,10 @@ describe SubscriptionsController do
     after { opml_file.close! }
 
     it 'OPMLをアップロードしてインポートできる' do
-      expect {
+      expect do
         mock_opml_rss!
         post :import, file: Rack::Test::UploadedFile.new(opml_file, 'application/xml')
-      }.to change(Feed, :count).by(2)
+      end.to change(Feed, :count).by(2)
 
       expect(response).to redirect_to(root_url)
     end
@@ -138,9 +138,9 @@ describe SubscriptionsController do
     let!(:subscription) { create(:subscription, user: user) }
 
     it 'Subscriptionを削除できる' do
-      expect {
+      expect do
         delete :destroy, id: subscription.id
-      }.to change(Subscription, :count).by(-1)
+      end.to change(Subscription, :count).by(-1)
     end
 
     it 'Feed一覧にリダイレクトする' do

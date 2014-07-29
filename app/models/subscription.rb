@@ -10,7 +10,7 @@ class Subscription < ActiveRecord::Base
 
   default_scope -> { order(created_at: :desc) }
 
-  scope :search, ->(conditions) {
+  scope :search, lambda { |conditions|
     scope = self
     conditions[:tag].presence.try do |tag_names|
       scope = scope.tagged_with(tag_names)
@@ -31,7 +31,6 @@ class Subscription < ActiveRecord::Base
     end
     save
   end
-
 
   def user_title
     title.presence || feed.title

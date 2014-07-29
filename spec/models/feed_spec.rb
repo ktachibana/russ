@@ -165,9 +165,9 @@ describe Feed do
 
     it 'すべてのFeedを更新する' do
       WebMock.stub_request(:get, mock_rss_url).to_return(body: rss_data_two_items)
-      expect {
+      expect do
         Feed.load_all!
-      }.to change(Item, :count).from(1).to(2)
+      end.to change(Item, :count).from(1).to(2)
     end
   end
 

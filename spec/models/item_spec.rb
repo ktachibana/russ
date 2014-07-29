@@ -56,7 +56,7 @@ describe Item do
         create(:item, feed: subscription.feed, title: '4')
       end
 
-      expect(Item.user(user).map(&:title)).to match_array(%w[1 2 3])
+      expect(Item.user(user).map(&:title)).to match_array(%w(1 2 3))
     end
   end
 end

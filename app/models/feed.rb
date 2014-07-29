@@ -15,7 +15,7 @@ class Feed < ActiveRecord::Base
   validates :link_url, presence: true, length: { maximum: 2048 }
   validates :description, length: { maximum: 4096 }
 
-  scope :search, ->(conditions) {
+  scope :search, lambda { |conditions|
     scope = self
     conditions[:tag].presence.try do |tag_names|
       scope = scope.tagged_with(tag_names)
@@ -48,7 +48,7 @@ class Feed < ActiveRecord::Base
       end
     rescue => e
       Rails.logger.error(e)
-      nil # TODO エラーハンドリング
+      nil # TODO: エラーハンドリング
     end
 
     def to_item_attributes(parsed_item)
@@ -58,11 +58,11 @@ class Feed < ActiveRecord::Base
       item ||= items.find_by(link: parsed_item.link)
 
       {
-          link: parsed_item.link,
-          title: parsed_item.title,
-          guid: guid,
-          published_at: parsed_item.date.try { |d| [d, Time.current].min },
-          description: parsed_item.description
+        link: parsed_item.link,
+        title: parsed_item.title,
+        guid: guid,
+        published_at: parsed_item.date.try { |d| [d, Time.current].min },
+        description: parsed_item.description
       }.tap do |attributes|
         attributes[:id] = item.id if item
       end
@@ -100,7 +100,7 @@ class Feed < ActiveRecord::Base
       if url && title
         feed = Feed.create!(url: url, title: title, link_url: link_url)
         result << user.subscriptions.create!(feed: feed)
-      else title
+      elsif title
         outline.elements.each('outline') do |child|
           child_attrs = child.attributes
           feed_title = child_attrs['text'] || child_attrs['title']
