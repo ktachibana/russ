@@ -18,3 +18,5 @@
 db/schema.rb
 
 erd.pdf
+
+bundle_bin
