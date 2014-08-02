@@ -54,18 +54,25 @@ class Feed < ActiveRecord::Base
     def to_item_attributes(parsed_item)
       guid = parsed_item.try(:guid).try(:content)
 
-      item = guid && items.find_by(guid: guid)
-      item ||= items.find_by(link: parsed_item.link)
+      result = parsed_item_attributes(guid, parsed_item)
+      find_existing_item(guid, parsed_item).try do |item|
+        result[:id] = item.id
+      end
+      result
+    end
 
+    def parsed_item_attributes(guid, parsed_item)
       {
         link: parsed_item.link,
         title: parsed_item.title,
         guid: guid,
         published_at: parsed_item.date.try { |d| [d, Time.current].min },
         description: parsed_item.description
-      }.tap do |attributes|
-        attributes[:id] = item.id if item
-      end
+      }
+    end
+
+    def find_existing_item(guid, parsed_item)
+      (guid && items.find_by(guid: guid)) || items.find_by(link: parsed_item.link)
     end
 
     module ClassMethods
