@@ -5,6 +5,7 @@ require 'rexml/document'
 class Feed < ActiveRecord::Base
   has_many :items, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
+  has_one :users_subscription, class_name: 'Subscription'
   has_one :latest_item, class_name: 'Item'
   acts_as_taggable
 

@@ -41,10 +41,10 @@ describe Item do
   end
 
   describe '.user' do
-    it 'ユーザーのItemだけを取得する' do
-      user = create(:user)
-      other_user = create(:user)
+    let(:user) { create(:user) }
+    let(:other_user) { create(:user) }
 
+    it 'ユーザーのItemだけを取得する' do
       create(:subscription, user: user) do |subscription|
         create(:item, feed: subscription.feed, title: '3')
       end
@@ -57,6 +57,15 @@ describe Item do
       end
 
       expect(Item.user(user).map(&:title)).to match_array(%w(1 2 3))
+    end
+
+    it 'ユーザーのSubscriptionだけがfeedに含まれる' do
+      feed = create(:feed, item_count: 1)
+      users_subscription = create(:subscription, feed: feed, user: user)
+      others_subscription = create(:subscription, feed: feed, user: other_user)
+
+      expect(Item.user(user)[0].feed.users_subscription).to eq(users_subscription)
+      expect(Item.user(other_user)[0].feed.users_subscription).to eq(others_subscription)
     end
   end
 end
