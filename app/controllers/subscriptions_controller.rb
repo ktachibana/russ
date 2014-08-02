@@ -4,7 +4,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def show
-    @subscription = owned_subscriptions.find(params[:id])
+    @subscription = owned_subscriptions.includes(feed: :items).find(params[:id])
     @items = @subscription.feed.items.page(params[:page])
   end
 
