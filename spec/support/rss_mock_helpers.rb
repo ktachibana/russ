@@ -9,8 +9,7 @@ module RssMockHelpers
     'http://test.com/rss.xml'
   end
 
-  def rss_data
-    <<-'EOS'
+  RSS_DATA = <<-'EOS'
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
@@ -20,11 +19,13 @@ module RssMockHelpers
     <description>My description</description>
   </channel>
 </rss>
-    EOS
+  EOS
+
+  def rss_data
+    RSS_DATA
   end
 
-  def rss_data_one_item
-    <<-EOS
+  RSS_DATA_ONE_ITEM = <<-EOS
 end
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -43,11 +44,13 @@ end
     </item>
   </channel>
 </rss>
-    EOS
+  EOS
+
+  def rss_data_one_item
+    RSS_DATA_ONE_ITEM
   end
 
-  def rss_data_two_items
-    <<-EOS
+  RSS_DATA_TWO_ITEMS = <<-EOS
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
@@ -73,11 +76,13 @@ end
     </item>
   </channel>
 </rss>
-    EOS
+  EOS
+
+  def rss_data_two_items
+    RSS_DATA_TWO_ITEMS
   end
 
-  def opml_data
-    <<-'EOS'
+  OPML_DATA = <<-'EOS'
 <?xml version="1.0" encoding="UTF-8"?>
 <opml version="1.0">
   <head>
@@ -90,7 +95,10 @@ end
     </outline>
   </body>
 </opml>
-EOS
+  EOS
+
+  def opml_data
+    OPML_DATA
   end
 
   def mock_opml_rss!
