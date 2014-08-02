@@ -93,32 +93,4 @@ class Feed < ActiveRecord::Base
     end
   end
   include FileLoadable
-
-  def self.import!(user, opml)
-    doc = REXML::Document.new(opml)
-
-    result = []
-    doc.elements.each('opml/body/outline') do |outline|
-      attrs = outline.attributes
-      title = attrs['text'] || attrs['title']
-      url = attrs['xmlUrl']
-      link_url = attrs['htmlUrl']
-
-      if url && title
-        feed = Feed.create!(url: url, title: title, link_url: link_url)
-        result << user.subscriptions.create!(feed: feed)
-      elsif title
-        outline.elements.each('outline') do |child|
-          child_attrs = child.attributes
-          feed_title = child_attrs['text'] || child_attrs['title']
-          url = child_attrs['xmlUrl']
-          link_url = child_attrs['htmlUrl']
-
-          feed = Feed.create!(url: url, title: feed_title, link_url: link_url)
-          result << user.subscriptions.create!(feed: feed, tag_list: [title])
-        end
-      end
-    end
-    result
-  end
 end

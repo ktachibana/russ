@@ -37,12 +37,14 @@ class SubscriptionsController < ApplicationController
   end
 
   def import
-    if params[:file].blank?
+    opml_file = params[:file]
+    if opml_file.blank?
       flash[:alert] = 'Select OPML file.'
       return redirect_to(upload_subscriptions_path)
     end
 
-    Feed.import!(current_user, params[:file].read)
+    OPML.import!(opml_file, current_user)
+
     redirect_to root_url
   end
 
