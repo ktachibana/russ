@@ -1,5 +1,8 @@
 # More info at https://github.com/guard/guard#readme
 
+guard_interactor = ENV['GUARD_INTERACTOR']
+interactor guard_interactor.to_sym if guard_interactor
+
 group :red_green_refactor, halt_on_fail: true do
   guard :rspec, cmd: 'bundle exec spring rspec', failed_mode: :none do
     watch(%r{^spec/.+_spec\.rb$})
