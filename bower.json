@@ -1,0 +1,7 @@
+{
+  "name": "russ",
+  "private": true,
+  "dependencies": {
+    "vue": "~0.10.6"
+  }
+}
