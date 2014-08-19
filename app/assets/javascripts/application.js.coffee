@@ -14,4 +14,5 @@
 #= require jquery_ujs
 #= require bootstrap
 #= require vue/dist/vue
+#= require js-routes
 #= require root

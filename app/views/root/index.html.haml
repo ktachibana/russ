@@ -11,7 +11,7 @@
         %small
           %a{ target: '_blank', v: { attr: 'href:feed.link_url' } }
             {{feed.users_subscription.user_title}}
-          %a{ v: { attr: 'href:"/subscriptions/" + feed.users_subscription.id' } }
+          %a{ v: { attr: 'href:subscription_path(feed.users_subscription)' } }
             ■
     .clearfix
     .panel-body{ v: { html: 'description' } }
