@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :items
   devise_for :users
 
   root to: 'root#index'

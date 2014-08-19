@@ -35,5 +35,6 @@
                   %li= link_to 'RuSS (Bookmarklet)', "javascript:location.href='#{new_subscription_url(url: '')}'+escape(location.href);"
                   %li= link_to 'Import OPML', upload_subscriptions_path
                   %li= link_to 'Sign out', destroy_user_session_path, method: :delete
-      = yield
+      %div#main-content{ class: %W(#{controller_name}-controller #{action_name}-action) }
+        = yield
     = javascript_include_tag 'application'
