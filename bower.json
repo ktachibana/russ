@@ -2,6 +2,7 @@
   "name": "russ",
   "private": true,
   "dependencies": {
-    "vue": "~0.10.6"
+    "vue": "~0.10.6",
+    "underscore": "~1.6.0"
   }
 }
