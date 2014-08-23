@@ -4,7 +4,7 @@ if $('.root-controller.index-action').length
     data:
       items: []
     methods:
-      subscription_path: Routes.subscription_path
+      subscriptionPath: Routes.subscriptionPath
     created: ->
       ($.getJSON '/items.json').then (data) =>
         @items = data
