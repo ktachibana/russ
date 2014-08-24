@@ -37,7 +37,7 @@ if $('.root-controller.index-action').length
       items: []
       tags: []
       page: 1
-      isLastPage: false
+      isLastPage: true
 
     methods:
       loadItems: ->
