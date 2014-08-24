@@ -1,3 +1,9 @@
+Vue.component 'item-panel',
+  template: '#item-panel'
+  computed:
+    subscriptionPath: ->
+      Routes.subscriptionPath(@feed.users_subscription)
+
 if $('.root-controller.index-action').length
   vue = new Vue
     el: '#main-content'
@@ -6,5 +12,5 @@ if $('.root-controller.index-action').length
     methods:
       subscriptionPath: Routes.subscriptionPath
     created: ->
-      ($.getJSON '/items.json').then (data) =>
+      ($.getJSON Routes.itemsPath()).then (data) =>
         @items = data
