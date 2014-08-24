@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ItemsController do
+describe ItemsController, type: :controller do
   let(:user) { create(:user) }
   before { sign_in(user) }
 

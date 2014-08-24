@@ -39,8 +39,8 @@ end
 
 group :development, :test do
   gem 'powder'
-  gem 'rspec', '3.0.0.beta2'
-  gem 'rspec-rails', '3.0.0.beta2'
+  gem 'rspec', '~> 3.0.0'
+  gem 'rspec-rails', '~> 3.0.0'
   gem 'minitest' #  for warning
   gem 'factory_girl'
   gem 'factory_girl_rails'
@@ -53,9 +53,9 @@ group :development, :test do
   gem 'pry'
   gem 'pry-rails'
   gem 'hirb-unicode'
-  gem 'tapp', git: 'https://github.com/esminc/tapp.git'
+  gem 'tapp'
   gem 'shoulda-matchers'
-  gem 'fuubar', '2.0.0.beta2'
+  gem 'fuubar', '~> 2.0.0'
   gem 'capistrano', '~> 2.15.5', require: false
   gem 'capistrano_colors', require: false
   gem 'capistrano-rbenv', require: false

@@ -9,13 +9,6 @@ GIT
       choice (~> 0.1.6)
       ruby-graphviz (~> 1.0.4)
 
-GIT
-  remote: https://github.com/esminc/tapp.git
-  revision: 605b0195792776a6667ae9d34ff3a43b61d8804e
-  specs:
-    tapp (1.4.1)
-      thor
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -103,8 +96,8 @@ GEM
       railties (>= 3.0.0)
     ffi (1.9.3)
     formatador (0.2.5)
-    fuubar (2.0.0.beta2)
-      rspec (~> 3.0.beta)
+    fuubar (2.0.0)
+      rspec (~> 3.0)
       ruby-progressbar (~> 1.4)
     growl (1.0.3)
     guard (2.6.1)
@@ -223,30 +216,26 @@ GEM
     rdoc (4.1.1)
       json (~> 1.4)
     ref (1.0.5)
-    rspec (3.0.0.beta2)
-      rspec-core (= 3.0.0.beta2)
-      rspec-expectations (= 3.0.0.beta2)
-      rspec-mocks (= 3.0.0.beta2)
-    rspec-collection_matchers (1.0.0)
-      rspec-expectations (>= 2.99.0.beta1)
-    rspec-core (3.0.0.beta2)
-      rspec-support (= 3.0.0.beta2)
-    rspec-expectations (3.0.0.beta2)
+    rspec (3.0.0)
+      rspec-core (~> 3.0.0)
+      rspec-expectations (~> 3.0.0)
+      rspec-mocks (~> 3.0.0)
+    rspec-core (3.0.4)
+      rspec-support (~> 3.0.0)
+    rspec-expectations (3.0.4)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (= 3.0.0.beta2)
-    rspec-mocks (3.0.0.beta2)
-      rspec-support (= 3.0.0.beta2)
-    rspec-rails (3.0.0.beta2)
+      rspec-support (~> 3.0.0)
+    rspec-mocks (3.0.4)
+      rspec-support (~> 3.0.0)
+    rspec-rails (3.0.2)
       actionpack (>= 3.0)
-      activemodel (>= 3.0)
       activesupport (>= 3.0)
       railties (>= 3.0)
-      rspec-collection_matchers
-      rspec-core (= 3.0.0.beta2)
-      rspec-expectations (= 3.0.0.beta2)
-      rspec-mocks (= 3.0.0.beta2)
-      rspec-support (= 3.0.0.beta2)
-    rspec-support (3.0.0.beta2)
+      rspec-core (~> 3.0.0)
+      rspec-expectations (~> 3.0.0)
+      rspec-mocks (~> 3.0.0)
+      rspec-support (~> 3.0.0)
+    rspec-support (3.0.4)
     rubocop (0.25.0)
       parser (>= 2.2.0.pre.4, < 3.0)
       powerpack (~> 0.0.6)
@@ -279,6 +268,8 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
+    tapp (1.4.1)
+      thor
     therubyracer (0.12.1)
       libv8 (~> 3.16.14.0)
       ref
@@ -328,7 +319,7 @@ DEPENDENCIES
   execjs
   factory_girl
   factory_girl_rails
-  fuubar (= 2.0.0.beta2)
+  fuubar (~> 2.0.0)
   growl
   guard
   guard-rspec
@@ -348,15 +339,15 @@ DEPENDENCIES
   rails (~> 4.1.1)
   rails-erd!
   rb-fsevent
-  rspec (= 3.0.0.beta2)
-  rspec-rails (= 3.0.0.beta2)
+  rspec (~> 3.0.0)
+  rspec-rails (~> 3.0.0)
   rubocop
   sass-rails (= 4.0.3)
   sdoc
   shoulda-matchers
   spring
   spring-commands-rspec
-  tapp!
+  tapp
   therubyracer
   timecop
   uglifier
