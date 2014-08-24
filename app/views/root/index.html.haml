@@ -24,11 +24,10 @@
     .panel-body{ v: { html: 'description' } }
 
 
-%tag-buttons{ v: { with: 'tags: tags' } }
-
-= paginate @items
+%tag-buttons{ v: { with: 'tags: tags', ref: 'tagButtons' } }
 
 .items
   %item-panel{ v: { component: 'item-panel', repeat: 'items' } }
 
-= paginate @items
+.more.text-center{ v: { show: '!isLastPage' } }
+  %button.btn.btn-primary{ v: { on: 'click: showMore' } } 続きを表示

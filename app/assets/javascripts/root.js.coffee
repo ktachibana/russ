@@ -36,19 +36,27 @@ if $('.root-controller.index-action').length
     data:
       items: []
       tags: []
+      page: 1
+      isLastPage: false
 
     methods:
-      reloadItems: (params) ->
-        ($.getJSON Routes.itemsPath(params)).then (data) =>
-          @items = data
+      loadItems: ->
+        ($.getJSON Routes.itemsPath(tag: @$.tagButtons.selectedTagNames(), page: @page)).then (result) =>
+          @isLastPage = result.last_page
+          result.items
 
-      selectedTagNames: ->
-        _.chain(@tags).filter((tag) -> tag.active ).map((tag) -> tag.name ).value()
+      showMore: ->
+        @page += 1
+        @loadItems().then (items) =>
+          @items = @items.concat(items)
 
     created: ->
-      @$on 'tag-changed', (selectedTagNames) ->
-        @reloadItems(tag: selectedTagNames)
+      @$on 'tag-changed', ->
+        @page = 1
+        @loadItems().then (items) =>
+          @items = items
 
       ($.getJSON Routes.rootPath()).then (data) =>
-        @items = data.items
+        @items = data.items.items
+        @isLastPage = data.items.last_page
         @tags = data.tags

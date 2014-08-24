@@ -11,7 +11,7 @@ describe ItemsController do
       get :index, page: page, format: :json
     end
     let(:page) { nil }
-    let(:data) { JSON.parse(response.body) }
+    let(:data) { JSON.parse(response.body, symbolize_names: true) }
 
     it 'サインインが必要' do
       sign_out(user)
@@ -29,7 +29,7 @@ describe ItemsController do
       item = create(:item, feed: subscription.feed)
 
       action
-      expect(data[0]['title']).to eq(item.title)
+      expect(data[:items][0][:title]).to eq(item.title)
     end
 
     context 'itemが大量にあるとき' do
@@ -43,7 +43,8 @@ describe ItemsController do
 
       it '取得件数が制限される' do
         action
-        expect(data.size).to eq(25)
+        expect(data[:items].size).to eq(25)
+        expect(data[:last_page]).to be false
       end
 
       context 'pageパラメータを指定したとき' do
@@ -51,8 +52,9 @@ describe ItemsController do
 
         it '指定したページのItemを取得する' do
           action
-          expect(data.size).to eq(1)
-          expect(data[0]['title']).to eq('25')
+          items = data[:items]
+          expect(items.size).to eq(1)
+          expect(items[0][:title]).to eq('25')
         end
       end
     end

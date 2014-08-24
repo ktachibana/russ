@@ -49,8 +49,9 @@ describe RootController, type: :controller do
         data = JSON.parse(response.body, symbolize_names: true)
 
         items = data[:items]
-        expect(items).to be_a(Array)
-        expect(items[0][:title]).to eq(subscription.feed.items[0].title)
+        expect(items[:items]).to be_a(Array)
+        expect(items[:items][0][:title]).to eq(subscription.feed.items[0].title)
+        expect(items[:last_page]).to be true
 
         tags = data[:tags]
         expect(tags).to be_a(Array)
