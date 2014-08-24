@@ -1,6 +1,33 @@
-= render 'tags'
+%script#tag-buttons{ type: 'text/x-template' }
+  %tag-button{ v: { repeat: 'tags' } }
 
-= paginate @items
+%script#tag-button{ type: 'text/x-template' }
+  .btn-group.btn-group-sm.tag-button
+    %a.btn{ v: { on: 'click: select', class: 'btn-info: active, active: active, btn-default: !active' } }
+      %span.glyphicon.glyphicon-tag
+      {{name}} ({{count}})
+    %a.btn.btn-default{ v: { on: 'click: toggle' } }
+      %span.glyphicon{ v: { class: 'glyphicon-minus: active, glyphicon-plus: !active' } }
+
+%script#item-panel{ type: 'text/x-template' }
+  .panel.panel-default
+    .panel-heading
+      %a{ target: '_blank', v: { attr: 'href:link' } }
+        {{title}}
+      .pull-right
+        %small
+          %a{ target: '_blank', v: { attr: 'href:feed.link_url' } }
+            {{feed.users_subscription.user_title}}
+          %a{ v: { attr: 'href:subscriptionPath' } }
+            ■
+    .clearfix
+    .panel-body{ v: { html: 'description' } }
+
+
+%tag-buttons{ v: { with: 'tags: tags', ref: 'tagButtons' } }
+
 .items
-  = render @items
-= paginate @items
+  %item-panel{ v: { component: 'item-panel', repeat: 'items' } }
+
+.more.text-center{ v: { show: '!isLastPage' } }
+  %button.btn.btn-primary{ v: { on: 'click: showMore' } } 続きを表示

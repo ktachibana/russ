@@ -67,6 +67,7 @@ end
 group :development do
   gem 'rails-erd', git: 'https://github.com/bshelton229/rails-erd.git', branch: 'mavericks'
   gem 'i18n-generators'
+  gem 'coffee-rails-source-maps'
 end
 
 group :test do
@@ -80,3 +81,4 @@ gem 'whenever', require: false
 gem 'unicorn'
 gem 'acts-as-taggable-on'
 gem 'dotenv-rails'
+gem 'js-routes'

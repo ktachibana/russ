@@ -1,20 +1,25 @@
 require 'spec_helper'
 
-describe RootController do
+describe RootController, type: :controller do
   let(:user) { create(:user) }
   before { sign_in(user) }
 
   describe 'GET :index' do
     render_views
 
+    def action
+      get :index, params
+    end
+    let(:params) { nil }
+
     it 'サインインが必要' do
       sign_out(user)
-      get :index
+      action
       expect(response).to redirect_to(new_user_session_url)
     end
 
     it 'サインインしていれば表示できる' do
-      get :index
+      action
       expect(response).to be_success
     end
 
@@ -25,8 +30,33 @@ describe RootController do
         end
       end
 
-      get :index
+      action
       expect(assigns(:items).map(&:title)).to eq((0...25).map(&:to_s))
+    end
+
+    context 'JSON形式をリクエストしたとき' do
+      before do
+        request.headers['HTTP_ACCEPT'] = 'application/json'
+      end
+
+      it 'JSONを返す' do
+        subscription = create(:subscription, user: user, feed: create(:feed, item_count: 1))
+        subscription.update_attributes(tag_list: %w(tag1))
+
+        action
+
+        expect(response.content_type).to eq('application/json')
+        data = JSON.parse(response.body, symbolize_names: true)
+
+        items = data[:items]
+        expect(items[:items]).to be_a(Array)
+        expect(items[:items][0][:title]).to eq(subscription.feed.items[0].title)
+        expect(items[:last_page]).to be true
+
+        tags = data[:tags]
+        expect(tags).to be_a(Array)
+        expect(data[:tags][0][:name]).to eq('tag1')
+      end
     end
   end
 end

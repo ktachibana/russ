@@ -12,4 +12,8 @@
 #
 #= require jquery
 #= require jquery_ujs
-#= require_tree .
+#= require bootstrap
+#= require vue/dist/vue
+#= require underscore/underscore
+#= require js-routes
+#= require root
