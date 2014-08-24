@@ -18,5 +18,4 @@
 db/schema.rb
 erd.pdf
 bundle_bin
-vendor/bower_components
 public/assets
