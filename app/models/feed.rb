@@ -5,7 +5,6 @@ require 'rexml/document'
 class Feed < ActiveRecord::Base
   has_many :items, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
-  has_one :users_subscription, class_name: 'Subscription'
   has_one :latest_item, class_name: 'Item'
   acts_as_taggable
 
@@ -15,6 +14,8 @@ class Feed < ActiveRecord::Base
   validates :title, presence: true, length: { maximum: 255 }
   validates :link_url, presence: true, length: { maximum: 2048 }
   validates :description, length: { maximum: 4096 }
+
+  attr_accessor :users_subscription
 
   scope :search, lambda { |conditions|
     scope = self

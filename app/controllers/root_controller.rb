@@ -1,6 +1,6 @@
 class RootController < ApplicationController
   def index
-    @items = Item.user(current_user).search(params)
+    @items = Item.search(current_user, params)
 
     respond_to do |format|
       format.html

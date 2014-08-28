@@ -6,27 +6,60 @@ describe Item do
   end
 
   describe '.search' do
+    let(:user) { create(:user) }
+    let(:other_user) { create(:user) }
+
+    describe 'user' do
+      it 'ユーザーのItemだけを取得する' do
+        feed1 = create(:feed) do |feed|
+          create(:item, feed: feed, title: '3', published_at: 1.day.ago)
+        end
+        feed2 = create(:feed) do |feed|
+          create(:item, feed: feed, title: '2', published_at: 2.days.ago)
+          create(:item, feed: feed, title: '1', published_at: 3.days.ago)
+        end
+        feed3 = create(:feed) do |feed|
+          create(:item, feed: feed, title: '4', published_at: 4.days.ago)
+        end
+        user.feeds = [feed1, feed3]
+        other_user.feeds = [feed2, feed3]
+
+      end
+
+      it 'ユーザーのSubscriptionだけがfeedに含まれる' do
+        feed = create(:feed, item_count: 1)
+        users_subscription = create(:subscription, feed: feed, user: user)
+        others_subscription = create(:subscription, feed: feed, user: other_user)
+
+        expect(Item.search(user)[0].feed.users_subscription).to eq(users_subscription)
+        expect(Item.search(other_user)[0].feed.users_subscription).to eq(others_subscription)
+      end
+    end
+
     describe ':tag' do
       it 'tagパラメータでタグ検索できる' do
         items = [%w(a), %w(a b), nil].map do |tag|
           create(:item) do |item|
-            create(:subscription, feed: item.feed, tag_list: tag)
+            create(:subscription, feed: item.feed, tag_list: tag, user: user)
           end
         end
-        expect(Item.search(tag: %w(a b))).to match_array(items.values_at(1))
-        expect(Item.search(tag: %w(a))).to match_array(items.values_at(0, 1))
-        expect(Item.search(tag: %w(b))).to match_array(items.values_at(1))
-        expect(Item.search(tag: %w())).to match_array(items)
+        expect(Item.search(user, tag: %w(a b))).to match_array(items.values_at(1))
+        expect(Item.search(user, tag: %w(a))).to match_array(items.values_at(0, 1))
+        expect(Item.search(user, tag: %w(b))).to match_array(items.values_at(1))
+        expect(Item.search(user, tag: %w())).to match_array(items)
       end
     end
 
     describe ':page' do
       let(:per_page) { Kaminari.config.default_per_page }
+
       it 'ページを絞る' do
-        create_list(:item, per_page + 1)
-        expect(Item.search(page: 1).count).to eq(per_page)
-        expect(Item.search(page: 2).count).to eq(1)
-        expect(Item.search(page: nil).count).to eq(per_page)
+        feed = create(:feed)
+        create_list(:item, per_page + 1, feed: feed)
+        user.feeds = [feed]
+        expect(Item.search(user, page: 1).count).to eq(per_page)
+        expect(Item.search(user, page: 2).count).to eq(1)
+        expect(Item.search(user, page: nil).count).to eq(per_page)
       end
     end
   end
@@ -41,31 +74,5 @@ describe Item do
   end
 
   describe '.user' do
-    let(:user) { create(:user) }
-    let(:other_user) { create(:user) }
-
-    it 'ユーザーのItemだけを取得する' do
-      create(:subscription, user: user) do |subscription|
-        create(:item, feed: subscription.feed, title: '3')
-      end
-      create(:subscription, user: user) do |subscription|
-        create(:item, feed: subscription.feed, title: '2')
-        create(:item, feed: subscription.feed, title: '1')
-      end
-      create(:subscription, user: other_user) do |subscription|
-        create(:item, feed: subscription.feed, title: '4')
-      end
-
-      expect(Item.user(user).map(&:title)).to match_array(%w(1 2 3))
-    end
-
-    it 'ユーザーのSubscriptionだけがfeedに含まれる' do
-      feed = create(:feed, item_count: 1)
-      users_subscription = create(:subscription, feed: feed, user: user)
-      others_subscription = create(:subscription, feed: feed, user: other_user)
-
-      expect(Item.user(user)[0].feed.users_subscription).to eq(users_subscription)
-      expect(Item.user(other_user)[0].feed.users_subscription).to eq(others_subscription)
-    end
   end
 end
