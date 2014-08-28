@@ -45,6 +45,9 @@ GEM
     ast (2.0.0)
     bcrypt (3.1.7)
     builder (3.2.2)
+    bullet (4.13.1)
+      activesupport (>= 3.0.0)
+      uniform_notifier (>= 1.6.0)
     capistrano (2.15.5)
       highline
       net-scp (>= 1.0.0)
@@ -294,6 +297,7 @@ GEM
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
+    uniform_notifier (1.6.2)
     warden (1.2.3)
       rack (>= 1.0)
     webmock (1.18.0)
@@ -309,6 +313,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts-as-taggable-on
+  bullet
   capistrano (~> 2.15.5)
   capistrano-rbenv
   capistrano_colors

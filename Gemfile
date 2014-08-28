@@ -68,6 +68,7 @@ group :development do
   gem 'rails-erd', git: 'https://github.com/bshelton229/rails-erd.git', branch: 'mavericks'
   gem 'i18n-generators'
   gem 'coffee-rails-source-maps'
+  gem 'bullet'
 end
 
 group :test do
