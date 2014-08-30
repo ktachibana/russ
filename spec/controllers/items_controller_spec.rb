@@ -29,7 +29,8 @@ describe ItemsController, type: :controller do
       item = create(:item, feed: subscription.feed)
 
       action
-      expect(data[:items][0][:title]).to eq(item.title)
+      expect(data[:items][0][:id]).to eq(item.id)
+      expect(data[:last_page]).to be true
     end
 
     context 'itemが大量にあるとき' do

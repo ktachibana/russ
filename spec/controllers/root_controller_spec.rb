@@ -48,14 +48,16 @@ describe RootController, type: :controller do
         expect(response.content_type).to eq('application/json')
         data = JSON.parse(response.body, symbolize_names: true)
 
-        items = data[:items]
-        expect(items[:items]).to be_a(Array)
-        expect(items[:items][0][:title]).to eq(subscription.feed.items[0].title)
-        expect(items[:last_page]).to be true
+        expect(data[:items][:items][0][:id]).to eq(subscription.feed.items[0].id)
 
-        tags = data[:tags]
-        expect(tags).to be_a(Array)
-        expect(data[:tags][0][:name]).to eq('tag1')
+        data[:tags].tap do |tags|
+          expect(tags).to be_a(Array)
+          data[:tags][0].tap do |tag|
+            expect(tag[:id]).to eq(subscription.tags[0].id)
+            expect(tag[:name]).to eq('tag1')
+            expect(tag[:count]).to eq(1)
+          end
+        end
       end
     end
   end
