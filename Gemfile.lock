@@ -1,14 +1,3 @@
-GIT
-  remote: https://github.com/bshelton229/rails-erd.git
-  revision: 5cd4e5d4b86520eae5f9d8845ffb214ee92e9d92
-  branch: mavericks
-  specs:
-    rails-erd (1.1.0)
-      activerecord (>= 3.0)
-      activesupport (>= 3.0)
-      choice (~> 0.1.6)
-      ruby-graphviz (~> 1.0.4)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -38,8 +27,8 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
-    acts-as-taggable-on (3.3.0)
-      activerecord (>= 3, < 5)
+    acts-as-taggable-on (3.4.1)
+      activerecord (>= 3.2, < 5)
     addressable (2.3.6)
     arel (5.0.1.20140414130214)
     ast (2.0.0)
@@ -73,7 +62,7 @@ GEM
     coffee-script (2.3.0)
       coffee-script-source
       execjs
-    coffee-script-source (1.7.1)
+    coffee-script-source (1.8.0)
     crack (0.4.2)
       safe_yaml (~> 1.0.0)
     devise (3.3.0)
@@ -131,7 +120,7 @@ GEM
     jbuilder (2.1.3)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
-    jquery-rails (3.1.1)
+    jquery-rails (3.1.2)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     js-routes (0.9.9)
@@ -163,7 +152,7 @@ GEM
     method_source (0.8.2)
     mime-types (1.25.1)
     mini_portile (0.6.0)
-    minitest (5.4.0)
+    minitest (5.4.1)
     multi_json (1.10.1)
     mysql2 (0.3.16)
     net-http-digest_auth (1.4)
@@ -207,6 +196,11 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 4.1.5)
       sprockets-rails (~> 2.0)
+    rails-erd (1.1.0)
+      activerecord (>= 3.0)
+      activesupport (>= 3.0)
+      choice (~> 0.1.6)
+      ruby-graphviz (~> 1.0.4)
     railties (4.1.5)
       actionpack (= 4.1.5)
       activesupport (= 4.1.5)
@@ -269,7 +263,7 @@ GEM
       multi_json (~> 1.0)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
-    sprockets-rails (2.1.3)
+    sprockets-rails (2.1.4)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
@@ -346,7 +340,7 @@ DEPENDENCIES
   pry
   pry-rails
   rails (~> 4.1.1)
-  rails-erd!
+  rails-erd
   rb-fsevent
   rspec (~> 3.0.0)
   rspec-rails (~> 3.0.0)
