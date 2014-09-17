@@ -56,9 +56,6 @@ group :development, :test do
   gem 'tapp'
   gem 'shoulda-matchers'
   gem 'fuubar', '~> 2.0.0'
-  gem 'capistrano', '~> 2.15.5', require: false
-  gem 'capistrano_colors', require: false
-  gem 'capistrano-rbenv', require: false
   gem 'timecop'
   gem 'rubocop'
   gem 'guard-rubocop'
@@ -69,6 +66,10 @@ group :development do
   gem 'i18n-generators'
   gem 'coffee-rails-source-maps'
   gem 'bullet'
+  gem 'capistrano', require: false
+  gem 'capistrano-rails', require: false
+  gem 'capistrano-rbenv', require: false
+  gem 'capistrano-bundler', require: false
 end
 
 group :test do
