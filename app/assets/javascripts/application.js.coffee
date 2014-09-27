@@ -16,4 +16,5 @@
 #= require vue
 #= require underscore
 #= require js-routes
+#= require router
 #= require root

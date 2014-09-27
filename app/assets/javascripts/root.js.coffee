@@ -47,33 +47,43 @@ Vue.component 'item-panel',
       Routes.subscriptionPath(@feed.users_subscription)
 
 if $('.root-controller.index-action').length
-  new Vue
-    el: '#main-content'
-    data:
-      items: []
-      tags: []
-      currentTags: []
-      page: 1
-      isLastPage: true
+  Router.on '/:tags', (tagsParam) ->
+    tags = if tagsParam then tagsParam.split(',') else []
 
-    methods:
-      loadItems: ->
-        ($.getJSON Routes.itemsPath(tag: @currentTags, page: @page)).then (result) =>
-          @isLastPage = result.last_page
-          result.items
+    new Vue
+      el: '#main-content'
+      data:
+        items: []
+        tags: []
+        currentTags: tags
+        page: 1
+        isLastPage: true
 
-      showMore: ->
-        @page += 1
-        @loadItems().then (items) =>
-          @items = @items.concat(items)
+      computed:
+        currentPath: ->
+          '/' + @currentTags.join(',')
 
-    created: ->
-      @$on 'tag-changed', ->
-        @page = 1
-        @loadItems().then (items) =>
-          @items = items
+      methods:
+        loadItems: ->
+          ($.getJSON Routes.itemsPath(tag: @currentTags, page: @page)).then (result) =>
+            @isLastPage = result.last_page
+            result.items
 
-      ($.getJSON Routes.rootPath(tag: @currentTags)).then (data) =>
-        @items = data.items.items
-        @isLastPage = data.items.last_page
-        @tags = data.tags
+        showMore: ->
+          @page += 1
+          @loadItems().then (items) =>
+            @items = @items.concat(items)
+
+      created: ->
+        @$on 'tag-changed', ->
+          Router.setCurrentPath(@currentPath)
+          @page = 1
+          @loadItems().then (items) =>
+            @items = items
+
+        ($.getJSON Routes.rootPath(tag: @currentTags)).then (data) =>
+          @items = data.items.items
+          @isLastPage = data.items.last_page
+          @tags = data.tags
+
+  Router.dispatch()
