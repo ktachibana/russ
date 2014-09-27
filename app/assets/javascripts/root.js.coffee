@@ -46,44 +46,45 @@ Vue.component 'item-panel',
     subscriptionPath: ->
       Routes.subscriptionPath(@feed.users_subscription)
 
+rootAction = (tags) ->
+  new Vue
+    el: '#main-content'
+    data:
+      items: []
+      tags: []
+      currentTags: tags
+      page: 1
+      isLastPage: true
+
+    computed:
+      currentPath: ->
+        '/' + @currentTags.join(',')
+
+    methods:
+      loadItems: ->
+        ($.getJSON Routes.itemsPath(tag: @currentTags, page: @page)).then (result) =>
+          @isLastPage = result.last_page
+          result.items
+
+      showMore: ->
+        @page += 1
+        @loadItems().then (items) =>
+          @items = @items.concat(items)
+
+    created: ->
+      @$on 'tag-changed', ->
+        Router.setCurrentPath(@currentPath)
+        @page = 1
+        @loadItems().then (items) =>
+          @items = items
+
+      ($.getJSON Routes.rootPath(tag: @currentTags)).then (data) =>
+        @items = data.items.items
+        @isLastPage = data.items.last_page
+        @tags = data.tags
+
 if $('.root-controller.index-action').length
-  Router.on '/:tags', (tagsParam) ->
-    tags = if tagsParam then tagsParam.split(',') else []
-
-    new Vue
-      el: '#main-content'
-      data:
-        items: []
-        tags: []
-        currentTags: tags
-        page: 1
-        isLastPage: true
-
-      computed:
-        currentPath: ->
-          '/' + @currentTags.join(',')
-
-      methods:
-        loadItems: ->
-          ($.getJSON Routes.itemsPath(tag: @currentTags, page: @page)).then (result) =>
-            @isLastPage = result.last_page
-            result.items
-
-        showMore: ->
-          @page += 1
-          @loadItems().then (items) =>
-            @items = @items.concat(items)
-
-      created: ->
-        @$on 'tag-changed', ->
-          Router.setCurrentPath(@currentPath)
-          @page = 1
-          @loadItems().then (items) =>
-            @items = items
-
-        ($.getJSON Routes.rootPath(tag: @currentTags)).then (data) =>
-          @items = data.items.items
-          @isLastPage = data.items.last_page
-          @tags = data.tags
+  Router.on '/', () -> rootAction([])
+  Router.on '/:tags', (tagsParam) -> rootAction(tagsParam.split(','))
 
   Router.dispatch()
