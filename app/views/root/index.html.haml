@@ -3,11 +3,11 @@
 
 %script#tag-button{ type: 'text/x-template' }
   .btn-group.btn-group-sm.tag-button
-    %a.btn{ v: { on: 'click: select', class: 'btn-info: active, active: active, btn-default: !active' } }
+    %a.btn{ v: { on: 'click: select', class: 'btn-info: isActive, active: isActive, btn-default: !isActive' } }
       %span.glyphicon.glyphicon-tag
       {{name}} ({{count}})
     %a.btn.btn-default{ v: { on: 'click: toggle' } }
-      %span.glyphicon{ v: { class: 'glyphicon-minus: active, glyphicon-plus: !active' } }
+      %span.glyphicon{ v: { class: 'glyphicon-minus: isActive, glyphicon-plus: !isActive' } }
 
 %script#item-panel{ type: 'text/x-template' }
   .panel.panel-default.item
@@ -24,7 +24,7 @@
     .panel-body{ v: { html: 'description' } }
 
 
-%tag-buttons{ v: { with: 'tags: tags', ref: 'tagButtons' } }
+%tag-buttons{ v: { with: 'tags: tags, currentTags: currentTags', ref: 'tagButtons' } }
 
 .items
   %item-panel{ v: { component: 'item-panel', repeat: 'items' } }

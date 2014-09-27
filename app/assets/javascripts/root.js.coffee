@@ -2,26 +2,42 @@ Vue.component 'tag-buttons',
   template: '#tag-buttons'
   data:
     tags: []
+    currentTags: []
   methods:
-    selectedTagNames: ->
-      _.chain(@tags).filter((tag) -> tag.active ).map((tag) -> tag.name ).value()
+    inactivate: (tagName) ->
+      @currentTags = _.without(@currentTags, tagName)
+    activateOnly: (tagName) ->
+      oldTags = @currentTags
+      @currentTags = [tagName]
+      !_.isEqual(@currentTags, oldTags)
+    activate: (tagName) ->
+      if @isActive(tagName)
+        false
+      else
+        @currentTags.push(tagName)
+        true
+    isActive: (tagName) ->
+      _.contains(@currentTags, tagName)
 
   components:
     'tag-button' : Vue.extend
       template: '#tag-button'
-      data:
-        active: false
+      computed:
+        isActive: ->
+          @$parent.isActive(@name)
       methods:
         dispatchChanged: ->
-          @$dispatch 'tag-changed', @$parent.selectedTagNames()
+          @$dispatch('tag-changed')
 
         select: ->
-          _.each @$parent.tags, (tag) =>
-            tag.active = (tag == @$data)
-          @dispatchChanged()
+          if @$parent.activateOnly(@name)
+            @dispatchChanged()
 
         toggle: ->
-          @active = !@active
+          if @isActive
+            @$parent.inactivate(@name)
+          else
+            @$parent.activate(@name)
           @dispatchChanged()
 
 Vue.component 'item-panel',
@@ -36,12 +52,13 @@ if $('.root-controller.index-action').length
     data:
       items: []
       tags: []
+      currentTags: []
       page: 1
       isLastPage: true
 
     methods:
       loadItems: ->
-        ($.getJSON Routes.itemsPath(tag: @$.tagButtons.selectedTagNames(), page: @page)).then (result) =>
+        ($.getJSON Routes.itemsPath(tag: @currentTags, page: @page)).then (result) =>
           @isLastPage = result.last_page
           result.items
 
@@ -56,7 +73,7 @@ if $('.root-controller.index-action').length
         @loadItems().then (items) =>
           @items = items
 
-      ($.getJSON Routes.rootPath()).then (data) =>
+      ($.getJSON Routes.rootPath(tag: @currentTags)).then (data) =>
         @items = data.items.items
         @isLastPage = data.items.last_page
         @tags = data.tags
