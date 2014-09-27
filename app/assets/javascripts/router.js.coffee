@@ -21,6 +21,7 @@ class @Router
       ''
 
   @dispatch: ->
+    @setCurrentPath('/') unless @currentPath()
     _.some @routes, (route) =>
       match = route.pathRegexp.exec(@currentPath())
       route.callback.apply(this, match.slice(1)) if match
