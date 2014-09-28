@@ -15,11 +15,11 @@
     %tr{ class: "_#{subscription.id}" }
       = form_for subscription, remote: true, class: %w[form form-inline] do |f|
         %td
-          = link_to '■', f.object
+          = link_to '■', f.object.feed, target: '_blank'
         %td.title
           = f.text_field :title, size: 50, class: 'form-control', placeholder: subscription.feed.title
         %td.latest
-          = link_to truncate(subscription.feed.latest_item.try(:title), length: 30), subscription, target: '_blank'
+          = link_to truncate(subscription.feed.latest_item.try(:title), length: 30), subscription.feed, target: '_blank'
         %td.tag
           = f.text_field :tag_list, class: 'form-control', value: subscription.tags_string
         %td

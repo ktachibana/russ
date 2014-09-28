@@ -4,6 +4,6 @@
 %small
   = link_to @subscription.feed.url, @subscription.feed.url, target: '_blank'
 
-%p= render @items, hide_feed: true
+%p= render @items
 
 = paginate @items

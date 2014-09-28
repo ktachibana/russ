@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :feeds
   resources :items
   devise_for :users
 

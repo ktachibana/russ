@@ -1,17 +1,8 @@
 class SubscriptionsController < ApplicationController
-  def index
-    @subscriptions = owned_subscriptions.includes({ feed: :latest_item }, :tags).order(:id).search(params)
-  end
-
-  def show
-    @subscription = owned_subscriptions.includes(feed: :items).find(params[:id])
-    @items = @subscription.feed.items.page(params[:page])
-  end
-
   def new
     url = params[:url]
     owned_subscriptions.joins(:feed).merge(Feed.where(url: url)).first.try do |subscription|
-      return redirect_to(subscription, notice: I18n.t('messages.feed_already_registed', url: url))
+      return redirect_to(subscription.feed, notice: I18n.t('messages.feed_already_registed', url: url))
     end
     feed = Feed.find_or_initialize_by(url: url)
     feed.load! if feed.new_record?
@@ -50,7 +41,7 @@ class SubscriptionsController < ApplicationController
 
   def destroy
     Subscription.destroy(params[:id])
-    redirect_to(Subscription)
+    redirect_to(Feed)
   end
 
   private

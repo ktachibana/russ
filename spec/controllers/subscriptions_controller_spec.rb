@@ -4,25 +4,6 @@ describe SubscriptionsController, type: :controller do
   let!(:user) { create(:user) }
   before { sign_in(user) }
 
-  describe 'GET :index' do
-    render_views
-
-    it 'Subscription一覧を取得する' do
-      subscriptions = create_list(:subscription, 2, user: user)
-      create(:subscription, user: create(:user))
-      get :index
-      expect(response).to be_success
-      expect(assigns(:subscriptions)).to match_array(subscriptions)
-    end
-
-    it '特定のタグがついたSubscriptionだけに絞り込める' do
-      subscriptions = %w(tag1 tag2).map { |tag| create(:subscription, user: user, tag_list: tag) }
-      get :index, tag: %w(tag1)
-      expect(response).to be_success
-      expect(assigns(:subscriptions)).to eq([subscriptions[0]])
-    end
-  end
-
   describe 'GET :new' do
     render_views
 
@@ -40,7 +21,7 @@ describe SubscriptionsController, type: :controller do
     it '登録済みのフィードのURLを指定するとリダイレクト' do
       subscription = create(:subscription, user: user, feed: create(:feed, url: mock_rss_url))
       get :new, url: mock_rss_url
-      expect(response).to redirect_to(subscription_path(subscription))
+      expect(response).to redirect_to(feed_path(subscription.feed))
       expect(flash[:notice]).to eq(I18n.t('messages.feed_already_registed', url: mock_rss_url))
     end
 
@@ -49,15 +30,6 @@ describe SubscriptionsController, type: :controller do
       WebMock.stub_request(:get, feed.url).to_raise('test fail')
       get :new, url: feed.url
       expect(response).to be_success
-    end
-  end
-
-  describe 'GET :show' do
-    let(:subscription) { create(:subscription, user: user) }
-
-    it 'Feedを表示できる' do
-      get :show, id: subscription.id
-      expect(assigns(:subscription)).to eq(subscription)
     end
   end
 
@@ -85,27 +57,37 @@ describe SubscriptionsController, type: :controller do
   end
 
   describe 'POST :update' do
+    def action
+      put :update, id: subscription.id, subscription: subscription_params
+    end
+    let(:subscription_params) { { title: 'NewTitle', tag_list: 'tag1, tag2' } }
     let(:subscription) { create(:subscription, user: user) }
 
     it 'Subscriptionを更新できる' do
-      put :update, id: subscription.id, subscription: { title: 'NewTitle', tag_list: 'tag1, tag2' }
+      action
       subscription.reload
       expect(subscription.title).to eq('NewTitle')
       expect(subscription.tag_list).to eq(%w(tag1 tag2))
     end
 
-    it 'タグを削除できる' do
-      subscription.update_attributes!(tag_list: %w(tag1 tag2))
-      put :update, id: subscription.id, subscription: { tag_list: 'tag1' }
-      subscription.reload
-      expect(subscription.tag_list).to eq(%w(tag1))
-      expect(ActsAsTaggableOn::Tagging.count).to eq(1)
+    context 'tag_listの値を削除したとき' do
+      let(:subscription) { create(:subscription, user: user, tag_list: %w(tag1 tag2)) }
+      let(:subscription_params) { { tag_list: 'tag1' } }
+
+      it 'タグを削除できる' do
+        action
+        subscription.reload
+        expect(subscription.tag_list).to eq(%w(tag1))
+        expect(ActsAsTaggableOn::Tagging.count).to eq(1)
+      end
     end
 
-    it 'フィードのURLは変更できない' do
-      expect do
-        put :update, id: subscription.id, subscription: { feed_attributes: { url: 'http://new.com/rss.xml' } }
-      end.not_to change { subscription.reload.feed.url }
+    context 'URLを与えたとき' do
+      let(:subscription_params) { { feed_attributes: { url: 'http://new.com/rss.xml' } } }
+
+      it 'フィードのURLは変更できない' do
+        expect { action }.not_to change { subscription.reload.feed.url }
+      end
     end
   end
 
@@ -145,7 +127,7 @@ describe SubscriptionsController, type: :controller do
 
     it 'Feed一覧にリダイレクトする' do
       delete :destroy, id: subscription.id
-      expect(response).to redirect_to(subscriptions_path)
+      expect(response).to redirect_to(feeds_path)
     end
   end
 end

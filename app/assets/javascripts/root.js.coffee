@@ -43,8 +43,8 @@ Vue.component 'tag-buttons',
 Vue.component 'item-panel',
   template: '#item-panel'
   computed:
-    subscriptionPath: ->
-      Routes.subscriptionPath(@feed.users_subscription)
+    feedPath: ->
+      Routes.feedPath(@feed)
 
 if $('.root-controller.index-action').length
   vue = new Vue
