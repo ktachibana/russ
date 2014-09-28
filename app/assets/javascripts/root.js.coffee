@@ -46,7 +46,8 @@ Vue.component 'item-panel',
     subscriptionPath: ->
       Routes.subscriptionPath(@feed.users_subscription)
 
-rootAction = (tags) ->
+rootAction = (tagsParam) ->
+  tags = if tagsParam then tagsParam.split(',') else []
   new Vue
     el: '#main-content'
     data:
@@ -84,7 +85,5 @@ rootAction = (tags) ->
         @tags = data.tags
 
 if $('.root-controller.index-action').length
-  Router.on '/', () -> rootAction([])
-  Router.on '/:tags', (tagsParam) -> rootAction(tagsParam.split(','))
-
+  Router.on '/:tags?', rootAction
   Router.dispatch()
