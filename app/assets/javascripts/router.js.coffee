@@ -8,8 +8,7 @@ class @Router
   @_compilePath: (path) ->
     # XXX: -とか.とかをunescapeしていないので、pathにそれらを与えるのはよくない
     # https://github.com/pillarjs/path-to-regexp を使うべきかも
-    source = path.replace(/:\w+/g, '([^/]+)')
-    new RegExp("^#{source}$")
+    pathToRegexp(path)
 
   @setCurrentPath: (path) ->
     location.hash = path
@@ -22,6 +21,7 @@ class @Router
 
   @dispatch: ->
     @setCurrentPath('/') unless @currentPath()
+
     _.some @routes, (route) =>
       match = route.pathRegexp.exec(@currentPath())
       route.callback.apply(this, match.slice(1)) if match
