@@ -74,6 +74,11 @@ end
 
 group :test do
   gem 'webmock'
+  gem 'capybara'
+  gem 'launchy'
+  gem 'poltergeist'
+  gem 'selenium-webdriver'
+  gem 'database_rewinder'
 end
 
 gem 'devise'
