@@ -7,7 +7,7 @@ FactoryGirl.define do
     sequence(:link_url) { |n| "http://test.com/content#{n}" }
     sequence(:description) { |n| "description#{n}" }
 
-    ignore do
+    transient do
       item_count 0
     end
 
