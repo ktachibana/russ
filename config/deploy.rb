@@ -8,7 +8,7 @@ set :repo_url, 'https://github.com/ktachibana/russ.git'
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
 # Default deploy_to directory is /var/www/my_app
-set :deploy_to, '/u/apps/russ'
+set :deploy_to, '~/russ'
 
 set :rbenv_type, :system # or :system, depends on your rbenv setup
 set :rbenv_ruby, File.read('.ruby-version').strip
@@ -62,7 +62,7 @@ namespace :deploy do
     desc 'Restart application'
     task action do
       on roles(:app), in: :sequence, wait: 5 do
-        execute :sudo, '/usr/local/rbenv/shims/god', action, 'russ'
+        execute :sudo, action, 'russ'
       end
     end
   end
