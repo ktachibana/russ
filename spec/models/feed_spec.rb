@@ -151,7 +151,7 @@ describe Feed do
 
     it 'エラーが起きたときはログを出力する' do
       allow(Feed).to receive(:load_rss).and_raise('error!')
-      expect(Rails.logger).to receive(:error).with(satisfy { |e| expect(e.message).to eq('error!') })
+      expect(Rails.logger).to receive(:error).with(satisfy { |e| expect(e).to include('error!') })
       feed.load!
     end
   end

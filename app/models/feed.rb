@@ -49,8 +49,7 @@ class Feed < ActiveRecord::Base
         self.items_attributes = attributes
       end
     rescue => e
-      Rails.logger.error(e)
-      Rails.logger.error(e.backtrace.join("\n"))
+      Rails.logger.error([e.message, *e.backtrace].join("\n"))
       nil # TODO: エラーハンドリング
     end
 
