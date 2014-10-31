@@ -50,6 +50,7 @@ class Feed < ActiveRecord::Base
       end
     rescue => e
       Rails.logger.error(e)
+      Rails.logger.error(e.backtrace.join("\n"))
       nil # TODO: エラーハンドリング
     end
 
