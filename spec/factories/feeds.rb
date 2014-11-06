@@ -15,4 +15,8 @@ FactoryGirl.define do
       create_list(:item, evaluator.item_count, feed: feed)
     end
   end
+
+  factory :feed_only_url, class: :feed do
+    sequence(:url) { |n| "http://test.com/rss#{n}.xml"}
+  end
 end

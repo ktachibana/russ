@@ -1,7 +1,6 @@
 module RssMockHelpers
-  def mock_rss!(url = nil)
-    url ||= mock_rss_url
-    WebMock.stub_request(:get, url).to_return(body: rss_data)
+  def mock_rss!(url: mock_rss_url, body: rss_data)
+    WebMock.stub_request(:get, url).to_return(body: body)
     url
   end
 
@@ -80,6 +79,41 @@ end
 
   def rss_data_two_items
     RSS_DATA_TWO_ITEMS
+  end
+
+  def rss_data_atom
+    <<-EOS
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title type="text" xml:lang="en">Riding Rails</title>
+  <link type="application/atom+xml" href="http://weblog.rubyonrails.org/feed/" rel="self"/>
+  <link type="text" href="http://weblog.rubyonrails.org/" rel="alternate"/>
+  <updated>2014-11-05T16:12:31+00:00</updated>
+  <id>http://weblog.rubyonrails.org/</id>
+
+  <entry>
+    <title>[ANN] Rails 4.2.0.beta4 has been released!</title>
+    <author>
+      <name>chancancode</name>
+    </author>
+    <link href="http://weblog.rubyonrails.org/2014/10/30/Rails-4-2-0-beta4-has-been-released/"/>
+    <updated>2014-10-30T22:00:00+00:00</updated>
+    <id>http://weblog.rubyonrails.org/2014/10/30/Rails-4-2-0-beta4-has-been-released/</id>
+    <content type="html">Content 1</content>
+  </entry>
+
+  <entry>
+    <title>Rails 3.2.20, 4.0.11, 4.1.7, and 4.2.0.beta3 have been released</title>
+    <author>
+      <name>tenderlove</name>
+    </author>
+    <link href="http://weblog.rubyonrails.org/2014/10/30/Rails_3_2_20_4_0_11_4_1_7_and_4_2_0_beta3_have_been_released/"/>
+    <updated>2014-10-30T18:16:55+00:00</updated>
+    <id>http://weblog.rubyonrails.org/2014/10/30/Rails_3_2_20_4_0_11_4_1_7_and_4_2_0_beta3_have_been_released/</id>
+    <content type="html">Content 2</content>
+  </entry>
+</feed>
+EOS
   end
 
   OPML_DATA = <<-'EOS'

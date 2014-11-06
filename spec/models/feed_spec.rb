@@ -59,17 +59,13 @@ describe Feed do
   end
 
   describe '#load!' do
-    before do
-      WebMock.stub_request(:get, 'http://test.com/rss.xml').to_return(body: rss_data_one_item)
-    end
-
-    let!(:feed) do
-      Feed.new(url: 'http://test.com/rss.xml').tap(&:load!)
-    end
+    before { mock_rss!(url: feed.url, body: rss_data) }
+    let(:feed) { build(:feed_only_url) }
+    let(:rss_data) { rss_data_one_item }
 
     it 'RSSからアイテムを読み込む' do
+      expect { feed.load! }.not_to change(feed, :url)
       expect(feed.title).to eq('RSS Title')
-      expect(feed.url).to eq('http://test.com/rss.xml')
       expect(feed.link_url).to eq('http://test.com/content')
       expect(feed.description).to eq('My description')
 
@@ -82,34 +78,38 @@ describe Feed do
       item.description == 'Item description'
     end
 
-    it '再度loadすると既存のものは更新になる' do
-      feed.save!
-      WebMock.stub_request(:get, 'http://test.com/rss.xml').to_return(body: rss_data_two_items)
-      feed.load!
-
-      expect(feed.title).to eq('New Title')
-      expect(feed.description).to eq('New description')
-      expect(feed.link_url).to eq('http://test.com/new-content')
-      expect(feed).to be_changed
-
-      expect(feed.items.size).to eq(2)
-      feed.items[0].tap do |item|
-        expect(item.title).to eq('New Title')
-        expect(item.link).to eq('http://test.com/content/2')
-        expect(item.published_at).to eq(Time.new(2012, 2, 22, 18, 24, 29))
-        item.description == 'New item description'
+    context 'すでに一度load!して保存してあるとき' do
+      before do
+        feed.load!
+        feed.save!
       end
-      feed.items[1].tap do |item|
-        expect(item.title).to eq('Item Title')
-        expect(item.link).to eq('http://test.com/content/3')
-        expect(item.published_at).to eq(Time.new(2012, 2, 20, 16, 4, 19))
-        item.description == 'Item description'
-      end
-    end
 
-    it 'guidが無い時はlinkで重複を判断する' do
-      feed.save!
-      WebMock.stub_request(:get, 'http://test.com/rss.xml').to_return(body: <<-EOS)
+      it '再度load!すると既存のFeedが更新される' do
+        mock_rss!(url: feed.url, body: rss_data_two_items)
+        feed.load!
+
+        expect(feed.title).to eq('New Title')
+        expect(feed.description).to eq('New description')
+        expect(feed.link_url).to eq('http://test.com/new-content')
+        expect(feed).to be_changed
+
+        expect(feed.items.size).to eq(2)
+        feed.items[0].tap do |item|
+          expect(item.title).to eq('New Title')
+          expect(item.link).to eq('http://test.com/content/2')
+          expect(item.published_at).to eq(Time.new(2012, 2, 22, 18, 24, 29))
+          item.description == 'New item description'
+        end
+        feed.items[1].tap do |item|
+          expect(item.title).to eq('Item Title')
+          expect(item.link).to eq('http://test.com/content/3')
+          expect(item.published_at).to eq(Time.new(2012, 2, 20, 16, 4, 19))
+          item.description == 'Item description'
+        end
+      end
+
+      it 'guidが無い時はlinkで重複を判断する' do
+        mock_rss!(url: feed.url, body: <<-EOS)
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
@@ -133,19 +133,20 @@ describe Feed do
     </item>
   </channel>
 </rss>
-      EOS
+        EOS
 
-      feed.load!
-      feed.save!
-      feed.reload
-      expect(feed.items.size).to eq(2)
-      feed.items[0].tap do |item|
-        expect(item.link).to eq('http://test.com/content/2')
-        item.description == 'New item description'
-      end
-      feed.items[1].tap do |item|
-        expect(item.link).to eq('http://test.com/content/1')
-        item.description == 'Item description UPDATED'
+        feed.load!
+        feed.save!
+        feed.reload
+        expect(feed.items.size).to eq(2)
+        feed.items[0].tap do |item|
+          expect(item.link).to eq('http://test.com/content/2')
+          item.description == 'New item description'
+        end
+        feed.items[1].tap do |item|
+          expect(item.link).to eq('http://test.com/content/1')
+          item.description == 'Item description UPDATED'
+        end
       end
     end
 
