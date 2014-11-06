@@ -75,7 +75,7 @@ describe Feed do
       expect(item.link).to eq('http://test.com/content/1')
       expect(item.guid).to eq('1')
       expect(item.published_at).to eq(Time.new(2012, 2, 20, 16, 4, 19))
-      item.description == 'Item description'
+      expect(item.description).to eq('Item description')
     end
 
     context 'すでに一度load!して保存してあるとき' do
@@ -146,6 +146,59 @@ describe Feed do
         feed.items[1].tap do |item|
           expect(item.link).to eq('http://test.com/content/1')
           item.description == 'Item description UPDATED'
+        end
+      end
+    end
+
+    context 'Atom形式のとき' do
+      let(:rss_data) { rss_data_atom }
+      before { feed.load! }
+
+      it 'Atomも読み込める' do
+        expect(feed.title).to eq('Riding Rails')
+        expect(feed.link_url).to eq('http://weblog.rubyonrails.org/')
+        expect(feed.description).to eq(nil)
+
+        expect(feed.items.size).to eq(1)
+
+        item = feed.items[0]
+        expect(item.title).to eq('Rails 3.2.20, 4.0.11, 4.1.7, and 4.2.0.beta3 have been released')
+        expect(item.link).to eq('http://weblog.rubyonrails.org/2014/10/30/Rails_3_2_20_4_0_11_4_1_7_and_4_2_0_beta3_have_been_released/')
+        expect(item.guid).to eq('http://weblog.rubyonrails.org/2014/10/30/Rails_3_2_20_4_0_11_4_1_7_and_4_2_0_beta3_have_been_released/')
+        expect(item.published_at).to eq(Time.utc(2014, 10, 30, 18, 16, 55))
+        expect(item.description).to eq('Content 1')
+      end
+
+      context 'すでに一度load!して保存してあるとき' do
+        before do
+          feed.save!
+
+          mock_rss!(url: feed.url, body: rss_data_atom_two_items)
+          feed.load!
+        end
+
+        it '再度load!すると既存のFeedが更新される' do
+          expect(feed.title).to eq('New Title')
+          expect(feed.link_url).to eq('http://weblog.rubyonrails.org/new')
+          expect(feed).to be_changed
+
+          expect(feed.items.size).to eq(2)
+
+          items = feed.items.sort_by(&:published_at).reverse
+          items[0].tap do |item|
+            expect(item.title).to eq('[ANN] Rails 4.2.0.beta4 has been released!')
+            expect(item.link).to eq('http://weblog.rubyonrails.org/2014/10/30/Rails-4-2-0-beta4-has-been-released/')
+            expect(item.guid).to eq('http://weblog.rubyonrails.org/2014/10/30/Rails-4-2-0-beta4-has-been-released/')
+            expect(item.published_at).to eq(Time.utc(2014, 10, 30, 22, 00, 00))
+            expect(item.description).to eq('Content 2')
+          end
+          items[1].tap do |item|
+            expect(item.title).to eq('Rails 3.2.20, 4.0.11, 4.1.7, and 4.2.0.beta3 have been released')
+            expect(item.link).to eq('http://weblog.rubyonrails.org/2014/10/30/Rails_3_2_20_4_0_11_4_1_7_and_4_2_0_beta3_have_been_released/')
+            expect(item.guid).to eq('http://weblog.rubyonrails.org/2014/10/30/Rails_3_2_20_4_0_11_4_1_7_and_4_2_0_beta3_have_been_released/')
+            expect(item.published_at).to eq(Time.utc(2014, 10, 30, 18, 16, 55))
+            expect(item.description).to eq('Content 1')
+          end
         end
       end
     end

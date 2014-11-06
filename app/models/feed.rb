@@ -39,14 +39,42 @@ class Feed < ActiveRecord::Base
       self.link_url = rss.channel.link
     end
 
+    def update_by_atom!(atom)
+      self.title = atom.title.content
+      self.link_url = atom.links.find { |link| link.rel == 'alternate' }.try(:href)
+      self.link_url ||= atom.links[0].try(:href) || url
+
+      guid_id_map = items.each_with_object({}) do |item, hash|
+        hash[item.guid] = item.id
+      end
+      attributes = atom.items.map do |item|
+        {}.tap do |result|
+          guid = item.id.try(:content) || result[:link]
+          result[:guid] = guid
+          guid_id_map[guid].try { |id| result[:id] = id }
+          result[:title] = item.title.content
+          result[:link] = item.link.href
+          result[:published_at] = item.updated.content
+          result[:description] = item.content.content
+        end
+      end
+
+      self.items_attributes = attributes
+    end
+
     def load!
       self.class.load_rss(url) do |rss|
-        update_by_rss!(rss)
+        case rss.feed_type
+        when 'atom'
+          update_by_atom!(rss)
+        else
+          update_by_rss!(rss)
 
-        attributes = rss.items.map do |loaded_item|
-          to_item_attributes(loaded_item)
+          attributes = rss.items.map do |loaded_item|
+            to_item_attributes(loaded_item)
+          end
+          self.items_attributes = attributes
         end
-        self.items_attributes = attributes
       end
     rescue => e
       Rails.logger.error([e.message, *e.backtrace].join("\n"))
