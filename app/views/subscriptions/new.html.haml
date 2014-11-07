@@ -4,7 +4,8 @@
       = ff.hidden_field :url
       = link_to ff.object.link_url, target: '_blank' do
         %h1= ff.object.title
-      .description.well= simple_format ff.object.description
+      - ff.object.description.presence.try do |desc|
+        .description.well= simple_format desc
   .form-group
     = f.label :title
     = f.text_field :title, class: 'form-control', placeholder: @subscription.feed.title
