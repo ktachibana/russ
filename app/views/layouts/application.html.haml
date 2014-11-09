@@ -8,6 +8,8 @@
     %meta{ name: 'viewport', content: 'width=device-width, initial-scale=1.0' }
 
   %body
+    = yield :components
+
     .container
       - { notice: :success, alert: :danger }.each do |flash_name, alert_type|
         - flash[flash_name].presence.try do |message|
