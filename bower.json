@@ -2,7 +2,7 @@
   "name": "russ",
   "private": true,
   "dependencies": {
-    "vue": "~0.10.6",
+    "vue": "~0.11.0",
     "underscore": "~1.6.0",
     "path-to-regexp": "pillarjs/path-to-regexp#~1.0.1"
   }
