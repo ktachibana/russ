@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
   resources :feeds
   resources :items
+  resources :tags
   devise_for :users
 
   root to: 'root#index'
