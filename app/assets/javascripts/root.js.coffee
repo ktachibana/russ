@@ -1,6 +1,6 @@
 Vue.component 'tag-buttons',
   template: '#tag-buttons'
-  data:
+  data: ->
     tags: []
     currentTags: []
   methods:
@@ -22,12 +22,13 @@ Vue.component 'tag-buttons',
   components:
     'tag-button' : Vue.extend
       template: '#tag-button'
+      inherit: true
       computed:
         isActive: ->
           @$parent.isActive(@name)
       methods:
         dispatchChanged: ->
-          @$dispatch('tag-changed')
+          @$dispatch('tag-changed', @currentTags)
 
         select: ->
           if @$parent.activateOnly(@name)
@@ -78,11 +79,13 @@ if $('.root-controller.index-action').length
         @loadItems().then (items) =>
           @items = @items.concat(items)
 
-      onTagChanged: ->
+      onTagChanged: (newTags) ->
+        @currentTags = newTags
         Router.setCurrentPath(@currentPath)
         @page = 1
         @loadItems().then (items) =>
           @items = items
+        null
 
     created: ->
       @$on 'tag-changed', @onTagChanged
