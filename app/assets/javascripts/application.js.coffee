@@ -18,4 +18,6 @@
 #= require path-to-regexp
 #= require js-routes
 #= require router
+#= require russ
 #= require root
+#= require feeds
