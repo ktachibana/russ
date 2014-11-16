@@ -21,10 +21,10 @@ if $('.root-controller.index-action').length
     methods:
       init: (tags) ->
         @currentTags = tags
-        ($.getJSON Routes.rootPath(tag: @currentTags)).then (data) =>
-          @items = data.items.items
-          @isLastPage = data.items.last_page
-          @tags = data.tags
+        ($.getJSON Routes.tagsPath()).then (tags) =>
+          @tags = tags
+        @loadItems().then (items) =>
+          @items = items
 
       loadItems: ->
         ($.getJSON Routes.itemsPath(tag: @currentTags, page: @page)).then (result) =>
