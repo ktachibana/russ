@@ -1,0 +1,22 @@
+%script#root-page{ type: 'text/x-template' }
+  %tag-buttons{ v: { with: 'tags: tags, currentTags: currentTags' } }
+
+  .items
+    %div{ v: { repeat: 'items', component: 'item-panel' } }
+
+  .more.text-center{ v: { show: '!isLastPage' } }
+    %button.btn.btn-primary{ v: { on: 'click: showMore' } } 続きを表示
+
+%script#item-panel{ type: 'text/x-template' }
+  .panel.panel-default.item
+    .panel-heading
+      %a{ target: '_blank', v: { attr: 'href:link' } }
+        {{title}}
+      .pull-right
+        %small
+          %a{ target: '_blank', v: { attr: 'href:feed.link_url' } }
+            {{feed.users_subscription.user_title}}
+          %a{ v: { attr: 'href:feedPath' } }
+            ■
+      .clearfix
+    .panel-body{ v: { html: 'description' } }

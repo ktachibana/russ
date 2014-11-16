@@ -6,8 +6,6 @@ class @Router
     @routes.push path: path, pathRegexp: regexp, callback: callback
 
   @_compilePath: (path) ->
-    # XXX: -とか.とかをunescapeしていないので、pathにそれらを与えるのはよくない
-    # https://github.com/pillarjs/path-to-regexp を使うべきかも
     pathToRegexp(path)
 
   @setCurrentPath: (path) ->
@@ -26,3 +24,8 @@ class @Router
       match = route.pathRegexp.exec(@currentPath())
       route.callback.apply(this, match.slice(1)) if match
       match
+
+  @watch: ->
+    window.onhashchange = =>
+      @setCurrentPath(@currentPath())
+      @dispatch()

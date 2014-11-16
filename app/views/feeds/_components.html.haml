@@ -1,0 +1,48 @@
+%script#feeds-page{ type: 'text/x-template' }
+  %h1.page-header Feeds
+
+  %tag-buttons{ v: { with: 'tags: tags, currentTags: currentTags' } }
+
+  %hr
+
+  .container-fluid
+    .row{ v: { component: 'subscription-row', repeat: 'subscriptions', ref: 'subscriptionConponents' } }
+
+%script#subscription-row{ type: 'text/x-template' }
+  = form_for Subscription.new, method: 'put', data: { remote: true }, html: { 'v-attr' => 'action: subscriptionPath', 'v-class' => 'classList' } do |f|
+    .col-md-6
+      = f.text_field :title, size: 50, class: 'form-control', 'v-attr' => 'placeholder: feed.title'
+    .col-md-4
+      = link_to '', target: '_blank', 'v-attr' => 'href: feedPath' do
+        {{feed.latest_item.title}}
+    .col-md-2
+      %button.btn.btn-primary.btn-sm
+        %span.glyphicon.glyphicon-ok
+      = link_to '', method: :delete, class: %w[btn btn-sm btn-danger], data: { confirm: 'Delete?' }, 'v-attr' => 'href:feedPath' do
+        &cross;
+      %span.response
+
+-#%script#subscription-row{ type: 'text/x-template' }
+  -#= form_for Subscription.new, remote: true, class: %w[form form-inline], html: {  } do |f|
+  -#%td
+    -#= link_to '■', '', target: '_blank', 'v-attr' => 'href: feedPath'
+    -#= f.text_field :title, size: 50, class: 'form-control', 'v-attr' => 'placeholder: feed.title'
+
+  -#= form_for Subscription.new, remote: true, class: %w[form form-inline], html: { v: { attr: 'action: ""' } } do |f|
+  -#  %td
+  -#    = link_to '■', 'f.object.feed', target: '_blank', 'v-attr' => 'href: feed.id'
+  -#  %td.title
+  -#    = f.text_field :title, size: 50, class: 'form-control', 'v-attr' => 'placeholder: feed.title'
+  -#        %td.latest
+  -#          = link_to truncate(subscription.feed.latest_item.try(:title), length: 30), subscription.feed, target: '_blank'
+  -#        %td.tag
+  -#          = f.text_field :tag_list, class: 'form-control', value: subscription.tags_string
+  -#        %td
+  -#          = f.button class: %w[btn btn-primary btn-sm] do
+  -#            %span.glyphicon.glyphicon-ok
+  -#        %td
+  -#          = link_to subscription_path(subscription), method: :delete, class: %w[btn btn-sm btn-danger], data: { confirm: 'Delete?' } do
+  -#            &cross;
+  -#        %td.response
+  -#
+  -#= paginate @subscriptions

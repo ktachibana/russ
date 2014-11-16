@@ -40,3 +40,25 @@ Vue.component 'tag-buttons',
           else
             @$parent.activate(@name)
           @dispatchChanged()
+
+if $('.vue-app').length
+  @app = new Vue
+    el: '#main-content'
+    data:
+      currentPage: null
+      currentTags: []
+      tags: []
+    compiled: () ->
+      ($.getJSON Routes.tagsPath()).then (tags) =>
+        @tags = tags
+
+  Router.on '/feeds/:tags?', (tagsParams) ->
+    app.currentTags = tagsParams?.split(',') || []
+    app.currentPage = 'feeds-page'
+
+  Router.on '/:tags?', (tagsParam) ->
+    app.currentTags = tagsParam?.split(',') || []
+    app.currentPage = 'root-page'
+
+  Router.watch()
+  Router.dispatch()

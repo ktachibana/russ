@@ -18,6 +18,10 @@
           {{name}} ({{count}})
         %a.btn.btn-default{ v: { on: 'click: toggle' } }
           %span.glyphicon{ v: { class: 'glyphicon-minus: isActive, glyphicon-plus: !isActive' } }
+
+    = render 'root/components'
+    = render 'feeds/components'
+
     = yield :components
 
     .container
@@ -26,6 +30,7 @@
           .alert.alert-dismissable{ class: "alert-#{alert_type}" }
             %button.close{ 'data-dismiss' => :alert, 'aria-hidden' => :true } &times;
             = message
+
       - if user_signed_in?
         %nav.navbar.navbar-default{ role: :navigation }
           .navbar-header
@@ -34,10 +39,10 @@
               %span.icon-bar
               %span.icon-bar
               %span.icon-bar
-            = link_to 'RuSS', root_path, class: 'navbar-brand'
+            = link_to 'RuSS', root_path(anchor: '/'), class: 'navbar-brand'
           .collapse.navbar-collapse.navbar-ex1-collapse
             %ul.nav.navbar-nav
-              %li= link_to 'Feeds', feeds_path
+              %li= link_to 'Feeds', '#/feeds/'
             %ul.nav.navbar-nav.navbar-right
               %li.dropdown
                 = link_to '#', class: 'dropdown-toggle', data: { toggle: :dropdown } do
@@ -47,6 +52,8 @@
                   %li= link_to 'RuSS (Bookmarklet)', "javascript:location.href='#{new_subscription_url(url: '')}'+escape(location.href);"
                   %li= link_to 'Import OPML', upload_subscriptions_path
                   %li= link_to 'Sign out', destroy_user_session_path, method: :delete
-      %div#main-content{ class: %W(#{controller_name}-controller #{action_name}-action) }
+
+      %div#main-content{ class: ('vue-app' if yield(:vue_app).present?) }
+        %div{ v: { component: '{{currentPage}}', ref: 'currentComponent' } }
         = yield
     = javascript_include_tag 'application'
