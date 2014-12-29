@@ -3,13 +3,13 @@ source 'https://rubygems.org'
 ruby File.read('.ruby-version').strip
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 4.1.1'
-gem 'sprockets', '~> 2.12.0' # CVE-2014-7819
+gem 'rails', '~> 4.1.8' # CVE-2014-7829
+gem 'sprockets', '>= 2.12' # CVE-2014-7819
 
 gem 'mysql2'
 
 # Use SCSS for stylesheets
-gem 'sass-rails'
+gem 'sass-rails', '>= 5.0.0.beta1'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier'
@@ -40,8 +40,8 @@ end
 
 group :development, :test do
   gem 'powder'
-  gem 'rspec', '~> 3.0.0'
-  gem 'rspec-rails', '~> 3.0.0'
+  gem 'rspec'
+  gem 'rspec-rails'
   gem 'minitest' #  for warning
   gem 'factory_girl'
   gem 'factory_girl_rails'
@@ -56,7 +56,7 @@ group :development, :test do
   gem 'hirb-unicode'
   gem 'tapp'
   gem 'shoulda-matchers'
-  gem 'fuubar', '~> 2.0.0'
+  gem 'fuubar'
   gem 'timecop'
   gem 'rubocop'
   gem 'guard-rubocop'
