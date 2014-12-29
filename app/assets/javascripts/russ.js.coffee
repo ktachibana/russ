@@ -42,7 +42,7 @@ Vue.component 'tag-buttons',
           @dispatchChanged()
 
 if $('.vue-app').length
-  @app = new Vue
+  app = new Vue
     el: '#main-content'
     data:
       currentPage: null
@@ -52,13 +52,12 @@ if $('.vue-app').length
       ($.getJSON Routes.tagsPath()).then (tags) =>
         @tags = tags
 
-  Router.on '/feeds/:tags?', (tagsParams) ->
-    app.currentTags = tagsParams?.split(',') || []
+  Path.map('#/feeds/(:tags)').to () ->
+    app.currentTags = @params['tags']?.split(',') || []
     app.currentPage = 'feeds-page'
 
-  Router.on '/:tags?', (tagsParam) ->
-    app.currentTags = tagsParam?.split(',') || []
+  Path.map('#/(:tags)').to () ->
+    app.currentTags = @params['tags']?.split(',') || []
     app.currentPage = 'root-page'
 
-  Router.watch()
-  Router.dispatch()
+  Path.listen()

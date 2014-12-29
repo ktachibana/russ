@@ -6,7 +6,6 @@ Vue.component 'feeds-page',
     subscriptions: []
   compiled: ->
     ($.getJSON Routes.feedsPath()).then (data) =>
-      console.log data
       @subscriptions = data.subscriptions
 
 Vue.component 'subscription-row',

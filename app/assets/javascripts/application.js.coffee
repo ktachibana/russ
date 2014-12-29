@@ -15,9 +15,8 @@
 #= require bootstrap
 #= require vue
 #= require underscore
-#= require path-to-regexp
+#= require path
 #= require js-routes
-#= require router
 #= require russ
 #= require root
 #= require feeds
