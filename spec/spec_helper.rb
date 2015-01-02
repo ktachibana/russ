@@ -6,6 +6,7 @@ require 'rspec/rails'
 require 'capybara/rspec'
 require 'capybara/poltergeist'
 Capybara.default_driver = :poltergeist
+
 WebMock.disable_net_connect!(allow_localhost: true)
 
 # Requires supporting ruby files with custom matchers and macros, etc,

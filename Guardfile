@@ -22,15 +22,4 @@ group :red_green_refactor, halt_on_fail: true do
     watch(%r{(app|spec|lib)/.+\.rb$})
     watch(%r{(?:.+/)?\.rubocop\.yml$}) { |m| File.dirname(m[0]) }
   end
-
-  ### Guard::Konacha
-  #  available options:
-  #  - :run_all_on_start, defaults to true
-  #  - :notification, defaults to true
-  #  - :rails_environment_file, location of rails environment file,
-  #    should be able to find it automatically
-  guard :konacha, run_all_on_start: false do
-    watch(%r{^app/assets/javascripts/(.*)\.js(\.coffee)?$}) { |m| "#{m[1]}_spec.js" }
-    watch(%r{^spec/javascripts/.+_spec(\.js|\.js\.coffee)$})
-  end
 end

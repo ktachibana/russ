@@ -61,7 +61,6 @@ group :development, :test do
   gem 'rubocop'
   gem 'guard-rubocop'
   gem 'konacha'
-  gem 'guard-konacha'
 end
 
 group :development do
