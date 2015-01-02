@@ -60,4 +60,5 @@ if $('.vue-app').length
     app.currentTags = @params['tags']?.split(',') || []
     app.currentPage = 'root-page'
 
+  Path.root '#/'
   Path.listen()
