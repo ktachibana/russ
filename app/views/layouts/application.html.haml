@@ -24,7 +24,7 @@
 
     = yield :components
 
-    .container
+    .container#main-content{ class: ('vue-app' if yield(:vue_app).present?) }
       - { notice: :success, alert: :danger }.each do |flash_name, alert_type|
         - flash[flash_name].presence.try do |message|
           .alert.alert-dismissable{ class: "alert-#{alert_type}" }
@@ -39,10 +39,13 @@
               %span.icon-bar
               %span.icon-bar
               %span.icon-bar
-            = link_to 'RuSS', root_path(anchor: '/'), class: 'navbar-brand'
+            %a{ v: { attr: 'href: rootPath' }, class: 'navbar-brand' }
+              RuSS
           .collapse.navbar-collapse.navbar-ex1-collapse
             %ul.nav.navbar-nav
-              %li= link_to 'Feeds', '#/feeds/'
+              %li
+                %a{ v: { attr: 'href: feedsPath' } }
+                  Feeds
             %ul.nav.navbar-nav.navbar-right
               %li.dropdown
                 = link_to '#', class: 'dropdown-toggle', data: { toggle: :dropdown } do
@@ -53,7 +56,7 @@
                   %li= link_to 'Import OPML', upload_subscriptions_path
                   %li= link_to 'Sign out', destroy_user_session_path, method: :delete
 
-      %div#main-content{ class: ('vue-app' if yield(:vue_app).present?) }
+      %div
         %div{ v: { component: '{{currentPage}}', ref: 'currentComponent' } }
         = yield
     = javascript_include_tag 'application'

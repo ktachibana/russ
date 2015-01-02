@@ -13,3 +13,4 @@ json.subscriptions @subscriptions do |subscription|
     end
   end
 end
+json.last_page @subscriptions.last_page?

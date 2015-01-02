@@ -1,12 +1,13 @@
 %script#feeds-page{ type: 'text/x-template' }
-  %h1.page-header Feeds
-
   %tag-buttons{ v: { with: 'tags: tags, currentTags: currentTags' } }
 
   %hr
 
   .container-fluid
     .row{ v: { component: 'subscription-row', repeat: 'subscriptions', ref: 'subscriptionConponents' } }
+
+  .more.text-center{ v: { show: '!isLastPage' } }
+    %button.btn.btn-primary{ v: { on: 'click: showMore' } } 続きを表示
 
 %script#subscription-row{ type: 'text/x-template' }
   = form_for Subscription.new, method: 'put', data: { remote: true }, html: { 'v-attr' => 'action: subscriptionPath', 'v-class' => 'classList' } do |f|

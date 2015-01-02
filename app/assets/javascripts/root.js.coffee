@@ -14,11 +14,11 @@ Vue.component 'root-page',
 
   computed:
     currentPath: ->
-      '/' + @currentTags.join(',')
+      '/' + @currentTagParams
 
   methods:
     loadItems: ->
-      ($.getJSON Routes.itemsPath(tag: @currentTags, page: @page)).then (result) =>
+      ($.getJSON Routes.itemsPath(tag: @$parent.currentTags, page: @page)).then (result) =>
         @isLastPage = result.last_page
         result.items
 
@@ -27,9 +27,10 @@ Vue.component 'root-page',
       @loadItems().then (items) =>
         @items = @items.concat(items)
 
-    onTagChanged: (newTags) ->
-      @currentTags = newTags
-      Router.setCurrentPath(@currentPath)
+    onTagButtonsChanged: (newTags) ->
+      location.hash = "#/#{newTags.join(',')}"
+
+    onCurrentTagsChanged: ->
       @page = 1
       @loadItems().then (items) =>
         @items = items
@@ -40,4 +41,5 @@ Vue.component 'root-page',
       @items = items
 
   created: ->
-    @$on 'tag-changed', @onTagChanged
+    @$on 'tag-buttons-changed', @onTagButtonsChanged
+    @$on 'current-tags-changed', @onCurrentTagsChanged

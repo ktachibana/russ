@@ -28,7 +28,7 @@ Vue.component 'tag-buttons',
           @$parent.isActive(@name)
       methods:
         dispatchChanged: ->
-          @$dispatch('tag-changed', @currentTags)
+          @$dispatch('tag-buttons-changed', @currentTags)
 
         select: ->
           if @$parent.activateOnly(@name)
@@ -48,17 +48,44 @@ if $('.vue-app').length
       currentPage: null
       currentTags: []
       tags: []
+
     compiled: () ->
       ($.getJSON Routes.tagsPath()).then (tags) =>
         @tags = tags
 
+    computed:
+      currentTagParams: ->
+        tags = _.map @currentTags, (tag) ->
+          encodeURIComponent(tag)
+        tags.join(',')
+
+      rootPath: ->
+        "#/#{@currentTagParams}"
+
+      feedsPath: ->
+        "#/feeds/#{@currentTagParams}"
+
+    methods:
+      setCurrentTags: (tags) ->
+        newTags = _.sortBy tags, (tag) -> tag
+        @currentTags = newTags
+
+
   Path.map('#/feeds/(:tags)').to () ->
-    app.currentTags = @params['tags']?.split(',') || []
-    app.currentPage = 'feeds-page'
+    app.setCurrentTags @params.tags?.split(',') || []
+    if app.currentPage != 'feeds-page'
+      app.currentPage = 'feeds-page'
+    else
+      app.$broadcast 'current-tags-changed'
 
   Path.map('#/(:tags)').to () ->
-    app.currentTags = @params['tags']?.split(',') || []
-    app.currentPage = 'root-page'
+    app.setCurrentTags @params.tags?.split(',') || []
+    if app.currentPage != 'root-page'
+      app.currentPage = 'root-page'
+    else
+      app.$broadcast 'current-tags-changed'
 
+  @app = app
   Path.root '#/'
-  Path.listen()
+  $ ->
+    Path.listen()
