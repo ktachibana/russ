@@ -19,7 +19,7 @@ Vue.component 'root-page',
   methods:
     loadItems: ->
       ($.getJSON Routes.itemsPath(tag: @$parent.currentTags, page: @page)).then (result) =>
-        @isLastPage = result.last_page
+        @isLastPage = result.lastPage
         result.items
 
     showMore: ->

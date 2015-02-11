@@ -15,7 +15,7 @@
       = f.text_field :title, size: 50, class: 'form-control', 'v-attr' => 'placeholder: feed.title'
     .col-md-4
       = link_to '', target: '_blank', 'v-attr' => 'href: feedPath' do
-        {{feed.latest_item.title}}
+        {{feed.latestItem.title}}
     .col-md-2
       %button.btn.btn-primary.btn-sm
         %span.glyphicon.glyphicon-ok

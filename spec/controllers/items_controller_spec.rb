@@ -30,7 +30,7 @@ describe ItemsController, type: :controller do
 
       action
       expect(data[:items][0][:id]).to eq(item.id)
-      expect(data[:last_page]).to be true
+      expect(data[:lastPage]).to be true
     end
 
     context 'itemが大量にあるとき' do
@@ -45,7 +45,7 @@ describe ItemsController, type: :controller do
       it '取得件数が制限される' do
         action
         expect(data[:items].size).to eq(25)
-        expect(data[:last_page]).to be false
+        expect(data[:lastPage]).to be false
       end
 
       context 'pageパラメータを指定したとき' do

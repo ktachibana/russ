@@ -47,15 +47,15 @@ describe FeedsController, type: :controller do
 
         data[:subscriptions][0].tap do |s|
           expect(s[:id]).to eq(subscription.id)
-          expect(s[:user_title]).to eq(subscription.user_title)
-          expect(s[:tag_list]).to eq(subscription.tag_list)
+          expect(s[:userTitle]).to eq(subscription.user_title)
+          expect(s[:tagList]).to eq(subscription.tag_list)
 
           s[:feed].tap do |f|
             feed = subscription.feed
             expect(f[:id]).to eq(feed.id)
             expect(f[:title]).to eq(feed.title)
 
-            f[:latest_item].tap do |i|
+            f[:latestItem].tap do |i|
               item = feed.items[0]
               expect(i[:title]).to eq(item.title)
             end
@@ -69,7 +69,7 @@ describe FeedsController, type: :controller do
         it 'feed.latest_itemがnull' do
           action
           data = JSON.parse(response.body, symbolize_names: true)
-          expect(data[:subscriptions][0][:feed][:latest_item]).to be nil
+          expect(data[:subscriptions][0][:feed][:latestItem]).to be nil
         end
       end
     end

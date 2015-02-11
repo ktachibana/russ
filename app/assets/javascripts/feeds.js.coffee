@@ -9,7 +9,7 @@ Vue.component 'feeds-page',
   methods:
     readFeeds: ->
       ($.getJSON(Routes.feedsPath(), tag: @$parent.currentTags, page: @page)).then (data) =>
-        @isLastPage = data.last_page
+        @isLastPage = data.lastPage
         data.subscriptions
 
     loadFeeds: ->
