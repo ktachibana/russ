@@ -20,3 +20,4 @@
 #= require russ
 #= require root
 #= require feeds
+#= require subscriptions

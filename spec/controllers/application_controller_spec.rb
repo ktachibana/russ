@@ -7,7 +7,7 @@ RSpec.describe ApplicationController, type: :controller do
         skip_before_filter :authenticate_user!
 
         def index
-          User.create!
+          FactoryGirl.create(:user, email: '', password: '')
         end
       end
 

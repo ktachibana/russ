@@ -1,4 +1,4 @@
-= form_for @subscription, class: 'form' do |f|
+= form_for @subscription, class: 'form', html: { data: { remote: true, type: 'json' } } do |f|
   .feed
     = f.fields_for :feed do |ff|
       = ff.hidden_field :url

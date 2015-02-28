@@ -34,25 +34,38 @@ describe SubscriptionsController, type: :controller do
   end
 
   describe 'POST :create' do
+    def action
+      post :create, subscription: subscription_params, format: :json
+    end
+    let(:subscription_params) { { title: '', tag_list: '', feed_attributes: { url: mock_rss_url } } }
+    before { mock_rss! }
+
     it 'Subscriptionを登録できる' do
-      mock_rss!
-      expect do
-        post :create, subscription: { title: '', tag_list: '', feed_attributes: { url: mock_rss_url } }
-      end.to change(Subscription, :count).by(1)
+      expect { action }.to change(Subscription, :count).by(1)
+      is_expected.to respond_with(:ok)
     end
 
-    it 'パラメータが不正だと登録されない' do
-      expect do
-        post :create, subscription: { title: '', tag_list: '' }
-      end.to_not change(Subscription, :count)
-      expect(response).to render_template(:new)
+    context 'パラメータが不正なとき' do
+      let(:subscription_params) { super().merge(title: 'a' * 256) }
+
+      it '登録されない' do
+        expect { action }.to_not change(Subscription, :count)
+      end
+
+      it 'バリデーションエラーを返す' do
+        action
+        is_expected.to respond_with(:unprocessable_entity)
+        expect(JSON.parse(response.body)).to include('type' => 'validation')
+      end
     end
 
-    it 'タグを登録できる' do
-      mock_rss!
-      post :create, subscription: { title: '', tag_list: 'tag1, tag2', feed_attributes: { url: mock_rss_url } }
-      expect(response).to redirect_to(root_url)
-      expect(assigns(:subscription).reload.tag_list).to match_array(%w(tag1 tag2))
+    context 'タグをあたえたとき' do
+      let(:subscription_params) { super().merge(tag_list: %w(tag1 tag2)) }
+
+      it 'タグを登録できる' do
+        action
+        expect(assigns(:subscription).reload.tag_list).to match_array(%w(tag1 tag2))
+      end
     end
   end
 
@@ -60,7 +73,7 @@ describe SubscriptionsController, type: :controller do
     def action
       put :update, id: subscription.id, subscription: subscription_params
     end
-    let(:subscription_params) { { title: 'NewTitle', tag_list: 'tag1, tag2' } }
+    let(:subscription_params) { { title: 'NewTitle', tag_list: %w(tag1 tag2) } }
     let(:subscription) { create(:subscription, user: user) }
 
     it 'Subscriptionを更新できる' do
@@ -72,7 +85,7 @@ describe SubscriptionsController, type: :controller do
 
     context 'tag_listの値を削除したとき' do
       let(:subscription) { create(:subscription, user: user, tag_list: %w(tag1 tag2)) }
-      let(:subscription_params) { { tag_list: 'tag1' } }
+      let(:subscription_params) { { tag_list: %w(tag1) } }
 
       it 'タグを削除できる' do
         action
@@ -87,6 +100,16 @@ describe SubscriptionsController, type: :controller do
 
       it 'フィードのURLは変更できない' do
         expect { action }.not_to change { subscription.reload.feed.url }
+      end
+    end
+
+    context 'accept_typeをjsonにしたとき' do
+      before { request.accept = 'application/json' }
+
+      it 'jsonでレスポンスする' do
+        action
+        expect(response.content_type).to eq('application/json')
+        expect(JSON.parse(response.body)).to eq('status' => 'OK')
       end
     end
   end

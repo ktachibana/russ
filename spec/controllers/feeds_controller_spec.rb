@@ -17,21 +17,10 @@ describe FeedsController, type: :controller do
     let(:tags) { %w(tag1 tag2) }
     let!(:others_subscription) { create(:subscription, user: create(:user)) }
 
-    it 'Subscription一覧を取得する' do
+    it 'フィード一覧を表示する' do
       action
       expect(response).to be_success
-      expect(assigns(:subscriptions)).to match_array(subscriptions)
-    end
-
-    context 'タグが与えられたとき' do
-      let(:params) { super().merge(tag: %w(tag1)) }
-      let!(:subscriptions) { %w(tag1 tag2).map { |tag| create(:subscription, user: user, tag_list: tag) } }
-
-      it '特定のタグがついたSubscriptionだけに絞り込める' do
-        action
-        expect(response).to be_success
-        expect(assigns(:subscriptions)).to eq([subscriptions[0]])
-      end
+      is_expected.to render_template('index')
     end
 
     context 'JSON形式をリクエストしたとき' do
@@ -60,6 +49,17 @@ describe FeedsController, type: :controller do
               expect(i[:title]).to eq(item.title)
             end
           end
+        end
+      end
+
+      context 'タグが与えられたとき' do
+        let(:params) { super().merge(tag: %w(tag1)) }
+        let!(:subscriptions) { %w(tag1 tag2).map { |tag| create(:subscription, user: user, tag_list: tag) } }
+
+        it '特定のタグがついたSubscriptionだけに絞り込める' do
+          action
+          expect(response).to be_success
+          expect(assigns(:subscriptions)).to eq([subscriptions[0]])
         end
       end
 

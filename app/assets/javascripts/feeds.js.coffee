@@ -37,10 +37,59 @@ Vue.component 'feeds-page',
 
 Vue.component 'subscription-row',
   template: '#subscription-row',
+  inherit: true
   computed:
     feedPath: ->
       Routes.feedPath(@feed)
+
     subscriptionPath: ->
-      Routes.subscriptionPath(this)
+      Routes.subscriptionPath(@)
+
     classList: ->
-      "_#{@id}"
+      ['form', "_#{@id}"]
+
+  methods:
+    openDialog: ->
+      @$parent.$.editSubscriptionDialog.open(@)
+
+Vue.component 'edit-subscription-dialog',
+  template: '#edit-subscription-dialog-template'
+  inherit: true
+
+  data: ->
+    row: {}
+    newTag: ''
+    errors: {}
+
+  ready: ->
+    form = $('#new_subscription')
+    form.on 'ajax:success', @onSuccess
+    form.on 'ajax:error', (xhr, status, error) =>
+      if status.responseJSON?.type == 'validation'
+        @errors = status.responseJSON.errors
+      else
+        alert('unknown error')
+        console.error(xhr, status, error)
+
+  computed:
+    $dialog: ->
+      $('#edit-subscription-dialog')
+
+  methods:
+    open: (row) ->
+      @row = row
+      @$dialog.modal('show')
+
+    addTag: (tag) ->
+      @row.tagList.push(tag) unless _.contains(@row.tagList, tag)
+
+    addNewTag: ->
+      return unless @newTag
+      @addTag(@newTag)
+      @newTag = ''
+
+    removeTag: (tag) ->
+      @row.tagList = _.without(@row.tagList, tag)
+
+    onSuccess: (event, data, status) ->
+      @$dialog.modal('hide')

@@ -18,4 +18,8 @@ class ApplicationController < ActionController::Base
       f.any { fail error }
     end
   end
+
+  def render_json_ok
+    render json: { status: 'OK' }
+  end
 end

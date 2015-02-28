@@ -6,6 +6,7 @@ class Subscription < ActiveRecord::Base
   accepts_nested_attributes_for :feed
 
   validates :user_id, presence: true
+  validates :title, length: { maximum: 255 }
   validates :feed_id, uniqueness: { scope: :user_id }
 
   default_scope -> { order(created_at: :desc) }
@@ -19,9 +20,8 @@ class Subscription < ActiveRecord::Base
     scope
   }
 
-  def subscribe
-    return false if feed.nil? || feed.url.blank?
-
+  # XXX: もっとスマートにしたい
+  def subscribe!
     persisted_feed = Feed.find_by(url: feed.url)
     if persisted_feed
       self.feed = persisted_feed
@@ -29,7 +29,7 @@ class Subscription < ActiveRecord::Base
       feed.load!
       feed.save!
     end
-    save
+    save!
   end
 
   def user_title

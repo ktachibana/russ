@@ -10,6 +10,7 @@ describe Subscription do
   describe 'validations' do
     it { is_expected.to validate_presence_of(:user_id) }
     it { is_expected.to validate_uniqueness_of(:feed_id).scoped_to(:user_id) }
+    it { is_expected.to ensure_length_of(:title).is_at_most(255) }
   end
 
   describe '.default_scope' do

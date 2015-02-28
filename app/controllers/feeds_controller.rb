@@ -1,6 +1,9 @@
 class FeedsController < ApplicationController
   def index
-    @subscriptions = owned_subscriptions.includes({ feed: :latest_item }, :tags).order(:id).search(params)
+    respond_to do |f|
+      f.html
+      f.json { @subscriptions = owned_subscriptions.includes({ feed: :latest_item }, :tags).order(:id).search(params) }
+    end
   end
 
   def show
