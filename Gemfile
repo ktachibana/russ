@@ -56,7 +56,6 @@ group :development, :test do
   gem 'hirb-unicode'
   gem 'tapp'
   gem 'shoulda-matchers'
-  gem 'fuubar'
   gem 'timecop'
   gem 'rubocop'
   gem 'guard-rubocop'
