@@ -72,6 +72,18 @@ describe Item do
     end
   end
 
-  describe '.user' do
+  describe '.before_save' do
+    before { Timecop.freeze }
+
+    describe '#correct_published_at' do
+      it '未来の日付が設定されていたら現在時刻に置き換える' do
+        expect(create(:item, published_at: 1.days.from_now).published_at).to eq(Time.current)
+        expect(create(:item, published_at: 1.days.from_now.to_date).published_at).to eq(Time.current)
+      end
+
+      it 'nilの時は現在時刻を設定する' do
+        expect(create(:item, published_at: nil).published_at).to eq(Time.current)
+      end
+    end
   end
 end

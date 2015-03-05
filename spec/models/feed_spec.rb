@@ -237,16 +237,6 @@ describe Feed do
       expect(subject[:description]).to eq item.description
     end
 
-    # 遠い未来の日付が設定されていて、ソートでずっとトップに居座る項目が作られたことがあるため
-    context 'dateが未来のとき' do
-      before { Timecop.freeze }
-      let(:item) { build(:parsed_item, date: 1.days.from_now) }
-
-      it 'published_atは現在時刻になる' do
-        expect(subject[:published_at]).to eq Time.current
-      end
-    end
-
     context 'dateがnilのとき' do
       let(:item) { build(:parsed_item, date: nil) }
 

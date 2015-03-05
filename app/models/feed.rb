@@ -96,7 +96,7 @@ class Feed < ActiveRecord::Base
         link: parsed_item.link,
         title: parsed_item.title,
         guid: guid,
-        published_at: parsed_item.date.try { |d| [d, Time.current].min },
+        published_at: parsed_item.date,
         description: parsed_item.description
       }
     end

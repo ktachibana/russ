@@ -19,4 +19,12 @@ class Item < ActiveRecord::Base
     end
     scope
   end
+
+  before_save :corrent_published_at!
+
+  def corrent_published_at!
+    # 遠い未来の日付が設定されていて、ソートでずっとトップに居座る項目が作られたことがあるため、現在時刻を上限とする
+    self.published_at = [published_at, Time.current].compact.min
+    self
+  end
 end
