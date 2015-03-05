@@ -23,7 +23,6 @@ describe Item do
         end
         user.feeds = [feed1, feed3]
         other_user.feeds = [feed2, feed3]
-
       end
 
       it 'ユーザーのSubscriptionだけがfeedに含まれる' do
