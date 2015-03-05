@@ -22,8 +22,8 @@ feature 'フィードの購読', type: :feature do
 
     within '.items .item' do
       expect(page).to have_content(item.title)
-                 .and have_content(item.description)
-                 .and have_content(subscription.title)
+        .and have_content(item.description)
+        .and have_content(subscription.title)
     end
   end
 end

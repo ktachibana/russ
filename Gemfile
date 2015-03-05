@@ -3,13 +3,13 @@ source 'https://rubygems.org'
 ruby File.read('.ruby-version').strip
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 4.1.8' # CVE-2014-7829
-gem 'sprockets', '>= 2.12' # CVE-2014-7819
+gem 'rails', '~> 4.2'
+gem 'sprockets'
 
 gem 'mysql2'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '>= 5.0.0.beta1'
+gem 'sass-rails'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier'

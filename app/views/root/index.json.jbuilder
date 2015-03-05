@@ -3,5 +3,5 @@ json.items do
 end
 
 json.tags @tags do |tag|
-  json.(tag, :id, :name, :count)
+  json.call(tag, :id, :name, :count)
 end
