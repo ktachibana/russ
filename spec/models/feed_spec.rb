@@ -3,14 +3,14 @@ require 'spec_helper'
 describe Feed do
   describe 'validations' do
     it { is_expected.to validate_presence_of(:url) }
-    it { is_expected.to ensure_length_of(:url).is_at_most(2048) }
+    it { is_expected.to validate_length_of(:url).is_at_most(2048) }
 
     it { is_expected.to validate_presence_of(:title) }
-    it { is_expected.to ensure_length_of(:title).is_at_most(255) }
+    it { is_expected.to validate_length_of(:title).is_at_most(255) }
 
-    it { is_expected.to ensure_length_of(:link_url).is_at_most(2048) }
+    it { is_expected.to validate_length_of(:link_url).is_at_most(2048) }
 
-    it { is_expected.to ensure_length_of(:description).is_at_most(4096) }
+    it { is_expected.to validate_length_of(:description).is_at_most(4096) }
   end
 
   describe 'associations' do
