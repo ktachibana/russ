@@ -12,7 +12,7 @@
     .panel-heading
       %a{ target: '_blank', v: { attr: 'href:link' } }
         {{title}}
-      .pull-right
+      .pull-right{ v: { if: '!hidefeed' } }
         %small
           %a{ target: '_blank', v: { attr: 'href:feed.linkUrl' } }
             {{feed.usersSubscription.userTitle}}

@@ -1,5 +1,8 @@
 Vue.component 'item-panel',
-  template: '#item-panel'
+  template: '#item-panel',
+  paramAttributes: ['hidefeed'],
+  compiled: ->
+    @hidefeed = @hidefeed?
   computed:
     feedPath: ->
       Routes.feedPath(@feed)
