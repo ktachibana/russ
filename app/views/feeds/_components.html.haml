@@ -4,20 +4,23 @@
   %hr
 
   .container-fluid
-    .row{ v: { component: 'subscription-row', repeat: 'subscriptions', ref: 'subscriptionConponents' } }
+    %div{ v: { component: 'subscription-row', repeat: 'subscriptions', ref: 'subscriptionConponents' } }
 
   .more.text-center{ v: { show: '!isLastPage' } }
     %button.btn.btn-primary{ v: { on: 'click: showMore' } } 続きを表示
 
 %script#subscription-row{ type: 'text/x-template' }
-  .col-md-5
-    = link_to '', target: '_blank', 'v-attr' => 'href: feedPath' do
-      %b {{userTitle}}
-  .col-md-6
-    = link_to '', target: '_blank', 'v-attr' => 'href: feedPath' do
-      {{feed.latestItem.title}}
-  .col-md-1
-    %a{ href: '{{href}}' }
-      %span.glyphicon.glyphicon-edit
-      編集
-    %span.response
+  %ul.list-group
+    %li.list-group-item
+      .list-group-item-heading
+        %a.btn.btn-default.btn-xs.pull-right{ href: '{{href}}' }
+          %span.glyphicon.glyphicon-edit
+          編集
+        = link_to '', target: '_blank', 'v-attr' => 'href: feedPath' do
+          %b {{userTitle}}
+        %span.label.label-default{ style: 'margin: 2px;', v: { repeat: 'tags' } }
+          {{name}}
+        .clearfix
+      .list-group-item-text
+        %a{ target: '_blank', v: { attr: 'href: feedPath' } }
+          %i {{feed.latestItem.title}}

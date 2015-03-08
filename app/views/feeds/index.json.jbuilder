@@ -11,5 +11,8 @@ json.subscriptions @subscriptions do |subscription|
       end
     end
   end
+  json.tags subscription.tags do |tag|
+    json.partial!('tags/tags', tag: tag)
+  end
 end
 json.last_page @subscriptions.last_page?
