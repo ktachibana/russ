@@ -4,6 +4,22 @@ describe SubscriptionsController, type: :controller do
   let!(:user) { create(:user) }
   before { sign_in(user) }
 
+  describe 'GET :show' do
+    render_views
+    def action
+      get :show, id: subscription.id, format: :json
+    end
+    let(:subscription) { create(:subscription, :with_title, user: user, tag_list: '%w(foo bar') }
+
+    it 'Subscriptionの情報を取得できる' do
+      action
+      is_expected.to respond_with(:ok)
+      data = JSON.parse(response.body, symbolize_names: true)
+      expect(data).to be_a(Hash)
+      expect(data[:title]).to eq(subscription.title)
+    end
+  end
+
   describe 'GET :new' do
     render_views
 

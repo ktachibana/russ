@@ -1,3 +1,3 @@
 json.array! @tags do |tag|
-  json.call(tag, :id, :name, :count)
+  json.partial!('tags/tags', tag: tag)
 end

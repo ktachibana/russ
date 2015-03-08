@@ -5,5 +5,9 @@ FactoryGirl.define do
     user
     feed
     title nil
+
+    trait :with_title do
+      sequence(:title) { |n| "Title #{n}" }
+    end
   end
 end

@@ -1,4 +1,8 @@
 class SubscriptionsController < ApplicationController
+  def show
+    @subscription = owned_subscriptions.preload(:feed).find(params[:id])
+  end
+
   def new
     url = params[:url]
     owned_subscriptions.joins(:feed).merge(Feed.where(url: url)).first.try do |subscription|
