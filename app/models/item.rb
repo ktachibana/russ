@@ -4,7 +4,7 @@ class Item < ActiveRecord::Base
   default_scope { order(published_at: :desc) }
 
   def self.search(user, conditions = {})
-    feed_subscriptions = user.subscriptions.includes(:feed).index_by(&:feed_id)
+    feed_subscriptions = user.subscriptions.preload(:feed).index_by(&:feed_id)
 
     scope = self
     scope = scope.where(feed_id: feed_subscriptions.keys)
@@ -13,7 +13,7 @@ class Item < ActiveRecord::Base
     end
 
     scope = scope.page(conditions[:page])
-    scope = scope.includes(:feed)
+    scope = scope.preload(:feed)
     scope.each do |item|
       item.feed.users_subscription = feed_subscriptions[item.feed_id]
     end
