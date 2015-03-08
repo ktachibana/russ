@@ -1,0 +1,21 @@
+%script#edit-subscription-page{ type: 'text/x-template' }
+  = form_for Subscription.new, class: 'form', html: { data: { remote: true, type: 'json' } } do |f|
+    .feed
+      = f.fields_for :feed, Feed.new do |ff|
+        = ff.hidden_field :url, 'v-model' => 'url'
+        %a{ target: '_blank', v: { attrs: 'href: link' } }
+          %h1 {{title}}
+        .description.well{ v: { html: 'description', if: 'description' } }
+    .form-group
+      = f.label :title
+      = f.text_field :title, class: 'form-control', 'v-attr' => 'placeholder: title'
+    .form-group
+      %div
+        = f.label :tags
+        = f.text_field :tag_list, class: 'form-control'
+      .owned-tags
+        %span.label.label-default{ v: { repeat: 'tags' } } {{name}}
+
+    = f.submit class: 'btn btn-primary'
+  .items
+    .item{ v: { repeat: 'items', component: 'item-panel' } }

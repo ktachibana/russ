@@ -1,3 +1,14 @@
+Vue.component 'edit-subscription-page',
+  template: '#edit-subscription-page',
+  inherit: true,
+  data: ->
+    feed: null
+  compiled: ->
+    url = decodeURIComponent(@$root.params.feedUrl)
+    ($.getJSON(Routes.newSubscriptionPath(), url: url)).then (data) =>
+      @$data = data
+
+
 $ ->
   form = $('#new_subscription')
   form.on 'ajax:success', (data, status, xhr) ->

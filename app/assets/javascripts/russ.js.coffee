@@ -48,10 +48,10 @@ if $('.vue-app').length
       currentPage: null
       currentTags: []
       tags: []
+      params: {}
 
     compiled: () ->
-      ($.getJSON Routes.tagsPath()).then (tags) =>
-        @tags = tags
+      @updateTags()
 
     computed:
       currentTagParams: ->
@@ -66,6 +66,10 @@ if $('.vue-app').length
         "#/feeds/#{@currentTagParams}"
 
     methods:
+      updateTags: ->
+        ($.getJSON Routes.tagsPath()).then (tags) =>
+          @tags = tags
+
       setCurrentTags: (tags) ->
         newTags = _.sortBy tags, (tag) -> tag
         @currentTags = newTags
@@ -77,6 +81,10 @@ if $('.vue-app').length
       app.currentPage = 'feeds-page'
     else
       app.$broadcast 'current-tags-changed'
+
+  Path.map('#/subscriptions/new/(:feedUrl)').to () ->
+    app.params = @params
+    app.currentPage = 'edit-subscription-page'
 
   Path.map('#/(:tags)').to () ->
     app.setCurrentTags @params.tags?.split(',') || []

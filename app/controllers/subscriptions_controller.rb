@@ -4,9 +4,9 @@ class SubscriptionsController < ApplicationController
     owned_subscriptions.joins(:feed).merge(Feed.where(url: url)).first.try do |subscription|
       return redirect_to(subscription.feed, notice: I18n.t('messages.feed_already_registed', url: url))
     end
-    feed = Feed.find_or_initialize_by(url: url)
-    feed.load! if feed.new_record?
-    @subscription = current_user.subscriptions.build(feed: feed)
+    @feed = Feed.find_or_initialize_by(url: url)
+    @feed.load! if @feed.new_record?
+    @subscription = current_user.subscriptions.build(feed: @feed)
   end
 
   # JSON API

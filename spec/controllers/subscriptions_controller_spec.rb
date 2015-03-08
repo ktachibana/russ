@@ -7,29 +7,48 @@ describe SubscriptionsController, type: :controller do
   describe 'GET :new' do
     render_views
 
+    def action
+      get :new, url: mock_rss_url, format: :json
+    end
+
     it 'Feedの情報をURLからロードできる' do
-      mock_rss!
+      mock_rss!(body: rss_data_one_item)
+      action
 
-      get :new, url: mock_rss_url
+      is_expected.to respond_with(:ok)
+      data = JSON.parse(response.body, symbolize_names: true)
+      expect(data).to be_a(Hash)
+      expect(data[:url]).to eq(mock_rss_url)
+      expect(data[:title]).to eq('RSS Title')
+      expect(data[:linkUrl]).to eq('http://test.com/content')
+      expect(data[:description]).to eq('My description')
 
-      expect(response).to be_success
-      subscription = assigns(:subscription)
-      expect(subscription).to be_present
-      expect(subscription.feed.title).to eq('RSS Title')
+      items = data[:items]
+      expect(items.length).to eq(1)
+
+      item = items[0]
+      expect(item[:title]).to eq('Item Title')
+      expect(item[:link]).to eq('http://test.com/content/1')
+      expect(item[:guid]).to eq('1')
+      expect(Time.parse(item[:publishedAt])).to eq(Time.parse('Mon, 20 Feb 2012 16:04:19 +0900').utc)
+      expect(item[:description]).to eq('Item description')
     end
 
-    it '登録済みのフィードのURLを指定するとリダイレクト' do
-      subscription = create(:subscription, user: user, feed: create(:feed, url: mock_rss_url))
-      get :new, url: mock_rss_url
-      expect(response).to redirect_to(feed_path(subscription.feed))
-      expect(flash[:notice]).to eq(I18n.t('messages.feed_already_registed', url: mock_rss_url))
-    end
+    context '登録済みのフィードを指定したとき' do
+      let!(:subscription) { create(:subscription, user: user, feed: feed) }
+      let(:feed) { create(:feed, url: mock_rss_url) }
 
-    it '既存のフィードのURLを指定したときは再読み込みはしない' do
-      feed = create(:feed)
-      WebMock.stub_request(:get, feed.url).to_raise('test fail')
-      get :new, url: feed.url
-      expect(response).to be_success
+      it '登録済みのフィードのURLを指定するとリダイレクト' do
+        action
+        expect(response).to redirect_to(feed_path(feed))
+        expect(flash[:notice]).to eq(I18n.t('messages.feed_already_registed', url: mock_rss_url))
+      end
+
+      it '再読み込みはしない' do
+        bypass_rescue
+        WebMock.stub_request(:get, mock_rss_url).to_raise('test fail')
+        expect { action }.not_to raise_error
+      end
     end
   end
 
