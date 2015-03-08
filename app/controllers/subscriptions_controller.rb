@@ -44,7 +44,7 @@ class SubscriptionsController < ApplicationController
 
   def destroy
     Subscription.destroy(params[:id])
-    redirect_to(Feed)
+    render_json_ok
   end
 
   private

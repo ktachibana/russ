@@ -1,22 +1,27 @@
 %script#edit-subscription-page{ type: 'text/x-template' }
-  = form_for Subscription.new, url: '{{formUrl}}', method: '{{formMethod}}', class: 'form', html: { data: { remote: true, type: 'json' }, 'v-remote' => 'onFormSuccess' } do |f|
-    .feed
-      %a{ target: '_blank', v: { attr: 'href: subscription.feed.linkUrl' } }
-        %h1 {{subscription.feed.title}}
-      .description.well{ v: { html: 'subscription.feed.description', if: 'subscription.feed.description' } }
-      = f.fields_for :feed, Feed.new do |ff|
-        = ff.hidden_field :url, 'v-model' => 'subscription.feed.url', 'v-if' => 'subscription.isNewRecord'
-    .form-group
-      = f.label :title
-      = f.text_field :title, class: 'form-control', 'v-attr' => 'placeholder: subscription.feed.title', 'v-model' => 'subscription.title'
-    .form-group
-      %div
-        = f.label :tags
-        = f.text_field :tag_list, class: 'form-control', 'v-tokenfield' => 'tagList'
-        .owned-tags
-          %button.btn.btn-default.btn-xs{ type: 'button', v: { repeat: 'tags', on: 'click: addTag(name)' } }
-            {{name}} ({{count}})
+  .well
+    = form_for Subscription.new, url: '{{formUrl}}', method: '{{formMethod}}', class: 'form', html: { data: { remote: true, type: 'json' }, 'v-remote' => 'onFormSuccess' } do |f|
+      .feed
+        .pull-right{ v: { if: 'isPersisted' } }
+          %a.btn.btn-danger{ href: '{{subscriptionPath}}', data: { remote: true, confirm: '登録解除してよろしいですか？', type: 'json', method: 'delete' }, v: { remote: 'onDeleted' } }
+            %span.glyphicon.glyphicon-trash
+            登録解除
+        %a{ target: '_blank', v: { attr: 'href: subscription.feed.linkUrl' } }
+          %h1 {{subscription.feed.title}}
+        .description.well{ v: { html: 'subscription.feed.description', if: 'subscription.feed.description' } }
+        = f.fields_for :feed, Feed.new do |ff|
+          = ff.hidden_field :url, 'v-model' => 'subscription.feed.url', 'v-if' => 'subscription.isNewRecord'
+      .form-group
+        = f.label :title
+        = f.text_field :title, class: 'form-control', 'v-attr' => 'placeholder: subscription.feed.title', 'v-model' => 'subscription.title'
+      .form-group
+        %div
+          = f.label :tags
+          = f.text_field :tag_list, class: 'form-control', 'v-tokenfield' => 'tagList'
+          .owned-tags
+            %button.btn.btn-default.btn-xs{ type: 'button', v: { repeat: 'tags', on: 'click: addTag(name)' } }
+              {{name}} ({{count}})
 
-    = f.submit class: 'btn btn-primary', value: '{{submitText}}する'
+      = f.submit class: 'btn btn-primary', value: '{{submitText}}する'
   .items
     .item{ v: { repeat: 'subscription.feed.items', component: 'item-panel' }, hidefeed: true }

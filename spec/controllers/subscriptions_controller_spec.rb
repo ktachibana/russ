@@ -175,17 +175,18 @@ describe SubscriptionsController, type: :controller do
   end
 
   describe '#destroy' do
+    def action
+      delete :destroy, id: subscription.id, format: :json
+    end
     let!(:subscription) { create(:subscription, user: user) }
 
     it 'Subscriptionを削除できる' do
-      expect do
-        delete :destroy, id: subscription.id
-      end.to change(Subscription, :count).by(-1)
+      expect { action }.to change(Subscription, :count).by(-1)
     end
 
-    it 'Feed一覧にリダイレクトする' do
-      delete :destroy, id: subscription.id
-      expect(response).to redirect_to(feeds_path)
+    it 'JSONでOKを返す' do
+      action
+      expect(JSON.parse(response.body, symbolize_names: true)).to eq(status: 'OK')
     end
   end
 end

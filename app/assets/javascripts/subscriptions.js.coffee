@@ -20,11 +20,17 @@ Vue.component 'edit-subscription-page',
     isNewRecord: ->
       !@subscription.id?
 
+    isPersisted: ->
+      !@isNewRecord
+
+    subscriptionPath: ->
+      Routes.subscriptionPath(id: @subscription.id)
+
     formUrl: ->
       if @isNewRecord
         Routes.subscriptionsPath()
       else
-        Routes.subscriptionPath(@subscription.id)
+        @subscriptionPath
 
     formMethod: ->
       if @isNewRecord
@@ -39,13 +45,16 @@ Vue.component 'edit-subscription-page',
         '更新'
 
   methods:
-    onFormSuccess: (data, status, xhr) ->
+    onFormSuccess: ->
       location.href = Routes.rootPath
 
     addTag: (tag) ->
       list = @tagList.split(', ')
       list.push(tag) unless _.contains(list, tag)
       @tagList = list.join(', ')
+
+    onDeleted: ->
+      location.href = Routes.rootPath
 
 Vue.directive 'remote', (handler) ->
   form = $(@el)
