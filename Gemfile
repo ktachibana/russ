@@ -48,7 +48,7 @@ group :development, :test do
   gem 'guard'
   gem 'guard-rspec'
   gem 'rb-fsevent'
-  gem 'growl'
+  gem 'ruby-growl'
   gem 'spring'
   gem 'spring-commands-rspec'
   gem 'pry'
