@@ -13,6 +13,7 @@
 #= require jquery
 #= require jquery_ujs
 #= require bootstrap
+#= require bootstrap-tokenfield
 #= require vue
 #= require underscore
 #= require path

@@ -1,21 +1,22 @@
 %script#edit-subscription-page{ type: 'text/x-template' }
   = form_for Subscription.new, class: 'form', html: { data: { remote: true, type: 'json' }, 'v-remote' => 'onFormSuccess' } do |f|
     .feed
-      %a{ target: '_blank', v: { attr: 'href: linkUrl' } }
-        %h1 {{title}}
-      .description.well{ v: { html: 'description', if: 'description' } }
+      %a{ target: '_blank', v: { attr: 'href: feed.linkUrl' } }
+        %h1 {{feed.title}}
+      .description.well{ v: { html: 'feed.description', if: 'feed.description' } }
       = f.fields_for :feed, Feed.new do |ff|
-        = ff.hidden_field :url, 'v-model' => 'url'
+        = ff.hidden_field :url, 'v-model' => 'feed.url'
     .form-group
       = f.label :title
-      = f.text_field :title, class: 'form-control', 'v-attr' => 'placeholder: title'
+      = f.text_field :title, class: 'form-control', 'v-attr' => 'placeholder: feed.title'
     .form-group
       %div
         = f.label :tags
-        = f.text_field :tag_list, class: 'form-control'
-      .owned-tags
-        %span.label.label-default{ v: { repeat: 'tags' } } {{name}}
+        = f.text_field :tag_list, class: 'form-control', 'v-tokenfield' => 'tagList'
+        .owned-tags
+          %button.btn.btn-default.btn-xs{ type: 'button', v: { repeat: 'tags', on: 'click: addTag(name)' } }
+            {{name}} ({{count}})
 
     = f.submit class: 'btn btn-primary'
   .items
-    .item{ v: { repeat: 'items', component: 'item-panel' }, hidefeed: true }
+    .item{ v: { repeat: 'feed.items', component: 'item-panel' }, hidefeed: true }

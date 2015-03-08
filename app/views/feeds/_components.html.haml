@@ -51,10 +51,8 @@
                 {{errors.tagList[0]}}
               .input-group
                 %input.form-control{ v: { model: 'newTag' } }
-                %span.input-group-btn
-                  %a.btn.btn-default{ v: { on: 'click: addNewTag' } } Add
               .owned-tags
-                %a.btn.btn-default.btn-xs{ v: { repeat: '$root.tags', on: 'click: addTag(name)' } }
+                %a.btn.btn-default.btn-xs{ v: { repeat: 'tags', on: 'click: addTag(name)' } }
                   {{name}} ({{count}})
             %hr
             .form-group

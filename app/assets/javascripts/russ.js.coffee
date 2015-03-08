@@ -93,7 +93,6 @@ if $('.vue-app').length
     else
       app.$broadcast 'current-tags-changed'
 
-  @app = app
   Path.root '#/'
   $ ->
     Path.listen()

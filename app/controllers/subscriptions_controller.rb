@@ -11,7 +11,7 @@ class SubscriptionsController < ApplicationController
 
   # JSON API
   def create
-    @subscription = owned_subscriptions.build(subscription_params.permit(:title, tag_list: [], feed_attributes: [:url]))
+    @subscription = owned_subscriptions.build(subscription_params.permit(:title, :tag_list, feed_attributes: [:url]))
     @subscription.subscribe!
     render_json_ok
   end

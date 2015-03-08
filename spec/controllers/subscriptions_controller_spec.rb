@@ -79,7 +79,7 @@ describe SubscriptionsController, type: :controller do
     end
 
     context 'タグをあたえたとき' do
-      let(:subscription_params) { super().merge(tag_list: %w(tag1 tag2)) }
+      let(:subscription_params) { super().merge(tag_list: 'tag1, tag2') }
 
       it 'タグを登録できる' do
         action
