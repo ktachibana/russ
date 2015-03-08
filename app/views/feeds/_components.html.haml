@@ -9,8 +9,6 @@
   .more.text-center{ v: { show: '!isLastPage' } }
     %button.btn.btn-primary{ v: { on: 'click: showMore' } } 続きを表示
 
-  %edit-subscription-dialog{ v: { ref: 'editSubscriptionDialog' }}
-
 %script#subscription-row{ type: 'text/x-template' }
   .col-md-5
     = link_to '', target: '_blank', 'v-attr' => 'href: feedPath' do
@@ -19,53 +17,7 @@
     = link_to '', target: '_blank', 'v-attr' => 'href: feedPath' do
       {{feed.latestItem.title}}
   .col-md-1
-    %a.btn.btn-primary.btn-sm{ v: { on: 'click: openDialog' } }
+    %a{ href: '{{href}}' }
       %span.glyphicon.glyphicon-edit
       編集
     %span.response
-
-%script#edit-subscription-dialog-template{ type: 'text/x-template' }
-  #edit-subscription-dialog.modal{ role: 'dialog', aria: { hidden: true } }
-    .modal-dialog
-      .modal-content
-        = form_for Subscription.new, method: 'put', data: { remote: true, type: 'json' }, html: { class: 'subscription-form form', 'v-attr' => 'action: row.subscriptionPath' } do |f|
-          .modal-header
-            %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: 'Close' } }
-              %span{ aria: { hidden: 'true' } } &times;
-            %h4.modal-title Edit Feed
-          .modal-body
-            .form-group{ v: { class: "'has-error' : errors.title" } }
-              = f.label :title
-              = f.text_field :title, size: 50, class: 'form-control', 'v-attr' => 'placeholder: row.feed.title'
-              %span.help-block
-                {{errors.title[0]}}
-            .form-group
-              = f.label :tag_list
-              .tags{ v: { class: "'has-error' : errors.tagList" } }
-                %span.label.label-default{ v: { repeat: 'row.tagList' } }
-                  {{$value}}
-                  %a{ href: 'javascript:void(0)', style: 'color: white;', v: { on: 'click: removeTag($value)' } }
-                    %span.glyphicon.glyphicon-trash
-                  = f.hidden_field :tag_list, multiple: true, 'v-attr' => 'value: $value'
-              %span.help-block
-                {{errors.tagList[0]}}
-              .input-group
-                %input.form-control{ v: { model: 'newTag' } }
-              .owned-tags
-                %a.btn.btn-default.btn-xs{ v: { repeat: 'tags', on: 'click: addTag(name)' } }
-                  {{name}} ({{count}})
-            %hr
-            .form-group
-              = f.label :items
-              %p.form-control-static
-                %a{ target: '_blank', 'v-attr' => 'href: row.feedPath' }
-                  {{row.feed.latestItem.title}}
-          .modal-footer
-            = link_to '', method: :delete, class: %w[pull-left btn btn-sm btn-danger], data: { confirm: 'Delete?' }, 'v-attr' => 'href: row.subscriptionPath' do
-              %span.glyphicon.glyphicon-trash
-              削除
-            %button.btn.btn-default{ type: 'button', data: { dismiss: 'modal' } }
-              Cancel
-            = f.button type: :submit, class: 'btn btn-primary' do
-              %span.glyphicon.glyphicon-edit
-              保存

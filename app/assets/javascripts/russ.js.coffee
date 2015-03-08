@@ -82,17 +82,21 @@ if $('.vue-app').length
     else
       app.$broadcast 'current-tags-changed'
 
-  Path.map('#/subscriptions/new/(:feedUrl)').to () ->
-    app.params = @params
+  Path.map('#/subscriptions/:id/edit').to () ->
+    app.params = { id: @params.id }
     app.currentPage = 'edit-subscription-page'
 
-  Path.map('#/(:tags)').to () ->
+  Path.map('#/subscriptions/new/:feedUrl').to () ->
+    app.params = { feedUrl: @params.feedUrl }
+    app.currentPage = 'edit-subscription-page'
+
+  Path.map('#/items(/:tags)').to () ->
     app.setCurrentTags @params.tags?.split(',') || []
     if app.currentPage != 'root-page'
       app.currentPage = 'root-page'
     else
       app.$broadcast 'current-tags-changed'
 
-  Path.root '#/'
+  Path.root '#/items'
   $ ->
     Path.listen()

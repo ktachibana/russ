@@ -108,7 +108,7 @@ describe SubscriptionsController, type: :controller do
     def action
       put :update, id: subscription.id, subscription: subscription_params
     end
-    let(:subscription_params) { { title: 'NewTitle', tag_list: %w(tag1 tag2) } }
+    let(:subscription_params) { { title: 'NewTitle', tag_list: 'tag1, tag2' } }
     let(:subscription) { create(:subscription, user: user) }
 
     it 'Subscriptionを更新できる' do
@@ -120,7 +120,7 @@ describe SubscriptionsController, type: :controller do
 
     context 'tag_listの値を削除したとき' do
       let(:subscription) { create(:subscription, user: user, tag_list: %w(tag1 tag2)) }
-      let(:subscription_params) { { tag_list: %w(tag1) } }
+      let(:subscription_params) { { tag_list: 'tag1' } }
 
       it 'タグを削除できる' do
         action

@@ -31,7 +31,7 @@ Vue.component 'root-page',
         @items = @items.concat(items)
 
     onTagButtonsChanged: (newTags) ->
-      location.hash = "#/#{newTags.join(',')}"
+      location.hash = "#/items/#{newTags.join(',')}"
 
     onCurrentTagsChanged: ->
       @page = 1

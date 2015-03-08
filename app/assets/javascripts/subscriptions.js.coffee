@@ -3,13 +3,40 @@ Vue.component 'edit-subscription-page',
   inherit: true,
 
   data: ->
-    feed: null
+    subscription: null
     tagList: ''
 
   compiled: ->
-    url = decodeURIComponent(@$root.params.feedUrl)
-    ($.getJSON(Routes.newSubscriptionPath(), url: url)).then (data) =>
-      @feed = data
+    if @params.id
+      ($.getJSON(Routes.subscriptionPath(@params.id))).then (subscription) =>
+        @subscription = subscription
+        @tagList = _.map(subscription.tags, (tag) -> tag.name).join(', ')
+    else
+      url = decodeURIComponent(@params.feedUrl)
+      ($.getJSON(Routes.newSubscriptionPath(), url: url)).then (feed) =>
+        @subscription = { feed: feed }
+
+  computed:
+    isNewRecord: ->
+      !@subscription.id?
+
+    formUrl: ->
+      if @isNewRecord
+        Routes.subscriptionsPath()
+      else
+        Routes.subscriptionPath(@subscription.id)
+
+    formMethod: ->
+      if @isNewRecord
+        'post'
+      else
+        'patch'
+
+    submitText: ->
+      if @isNewRecord
+        '登録'
+      else
+        '更新'
 
   methods:
     onFormSuccess: (data, status, xhr) ->
