@@ -37,7 +37,6 @@ describe FeedsController, type: :controller do
         data[:subscriptions][0].tap do |s|
           expect(s[:id]).to eq(subscription.id)
           expect(s[:userTitle]).to eq(subscription.user_title)
-          expect(s[:tagList]).to eq(subscription.tag_list)
 
           s[:feed].tap do |f|
             feed = subscription.feed
