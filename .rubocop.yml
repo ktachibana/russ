@@ -5,6 +5,7 @@ AllCops:
     - 'bin/**/*'
     - 'config/**/*'
     - 'bundle_bin/**/*'
+    - 'Guardfile'
 
 AsciiComments:
   Enabled: false
