@@ -6,6 +6,7 @@
     "underscore": "~1.6.0",
     "path-to-regexp": "pillarjs/path-to-regexp#~1.0.1",
     "pathjs": "*",
-    "bootstrap-tokenfield": "~0.12.1"
+    "bootstrap-tokenfield": "~0.12.1",
+    "bootstrap": "~3.3.2"
   }
 }
