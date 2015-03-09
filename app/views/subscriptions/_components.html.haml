@@ -6,8 +6,9 @@
           %a.btn.btn-danger{ href: '{{subscriptionPath}}', data: { remote: true, confirm: '登録解除してよろしいですか？', type: 'json', method: 'delete' }, v: { remote: 'onDeleted' } }
             %span.glyphicon.glyphicon-trash
             登録解除
-        %a{ target: '_blank', v: { attr: 'href: subscription.feed.linkUrl' } }
-          %h1 {{subscription.feed.title}}
+        %h1
+          %a{ target: '_blank', v: { attr: 'href: subscription.feed.linkUrl' } }
+            {{subscription.feed.title}}
         .description.well{ v: { html: 'subscription.feed.description', if: 'subscription.feed.description' } }
         = f.fields_for :feed, Feed.new do |ff|
           = ff.hidden_field :url, 'v-model' => 'subscription.feed.url', 'v-if' => 'subscription.isNewRecord'
