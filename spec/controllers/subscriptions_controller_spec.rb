@@ -24,8 +24,10 @@ describe SubscriptionsController, type: :controller do
     render_views
 
     def action
-      get :new, url: mock_rss_url, format: :json
+      get :new, url: url, format: format
     end
+    let(:url) { mock_rss_url }
+    let(:format) { :json }
 
     it 'Feedの情報をURLからロードできる' do
       mock_rss!(body: rss_data_one_item)
@@ -64,6 +66,15 @@ describe SubscriptionsController, type: :controller do
         bypass_rescue
         WebMock.stub_request(:get, mock_rss_url).to_raise('test fail')
         expect { action }.not_to raise_error
+      end
+    end
+
+    context 'formatがHTMLのとき' do
+      let(:format) { :html }
+
+      it 'フィード登録ページにリダイレクトする' do
+        action
+        is_expected.to redirect_to(root_path(anchor: '/subscriptions/new/' + Base64.strict_encode64(url)))
       end
     end
   end

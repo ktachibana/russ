@@ -11,7 +11,7 @@
             {{subscription.feed.title}}
         .description.well{ v: { html: 'subscription.feed.description', if: 'subscription.feed.description' } }
         = f.fields_for :feed, Feed.new do |ff|
-          = ff.hidden_field :url, 'v-model' => 'subscription.feed.url', 'v-if' => 'subscription.isNewRecord'
+          = ff.hidden_field :url, 'v-model' => 'subscription.feed.url', 'v-if' => 'isNewRecord'
       .form-group
         = f.label :title
         = f.text_field :title, class: 'form-control', 'v-attr' => 'placeholder: subscription.feed.title', 'v-model' => 'subscription.title'
