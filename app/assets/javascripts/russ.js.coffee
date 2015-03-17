@@ -87,7 +87,7 @@ if $('.vue-app').length
     app.currentPage = 'edit-subscription-page'
 
   Path.map('#/subscriptions/new/:feedUrl').to () ->
-    app.params = { feedUrl: @params.feedUrl }
+    app.params = { feedUrl: atob(@params.feedUrl) }
     app.currentPage = 'edit-subscription-page'
 
   Path.map('#/items/(:tags)').to () ->
