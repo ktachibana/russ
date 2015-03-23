@@ -20,9 +20,12 @@ class Item < ActiveRecord::Base
     scope
   end
 
-  before_save :corrent_published_at!
+  before_save :correct_published_at!
 
-  def corrent_published_at!
+  def correct_published_at!
+    # 一度設定した日付をnilにしてリセットはできない
+    restore_published_at! if published_at.nil? && published_at_was
+
     # 遠い未来の日付が設定されていて、ソートでずっとトップに居座る項目が作られたことがあるため、現在時刻を上限とする
     self.published_at = [published_at, Time.current].compact.min
     self

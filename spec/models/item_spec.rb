@@ -84,6 +84,16 @@ describe Item do
       it 'nilの時は現在時刻を設定する' do
         expect(create(:item, published_at: nil).published_at).to eq(Time.current)
       end
+
+      it 'すでに設定された時刻をnilにしようとしたら元に戻す' do
+        item = create(:item, published_at: 1.day.ago)
+        expect { item.update_attributes(published_at: nil) }.to_not change { item.published_at }
+      end
+
+      it '直接新しい日付を設定することはできる' do
+        item = create(:item, published_at: 2.days.ago)
+        expect { item.update_attributes(published_at: 1.day.ago) }.to change { item.published_at }.to(1.day.ago)
+      end
     end
   end
 end
