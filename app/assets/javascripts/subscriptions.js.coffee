@@ -67,6 +67,9 @@ Vue.component 'subscription-page',
         @subscription.lastPage = result.lastPage
         @subscription.feed.items = @subscription.feed.items.concat(result.items)
 
+    isEditing: ->
+      @isNewRecord || @isEdit
+
     edit: ->
       @isEdit = true
 
