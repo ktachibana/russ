@@ -1,10 +1,12 @@
-Vue.component 'edit-subscription-page',
-  template: '#edit-subscription-page',
+Vue.component 'subscription-page',
+  template: '#subscription-page',
   inherit: true,
 
   data: ->
     subscription: null
     tagList: ''
+    isEdit: false
+    page: 1
 
   compiled: ->
     if @params.id
@@ -44,6 +46,12 @@ Vue.component 'edit-subscription-page',
       else
         '更新'
 
+    hasMore: ->
+      @isPersisted && !@subscription.lastPage
+
+    isEditing: ->
+      @isNewRecord || @isEdit
+
   methods:
     onFormSuccess: ->
       location.href = Routes.rootPath
@@ -55,6 +63,18 @@ Vue.component 'edit-subscription-page',
 
     onDeleted: ->
       location.href = Routes.rootPath
+
+    showMore: ->
+      @page += 1
+      ($.getJSON Routes.itemsPath(subscription_id: @subscription.id, page: @page)).then (result) =>
+        @subscription.lastPage = result.lastPage
+        @subscription.feed.items = @subscription.feed.items.concat(result.items)
+
+    edit: ->
+      @isEdit = true
+
+    closeEdit: ->
+      @isEdit = false
 
 Vue.directive 'remote', (handler) ->
   form = $(@el)

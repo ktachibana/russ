@@ -49,4 +49,4 @@ Vue.component 'subscription-row',
       ['form', "_#{@id}"]
 
     href: ->
-      "#/subscriptions/#{@id}/edit"
+      "#/subscriptions/#{@id}"

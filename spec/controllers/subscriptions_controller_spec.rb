@@ -9,7 +9,7 @@ describe SubscriptionsController, type: :controller do
     def action
       get :show, id: subscription.id, format: :json
     end
-    let(:subscription) { create(:subscription, :with_title, user: user, tag_list: '%w(foo bar') }
+    let(:subscription) { create(:subscription, :with_title, user: user, tag_list: %w(foo bar)) }
 
     it 'Subscriptionの情報を取得できる' do
       action
@@ -17,6 +17,18 @@ describe SubscriptionsController, type: :controller do
       data = JSON.parse(response.body, symbolize_names: true)
       expect(data).to be_a(Hash)
       expect(data[:title]).to eq(subscription.title)
+    end
+
+    context 'itemsが大量にあるとき' do
+      let(:subscription) { create(:subscription, user: user, feed: feed) }
+      let(:feed) { create(:feed, item_count: 26) }
+
+      it '取得件数が制限される' do
+        action
+        data = JSON.parse(response.body, symbolize_names: true)
+        expect(data[:feed][:items].size).to eq(25)
+        expect(data[:lastPage]).to be false
+      end
     end
   end
 
