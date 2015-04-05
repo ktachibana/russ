@@ -15,6 +15,8 @@ class SubscriptionsController < ApplicationController
         @subscription = current_user.subscriptions.build(feed: @feed)
       end
       format.html do
+        url = Feedbag.find(url)[0]
+        return redirect_to(root_path, alert: I18n.t('messages.feed_not_found')) unless url
         encoded = Base64.strict_encode64(url)
         redirect_to(root_path(anchor: "/subscriptions/new/#{encoded}"))
       end

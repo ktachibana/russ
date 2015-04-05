@@ -69,12 +69,45 @@ describe SubscriptionsController, type: :controller do
       end
     end
 
-    context 'formatがHTMLのとき' do
+    context 'bookmarkletから呼び出されたとき' do
       let(:format) { :html }
 
       it 'フィード登録ページにリダイレクトする' do
+        mock_rss!(url: url, body: rss_data, content_type: 'application/rss+xml')
         action
         is_expected.to redirect_to(root_path(anchor: '/subscriptions/new/' + Base64.strict_encode64(url)))
+      end
+
+      context 'RSSへのリンクを持つHTMLページのとき' do
+        let(:url) { 'http://test.com/index.html' }
+        let(:html) do
+          <<-HTML
+<html>
+<head>
+<link rel="alternate" type="application/rss+xml" href="http://test.com/rss.xml"/>
+</head>
+</html>
+          HTML
+        end
+
+        it 'HTMLからRSSを自動で探し出す' do
+          mock_url!(url: url, body: html, content_type: 'text/html')
+          mock_url!(url: mock_rss_url, body: rss_data, content_type: 'application.rss+xml')
+          action
+          is_expected.to redirect_to(root_path(anchor: '/subscriptions/new/' + Base64.strict_encode64(mock_rss_url)))
+        end
+      end
+
+      context 'RSSへのリンクがないHTMLページのとき' do
+        let(:url) { 'http://test.com/index.html' }
+        let(:html) { '<html></html>' }
+
+        it 'エラーメッセージをflashで表示する' do
+          mock_url!(url: url, body: html, content_type: 'text/html')
+          action
+          is_expected.to redirect_to(root_path)
+          expect(flash[:alert]).to eq(I18n.t('messages.feed_not_found'))
+        end
       end
     end
   end
