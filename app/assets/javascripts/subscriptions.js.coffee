@@ -1,5 +1,5 @@
-Vue.component 'edit-subscription-page',
-  template: '#edit-subscription-page',
+Vue.component 'subscription-page',
+  template: '#subscription-page',
   inherit: true,
 
   data: ->

@@ -1,4 +1,4 @@
-%script#edit-subscription-page{ type: 'text/x-template' }
+%script#subscription-page{ type: 'text/x-template' }
   .well
     = form_for Subscription.new, url: '{{formUrl}}', method: '{{formMethod}}', class: 'form', html: { data: { remote: true, type: 'json' }, 'v-remote' => 'onFormSuccess' } do |f|
       .feed

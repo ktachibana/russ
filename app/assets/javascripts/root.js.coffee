@@ -4,8 +4,8 @@ Vue.component 'item-panel',
   compiled: ->
     @hidefeed = @hidefeed?
   computed:
-    feedPath: ->
-      Routes.feedPath(@feed)
+    subscriptionPath: ->
+      "#/subscriptions/#{@feed.usersSubscription.id}"
 
 Vue.component 'root-page',
   template: '#root-page'
