@@ -36,7 +36,7 @@
           %button.btn.btn-primary{ type: 'submit' }
             %span.glyphicon.glyphicon-ok
             {{submitText}}する
-          %button.btn.btn-default{ v: { on: 'click: closeEdit', if: 'isPersisted' } }
+          %button.btn.btn-default{ type: 'button', v: { on: 'click: closeEdit', if: 'isPersisted' } }
             %span.glyphicon.glyphicon-remove
             閉じる
         .clearfix

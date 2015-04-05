@@ -49,6 +49,9 @@ Vue.component 'subscription-page',
     hasMore: ->
       @isPersisted && !@subscription.lastPage
 
+    isEditing: ->
+      @isNewRecord || @isEdit
+
   methods:
     onFormSuccess: ->
       location.href = Routes.rootPath
@@ -66,9 +69,6 @@ Vue.component 'subscription-page',
       ($.getJSON Routes.itemsPath(subscription_id: @subscription.id, page: @page)).then (result) =>
         @subscription.lastPage = result.lastPage
         @subscription.feed.items = @subscription.feed.items.concat(result.items)
-
-    isEditing: ->
-      @isNewRecord || @isEdit
 
     edit: ->
       @isEdit = true
