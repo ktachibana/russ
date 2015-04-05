@@ -26,3 +26,6 @@
       = f.submit class: 'btn btn-primary', value: '{{submitText}}する'
   .items
     .item{ v: { repeat: 'subscription.feed.items', component: 'item-panel' }, hidefeed: true }
+
+  .more.text-center{ v: { if: 'hasMore' } }
+    %button.btn.btn-primary{ v: { on: 'click: showMore' } } 続きを表示

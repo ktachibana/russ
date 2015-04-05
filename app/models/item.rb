@@ -12,6 +12,10 @@ class Item < ActiveRecord::Base
       scope = scope.where(feed_id: Subscription.tagged_with(tags).pluck(:feed_id))
     end
 
+    conditions[:subscription_id].presence.try do |subscription_id|
+      scope = scope.joins(feed: :subscriptions).merge(Subscription.where(id: subscription_id))
+    end
+
     scope = scope.page(conditions[:page])
     scope = scope.preload(:feed)
     scope.each do |item|

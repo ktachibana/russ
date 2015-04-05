@@ -5,6 +5,7 @@ Vue.component 'edit-subscription-page',
   data: ->
     subscription: null
     tagList: ''
+    page: 1
 
   compiled: ->
     if @params.id
@@ -44,6 +45,9 @@ Vue.component 'edit-subscription-page',
       else
         '更新'
 
+    hasMore: ->
+      @isPersisted && !@subscription.lastPage
+
   methods:
     onFormSuccess: ->
       location.href = Routes.rootPath
@@ -55,6 +59,12 @@ Vue.component 'edit-subscription-page',
 
     onDeleted: ->
       location.href = Routes.rootPath
+
+    showMore: ->
+      @page += 1
+      ($.getJSON Routes.itemsPath(subscription_id: @subscription.id, page: @page)).then (result) =>
+        @subscription.lastPage = result.lastPage
+        @subscription.feed.items = @subscription.feed.items.concat(result.items)
 
 Vue.directive 'remote', (handler) ->
   form = $(@el)

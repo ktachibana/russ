@@ -1,6 +1,7 @@
 class SubscriptionsController < ApplicationController
   def show
     @subscription = owned_subscriptions.preload(:feed).find(params[:id])
+    @items = @subscription.feed.items.page(params[:page])
   end
 
   def new
