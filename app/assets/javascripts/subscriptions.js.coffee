@@ -5,6 +5,7 @@ Vue.component 'subscription-page',
   data: ->
     subscription: null
     tagList: ''
+    isEdit: false
     page: 1
 
   compiled: ->
@@ -65,6 +66,12 @@ Vue.component 'subscription-page',
       ($.getJSON Routes.itemsPath(subscription_id: @subscription.id, page: @page)).then (result) =>
         @subscription.lastPage = result.lastPage
         @subscription.feed.items = @subscription.feed.items.concat(result.items)
+
+    edit: ->
+      @isEdit = true
+
+    closeEdit: ->
+      @isEdit = false
 
 Vue.directive 'remote', (handler) ->
   form = $(@el)

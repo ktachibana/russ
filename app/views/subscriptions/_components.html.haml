@@ -1,29 +1,43 @@
 %script#subscription-page{ type: 'text/x-template' }
   .well
-    = form_for Subscription.new, url: '{{formUrl}}', method: '{{formMethod}}', class: 'form', html: { data: { remote: true, type: 'json' }, 'v-remote' => 'onFormSuccess' } do |f|
-      .feed
-        .pull-right{ v: { if: 'isPersisted' } }
-          %a.btn.btn-danger{ href: '{{subscriptionPath}}', data: { remote: true, confirm: '登録解除してよろしいですか？', type: 'json', method: 'delete' }, v: { remote: 'onDeleted' } }
-            %span.glyphicon.glyphicon-trash
-            登録解除
-        %h1
-          %a{ target: '_blank', v: { attr: 'href: subscription.feed.linkUrl' } }
-            {{subscription.feed.title}}
-        .description.well{ v: { html: 'subscription.feed.description', if: 'subscription.feed.description' } }
+    .feed
+      .pull-right{ v: { if: 'isPersisted' } }
+        %a.btn.btn-danger{ href: '{{subscriptionPath}}', data: { remote: true, confirm: '登録解除してよろしいですか？', type: 'json', method: 'delete' }, v: { remote: 'onDeleted' } }
+          %span.glyphicon.glyphicon-trash
+          登録解除
+      %h1
+        %a{ target: '_blank', v: { attr: 'href: subscription.feed.linkUrl' } }
+          {{subscription.feed.title}}
+      .description.well{ v: { html: 'subscription.feed.description', if: 'subscription.feed.description' } }
+    .show-subscription{ v: { if: '!isEdit' } }
+      %span.label.label-default{ style: 'margin: 2px;', v: { repeat: 'subscription.tags' } }
+        {{name}}
+      %button.btn.btn-default.pull-right{ v: { on: 'click: edit' } }
+        %span.glyphicon.glyphicon-edit
+        編集
+      .clearfix
+    .edit-subscription{ v: { if: 'isEdit' } }
+      = form_for Subscription.new, url: '{{formUrl}}', method: '{{formMethod}}', class: 'form', html: { data: { remote: true, type: 'json' }, 'v-remote' => 'onFormSuccess' } do |f|
         = f.fields_for :feed, Feed.new do |ff|
           = ff.hidden_field :url, 'v-model' => 'subscription.feed.url', 'v-if' => 'isNewRecord'
-      .form-group
-        = f.label :title
-        = f.text_field :title, class: 'form-control', 'v-attr' => 'placeholder: subscription.feed.title', 'v-model' => 'subscription.title'
-      .form-group
-        %div
-          = f.label :tags
-          = f.text_field :tag_list, class: 'form-control', 'v-tokenfield' => 'tagList'
-          .owned-tags
-            %button.btn.btn-default.btn-xs{ type: 'button', v: { repeat: 'tags', on: 'click: addTag(name)' } }
-              {{name}} ({{count}})
-
-      = f.submit class: 'btn btn-primary', value: '{{submitText}}する'
+        .form-group
+          = f.label :title
+          = f.text_field :title, class: 'form-control', 'v-attr' => 'placeholder: subscription.feed.title', 'v-model' => 'subscription.title'
+        .form-group
+          %div
+            = f.label :tags
+            = f.text_field :tag_list, class: 'form-control', 'v-tokenfield' => 'tagList'
+            .owned-tags
+              %button.btn.btn-default.btn-xs{ type: 'button', v: { repeat: 'tags', on: 'click: addTag(name)' } }
+                {{name}} ({{count}})
+        .form-group.pull-right
+          %button.btn.btn-primary{ type: 'submit' }
+            %span.glyphicon.glyphicon-ok
+            {{submitText}}する
+          %button.btn.btn-default{ v: { on: 'click: closeEdit' } }
+            %span.glyphicon.glyphicon-remove
+            閉じる
+        .clearfix
   .items
     .item{ v: { repeat: 'subscription.feed.items', component: 'item-panel' }, hidefeed: true }
 
