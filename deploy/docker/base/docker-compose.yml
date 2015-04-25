@@ -1,0 +1,10 @@
+base:
+  build: .
+  links:
+    - mysql
+  command: /bin/bash
+
+mysql:
+  image: mysql:latest
+  environment:
+    MYSQL_ROOT_PASSWORD: 'fooBAR@42'
