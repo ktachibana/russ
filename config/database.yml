@@ -49,7 +49,4 @@ test:
 #
 production:
   <<: *default
-  database: russ
-  username: russ
-  password: <%= ENV['RUSS_DATABASE_PASSWORD'] %>
-  socket: /var/run/mysqld/mysqld.sock
+  url: <%= ENV['DATABASE_URL'] %>

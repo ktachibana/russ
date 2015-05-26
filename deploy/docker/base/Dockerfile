@@ -11,5 +11,4 @@ RUN ruby-build 2.2.2 /usr/local
 RUN git clone https://github.com/ktachibana/russ.git --depth 1
 WORKDIR russ
 RUN gem install bundler; bundle install --without test develop
-ADD database.yml config/database.yml
 ENV RAILS_ENV=production
