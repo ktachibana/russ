@@ -8,7 +8,7 @@ RUN git clone https://github.com/sstephenson/ruby-build.git --depth 1; cd ruby-b
 
 RUN ruby-build 2.2.2 /usr/local
 
-RUN git clone https://github.com/ktachibana/russ.git --depth 1
+ADD . /russ
 WORKDIR russ
 RUN gem install bundler; bundle install --without test develop
 ENV RAILS_ENV=production

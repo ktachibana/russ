@@ -1,24 +1,22 @@
 webapp:
-  build: webapp
+  build: 'containers/webapp'
   links:
     - database
-  ports:
-    - '8088:8088'
   volumes_from:
     - datastore
   environment:
-    DATABASE_URL: 'mysql2://root:fooBAR42@database:3306'
+    DATABASE_URL: 'mysql2://root:fooBAR42@database:3306/russ'
     SECRET_KEY_BASE: 9681bdc4d64739364200229d42a317459f28e1930ea0aaa70e276f98c284f61b4917f8a0c8cc704b67c107f6a576ece3a548380cfe48a99686a18301306d42b5
 
 database:
-  image: mysql:latest
+  image: 'mysql:latest'
   environment:
     MYSQL_ROOT_PASSWORD: 'fooBAR42'
   volumes_from:
     - datastore
 
 reverseproxy:
-  build: 'reverse-proxy'
+  build: 'containers/reverse-proxy'
   links:
     - webapp
   volumes_from:
@@ -27,4 +25,4 @@ reverseproxy:
     - '80:80'
 
 datastore:
-  build: datastore
+  build: 'containers/datastore'

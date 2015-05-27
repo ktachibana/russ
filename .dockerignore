@@ -1,0 +1,7 @@
+tmp/*
+public/assets/*
+log/*
+vendor/bundle/*
+containers
+.dockerignore
+.docker-compose.yml
