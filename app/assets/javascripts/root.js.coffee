@@ -1,12 +1,3 @@
-Vue.component 'item-panel',
-  template: '#item-panel',
-  paramAttributes: ['hidefeed'],
-  compiled: ->
-    @hidefeed = @hidefeed?
-  computed:
-    subscriptionPath: ->
-      "#/subscriptions/#{@feed.usersSubscription.id}"
-
 Vue.component 'root-page',
   template: '#root-page'
   inherit: true

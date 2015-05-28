@@ -22,3 +22,5 @@
 #= require root
 #= require feeds
 #= require subscriptions
+#= require tags
+#= require items
