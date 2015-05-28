@@ -18,7 +18,8 @@ Vue.component 'feeds-page',
         @subscriptions = subscriptions
 
     onTagButtonsChanged: (newTags) ->
-      location.hash = "#/feeds/#{newTags.join(',')}"
+      tags = _.map newTags, (tag) -> encodeURIComponent(tag)
+      location.hash = "#/feeds/#{tags.join(',')}"
 
     onCurrentTagsChanged: ->
       @loadFeeds()

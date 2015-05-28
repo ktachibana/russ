@@ -22,7 +22,8 @@ Vue.component 'root-page',
         @items = @items.concat(items)
 
     onTagButtonsChanged: (newTags) ->
-      location.hash = "#/items/#{newTags.join(',')}"
+      tags = _.map newTags, (tag) -> encodeURIComponent(tag)
+      location.hash = "#/items/#{tags.join(',')}"
 
     onCurrentTagsChanged: ->
       @page = 1

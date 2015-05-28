@@ -33,7 +33,9 @@ if $('.vue-app').length
 
 
   Path.map('#/feeds/(:tags)').to () ->
-    app.setCurrentTags @params.tags?.split(',') || []
+    encodedTags = (@params.tags || null)?.split(',') || []
+    tags = _.map encodedTags, (tag) -> decodeURIComponent(tag)
+    app.setCurrentTags tags
     if app.currentPage != 'feeds-page'
       app.currentPage = 'feeds-page'
     else
@@ -48,7 +50,9 @@ if $('.vue-app').length
     app.currentPage = 'subscription-page'
 
   Path.map('#/items/(:tags)').to () ->
-    app.setCurrentTags (@params.tags || null)?.split(',') || []
+    encodedTags = (@params.tags || null)?.split(',') || []
+    tags = _.map encodedTags, (tag) -> decodeURIComponent(tag)
+    app.setCurrentTags tags
     if app.currentPage != 'root-page'
       app.currentPage = 'root-page'
     else
