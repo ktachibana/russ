@@ -1,3 +1,6 @@
+base:
+  build: 'containers/base'
+
 webapp:
   build: 'containers/webapp'
   links:
