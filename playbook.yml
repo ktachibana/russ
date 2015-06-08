@@ -1,17 +1,15 @@
 - hosts: trusty
   tasks:
-    - name: 'install docker'
-      apt: name=docker.io
-      sudo: yes
     - name: 'archive'
-      local_action: command rake russ:archive
+      local_action: command bundle exec rake russ:archive
     - name: 'make directory'
       file: path=russ state=directory
     - name: 'unarchive'
       unarchive: src=tmp/russ.tar.gz dest=/home/vagrant/russ
+
+    - name: 'install docker'
+      shell: './russ/install-docker.sh'
+      sudo: yes
     - name: 'add user russ'
       sudo: yes
       user: name=vagrant groups=docker
-    - name: 'install docker-compose'
-      shell: './russ/install-docker-compose.sh'
-      sudo: yes
