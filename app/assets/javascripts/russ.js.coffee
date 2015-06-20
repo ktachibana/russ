@@ -42,7 +42,9 @@ if $('.vue-app').length
       app.$broadcast 'current-tags-changed'
 
   Path.map('#/subscriptions/new/:feedUrl').to () ->
-    app.params = { feedUrl: atob(@params.feedUrl) }
+    url = @params.feedUrl
+    url = atob(url.replace('-', '+').replace('_', '/'))
+    app.params = { feedUrl: url }
     app.currentPage = 'subscription-page'
 
   Path.map('#/subscriptions/:id').to () ->
