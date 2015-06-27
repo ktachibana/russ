@@ -6,7 +6,7 @@ ruby File.read('.ruby-version').strip
 gem 'rails', '~> 4.2'
 gem 'sprockets'
 
-gem 'mysql2'
+gem 'pg'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'
