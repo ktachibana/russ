@@ -4,9 +4,9 @@ ruby File.read('.ruby-version').strip
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 4.2'
-gem 'sprockets', '~> 2.12.3'
+gem 'sprockets'
 
-gem 'mysql2'
+gem 'pg'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'
@@ -94,3 +94,4 @@ gem 'js-routes'
 gem 'oj'
 gem 'oj_mimic_json'
 gem 'feedbag'
+gem 'activerecord-import'

@@ -20,4 +20,5 @@ erd.pdf
 bundle_bin
 public/assets
 vendor/bower_components
+vendor/bundle
 .vagrant

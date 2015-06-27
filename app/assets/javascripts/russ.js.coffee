@@ -1,46 +1,3 @@
-Vue.component 'tag-buttons',
-  template: '#tag-buttons'
-  data: ->
-    tags: []
-    currentTags: []
-  methods:
-    inactivate: (tagName) ->
-      @currentTags = _.without(@currentTags, tagName)
-    activateOnly: (tagName) ->
-      oldTags = @currentTags
-      @currentTags = [tagName]
-      !_.isEqual(@currentTags, oldTags)
-    activate: (tagName) ->
-      if @isActive(tagName)
-        false
-      else
-        @currentTags.push(tagName)
-        true
-    isActive: (tagName) ->
-      _.contains(@currentTags, tagName)
-
-  components:
-    'tag-button' : Vue.extend
-      template: '#tag-button'
-      inherit: true
-      computed:
-        isActive: ->
-          @$parent.isActive(@name)
-      methods:
-        dispatchChanged: ->
-          @$dispatch('tag-buttons-changed', @currentTags)
-
-        select: ->
-          if @$parent.activateOnly(@name)
-            @dispatchChanged()
-
-        toggle: ->
-          if @isActive
-            @$parent.inactivate(@name)
-          else
-            @$parent.activate(@name)
-          @dispatchChanged()
-
 if $('.vue-app').length
   app = new Vue
     el: '#main-content'
@@ -71,19 +28,23 @@ if $('.vue-app').length
           @tags = tags
 
       setCurrentTags: (tags) ->
-        newTags = _.sortBy tags, (tag) -> tag
+        newTags = tags.sort()
         @currentTags = newTags
 
 
   Path.map('#/feeds/(:tags)').to () ->
-    app.setCurrentTags @params.tags?.split(',') || []
+    encodedTags = (@params.tags || null)?.split(',') || []
+    tags = _.map encodedTags, (tag) -> decodeURIComponent(tag)
+    app.setCurrentTags tags
     if app.currentPage != 'feeds-page'
       app.currentPage = 'feeds-page'
     else
       app.$broadcast 'current-tags-changed'
 
   Path.map('#/subscriptions/new/:feedUrl').to () ->
-    app.params = { feedUrl: atob(@params.feedUrl) }
+    url = @params.feedUrl
+    url = atob(url.replace('-', '+').replace('_', '/'))
+    app.params = { feedUrl: url }
     app.currentPage = 'subscription-page'
 
   Path.map('#/subscriptions/:id').to () ->
@@ -91,7 +52,9 @@ if $('.vue-app').length
     app.currentPage = 'subscription-page'
 
   Path.map('#/items/(:tags)').to () ->
-    app.setCurrentTags (@params.tags || null)?.split(',') || []
+    encodedTags = (@params.tags || null)?.split(',') || []
+    tags = _.map encodedTags, (tag) -> decodeURIComponent(tag)
+    app.setCurrentTags tags
     if app.currentPage != 'root-page'
       app.currentPage = 'root-page'
     else
