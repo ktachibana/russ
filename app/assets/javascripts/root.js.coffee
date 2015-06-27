@@ -1,12 +1,3 @@
-Vue.component 'item-panel',
-  template: '#item-panel',
-  paramAttributes: ['hidefeed'],
-  compiled: ->
-    @hidefeed = @hidefeed?
-  computed:
-    subscriptionPath: ->
-      "#/subscriptions/#{@feed.usersSubscription.id}"
-
 Vue.component 'root-page',
   template: '#root-page'
   inherit: true
@@ -31,7 +22,8 @@ Vue.component 'root-page',
         @items = @items.concat(items)
 
     onTagButtonsChanged: (newTags) ->
-      location.hash = "#/items/#{newTags.join(',')}"
+      tags = _.map newTags, (tag) -> encodeURIComponent(tag)
+      location.hash = "#/items/#{tags.join(',')}"
 
     onCurrentTagsChanged: ->
       @page = 1
