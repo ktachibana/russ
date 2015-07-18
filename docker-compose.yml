@@ -1,6 +1,3 @@
-base:
-  build: 'containers/base'
-
 webapp:
   build: 'containers/webapp'
   links:
@@ -8,13 +5,14 @@ webapp:
   volumes_from:
     - datastore
   environment:
-    DATABASE_URL: 'mysql2://root:fooBAR42@database:3306/russ'
+    DATABASE_URL: 'postgres://postgres:fooBAR42@database/postgres:3306'
     SECRET_KEY_BASE: 9681bdc4d64739364200229d42a317459f28e1930ea0aaa70e276f98c284f61b4917f8a0c8cc704b67c107f6a576ece3a548380cfe48a99686a18301306d42b5
+    DATABASE_PASSWORD: 'fooBAR42'
 
 database:
-  image: 'mysql:latest'
+  image: 'postgres:latest'
   environment:
-    MYSQL_ROOT_PASSWORD: 'fooBAR42'
+    POSTGRES_PASSWORD: 'fooBAR42'
   volumes_from:
     - datastore
 

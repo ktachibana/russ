@@ -11,4 +11,4 @@ libgdbm3
 libgdbm-dev
 git
 curl
-libmysqlclient-dev
+libpq-dev
