@@ -1,5 +1,6 @@
 FROM nginx
 
-ADD russ.conf boot.sh /
+VOLUME /var/log/nginx
 
-CMD ["/boot.sh"]
+ADD russ.conf boot.sh /
+CMD /boot.sh

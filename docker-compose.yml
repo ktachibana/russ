@@ -1,5 +1,26 @@
+reverseproxy:
+  build: 'containers/reverse-proxy'
+  links:
+    - webapp
+  volumes_from:
+    - webapp
+    - datastore
+  ports:
+    - '80:80'
+
 webapp:
   build: 'containers/webapp'
+  links:
+    - database
+  volumes_from:
+    - datastore
+  environment:
+    DATABASE_URL: 'postgres://postgres:fooBAR42@database/postgres:3306'
+    SECRET_KEY_BASE: 9681bdc4d64739364200229d42a317459f28e1930ea0aaa70e276f98c284f61b4917f8a0c8cc704b67c107f6a576ece3a548380cfe48a99686a18301306d42b5
+    DATABASE_PASSWORD: 'fooBAR42'
+
+crawler:
+  build: 'containers/crawler'
   links:
     - database
   volumes_from:
@@ -15,15 +36,6 @@ database:
     POSTGRES_PASSWORD: 'fooBAR42'
   volumes_from:
     - datastore
-
-reverseproxy:
-  build: 'containers/reverse-proxy'
-  links:
-    - webapp
-  volumes_from:
-    - datastore
-  ports:
-    - '80:80'
 
 datastore:
   build: 'containers/datastore'

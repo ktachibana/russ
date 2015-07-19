@@ -1,7 +1,9 @@
+.git
 tmp/*
 public/assets/*
 log/*
 vendor/bundle/*
 .dockerignore
 .docker-compose.yml
+containers
 spec

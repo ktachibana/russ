@@ -1,5 +1,7 @@
 FROM russ/base
 
 EXPOSE 8080
+VOLUME /russ/public/assets
 
-CMD bundle exec unicorn_rails -c config/unicorn.rb
+ADD boot.sh /
+CMD /boot.sh
