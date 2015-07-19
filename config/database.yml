@@ -52,3 +52,4 @@ production:
   port: <%= ENV['DATABASE_PORT_5432_TCP_PORT'] %>
   username: postgres
   password: <%= ENV['DATABASE_PASSWORD'] %>
+  database: russ
