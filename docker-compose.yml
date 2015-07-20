@@ -14,10 +14,7 @@ webapp:
     - database
   volumes_from:
     - datastore
-  environment:
-    DATABASE_URL: 'postgres://postgres:fooBAR42@database/postgres:3306'
-    SECRET_KEY_BASE: 9681bdc4d64739364200229d42a317459f28e1930ea0aaa70e276f98c284f61b4917f8a0c8cc704b67c107f6a576ece3a548380cfe48a99686a18301306d42b5
-    DATABASE_PASSWORD: 'fooBAR42'
+  env_file: .env
 
 crawler:
   build: 'containers/crawler'
@@ -25,17 +22,13 @@ crawler:
     - database
   volumes_from:
     - datastore
-  environment:
-    DATABASE_URL: 'postgres://postgres:fooBAR42@database/postgres:3306'
-    SECRET_KEY_BASE: 9681bdc4d64739364200229d42a317459f28e1930ea0aaa70e276f98c284f61b4917f8a0c8cc704b67c107f6a576ece3a548380cfe48a99686a18301306d42b5
-    DATABASE_PASSWORD: 'fooBAR42'
+  env_file: .env
 
 database:
   image: 'postgres:latest'
-  environment:
-    POSTGRES_PASSWORD: 'fooBAR42'
   volumes_from:
     - datastore
+  env_file: .env
 
 datastore:
   build: 'containers/datastore'
