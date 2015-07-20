@@ -9,4 +9,4 @@ WORKDIR /russ
 ENV RAILS_ENV=production
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install libpq-dev
-RUN bundle install --without test develop
+RUN bundle install --without test development
