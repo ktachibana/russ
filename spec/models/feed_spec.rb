@@ -150,6 +150,17 @@ describe Feed do
       end
     end
 
+    context 'link_urlにホスト名が含まれないとき' do
+      let(:rss_data) { rss_data_relative_link }
+      let(:feed) { build(:feed_only_url, url: 'http://test.com/rss.xml') }
+
+      it 'urlからの相対URLとして解決する' do
+        feed.load!
+        expect(feed.link_url).to eq('http://test.com/site/mypage')
+        expect(feed.items[0].link).to eq('http://test.com/content/1')
+      end
+    end
+
     context 'Atom形式のとき' do
       let(:rss_data) { rss_data_atom }
       before { feed.load! }

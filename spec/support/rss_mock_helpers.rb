@@ -84,6 +84,27 @@ end
     RSS_DATA_TWO_ITEMS
   end
 
+  def rss_data_relative_link
+    <<-'EOS'
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>RSS Title</title>
+    <link>/site/mypage</link>
+    <description>My description</description>
+
+    <item>
+      <title>New Title</title>
+      <link>/content/1</link>
+      <guid>1</guid>
+      <pubDate>Wed, 22 Feb 2012 18:24:29 +0900</pubDate>
+      <description><![CDATA[New item description]]></description>
+    </item>
+  </channel>
+</rss>
+    EOS
+  end
+
   def rss_data_atom
     <<-EOS
 <?xml version="1.0" encoding="utf-8"?>

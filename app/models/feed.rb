@@ -75,10 +75,20 @@ class Feed < ActiveRecord::Base
           end
           self.items_attributes = attributes
         end
+        resolve_relative_url!
       end
     rescue => e
       Rails.logger.error([e.message, *e.backtrace].join("\n"))
       nil # TODO: エラーハンドリング
+    end
+
+    def resolve_relative_url!
+      return if url.blank?
+
+      self.link_url = URI.join(url, link_url).to_s if link_url.present?
+      self.items.each do |item|
+        item.link = URI.join(url, item.link) if item.link.present?
+      end
     end
 
     def to_item_attributes(parsed_item)
