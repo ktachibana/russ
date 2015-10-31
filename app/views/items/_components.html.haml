@@ -9,7 +9,10 @@
             {{feed.usersSubscription.userTitle}}
       .clearfix
     .panel-body
-      {{{description}}}
+      .description{ v: { class: 'shorten: shorten' } }
+        {{{description}}}
+      %a{ href: 'javascript:void(0)', v: { show: 'shorten', on: 'click: showAll' } }
+        すべて表示
       %small.published-at.pull-right
         %span.glyphicon.glyphicon-upload
         {{publishedAtDate | date}}
