@@ -9,8 +9,7 @@
             {{feed.usersSubscription.userTitle}}
       .clearfix
     .panel-body
-      %p{ v: { html: 'description' } }
-      .pull-right
+      {{{description}}}
+      %small.published-at.pull-right
         %span.glyphicon.glyphicon-upload
-        %i {{publishedAtDate | date}}
-      .clearfix
+        {{publishedAtDate | date}}
