@@ -15,47 +15,7 @@ describe Feed do
 
   describe 'associations' do
     it { is_expected.to have_many(:items).dependent(:destroy) }
-    it { is_expected.to have_many(:tags) }
     it { is_expected.to have_many(:subscriptions).dependent(:destroy) }
-  end
-
-  describe '.acts_as_tagging_on' do
-    let(:feed) { create(:feed) }
-
-    it '一括して追加できる' do
-      feed.update_attributes!(tag_list: %w(tag1 tag2))
-      expect(feed.tags.map(&:name)).to eq(%w(tag1 tag2))
-    end
-
-    it '削除できる' do
-      feed.update_attributes!(tag_list: %w(tag1 tag2))
-      expect(ActsAsTaggableOn::Tag.pluck(:name)).to eq(%w(tag1 tag2))
-
-      feed.reload
-      feed.update_attributes!(tag_list: %w(tag1 tag3))
-      expect(feed.tags.map(&:name)).to eq(%w(tag1 tag3))
-      expect(ActsAsTaggableOn::Tagging.count).to eq(2)
-    end
-
-    it 'フィードとタグを一括して登録できる' do
-      feed = Feed.create(attributes_for(:feed, tag_list: 'tagname'))
-      expect(feed.tag_list).to eq(%w(tagname))
-      expect(Feed.count).to eq(1)
-      expect(ActsAsTaggableOn::Tagging.count).to eq(1)
-    end
-  end
-
-  describe '.search' do
-    describe '.by_tag_id' do
-      it '特定のタグのついたものだけに絞り込む' do
-        feeds = ['tag1', 'tag1, tag2', []].map do |tags|
-          create(:feed, tag_list: tags)
-        end
-        expect(Feed.search(tag: %w(tag1))).to match_array(feeds.values_at(0, 1))
-        expect(Feed.search(tag: %w(tag1 tag2))).to match_array(feeds.values_at(1))
-        expect(Feed.search(tag: %w(tag2 tag1))).to match_array(feeds.values_at(1))
-      end
-    end
   end
 
   describe '#load!' do

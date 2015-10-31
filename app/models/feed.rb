@@ -6,7 +6,6 @@ class Feed < ActiveRecord::Base
   has_many :items, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
   has_one :latest_item, class_name: 'Item'
-  acts_as_taggable
 
   accepts_nested_attributes_for :items
 
@@ -16,19 +15,6 @@ class Feed < ActiveRecord::Base
   validates :description, length: { maximum: 4096 }
 
   attr_accessor :users_subscription
-
-  scope :search, lambda { |conditions|
-    scope = self
-    conditions[:tag].presence.try do |tag_names|
-      scope = scope.tagged_with(tag_names)
-    end
-    scope = scope.page(conditions[:page])
-    scope
-  }
-
-  def tags_string
-    tags.map(&:name).join(', ')
-  end
 
   module FileLoadable
     extend ActiveSupport::Concern
