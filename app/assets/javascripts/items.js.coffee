@@ -6,3 +6,5 @@ Vue.component 'item-panel',
   computed:
     subscriptionPath: ->
       "#/subscriptions/#{@feed.usersSubscription.id}"
+    publishedAtDate: ->
+      new Date(@publishedAt)

@@ -8,4 +8,9 @@
           %a{ v: { attr: 'href: subscriptionPath' } }
             {{feed.usersSubscription.userTitle}}
       .clearfix
-    .panel-body{ v: { html: 'description' } }
+    .panel-body
+      %p{ v: { html: 'description' } }
+      .pull-right
+        %span.glyphicon.glyphicon-upload
+        %i {{publishedAtDate | date}}
+      .clearfix
