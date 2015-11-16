@@ -110,6 +110,7 @@ end
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title type="text" xml:lang="en">Riding Rails</title>
+  <subtitle type="text">Sub Title</subtitle>
   <link type="application/atom+xml" href="http://weblog.rubyonrails.org/feed/" rel="self"/>
   <link type="text" href="http://weblog.rubyonrails.org/" rel="alternate"/>
   <updated>2014-11-05T16:12:31+00:00</updated>

@@ -27,6 +27,7 @@ class Feed < ActiveRecord::Base
 
     def update_by_atom!(atom)
       self.title = atom.title.content
+      self.description = atom.subtitle.try(:content)
       self.link_url = atom.links.find { |link| link.rel == 'alternate' }.try(:href)
       self.link_url ||= atom.links[0].try(:href) || url
 

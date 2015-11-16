@@ -128,7 +128,7 @@ describe Feed do
       it 'Atomも読み込める' do
         expect(feed.title).to eq('Riding Rails')
         expect(feed.link_url).to eq('http://weblog.rubyonrails.org/')
-        expect(feed.description).to eq(nil)
+        expect(feed.description).to eq('Sub Title')
 
         expect(feed.items.size).to eq(1)
 
