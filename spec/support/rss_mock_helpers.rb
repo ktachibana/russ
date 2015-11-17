@@ -3,6 +3,7 @@ module RssMockHelpers
     WebMock.stub_request(:get, url).to_return(body: body, headers: { content_type: content_type })
     url
   end
+
   def mock_rss!(url: mock_rss_url, body: rss_data, content_type: nil)
     mock_url!(url: url, body: body, content_type: content_type)
   end

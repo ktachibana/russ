@@ -73,7 +73,7 @@ class Feed < ActiveRecord::Base
       return if url.blank?
 
       self.link_url = URI.join(url, link_url).to_s if link_url.present?
-      self.items.each do |item|
+      items.each do |item|
         item.link = URI.join(url, item.link) if item.link.present?
       end
     end
