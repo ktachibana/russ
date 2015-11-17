@@ -71,11 +71,10 @@ describe Feed do
       it 'guidが無い時はlinkで重複を判断する' do
         mock_rss!(url: feed.url, body: <<-EOS)
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0">
   <channel>
     <title>RSS Title</title>
     <link>http://test.com/content</link>
-    <atom:link rel="self" type="application/rss+xml" href="http://test.com/rss.xml?rss=2.0"/>
     <description>My description</description>
 
     <item>
