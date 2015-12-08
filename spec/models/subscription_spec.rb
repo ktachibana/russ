@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Subscription do
+describe Subscription, type: :model do
   describe 'associations' do
     it { is_expected.to belong_to(:user) }
     it { is_expected.to belong_to(:feed) }

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FeedsController, type: :controller do
+RSpec.describe FeedsController, type: :controller do
   render_views
   let!(:user) { create(:user) }
   before { sign_in(user) }

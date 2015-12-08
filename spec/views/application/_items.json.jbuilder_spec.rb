@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'application/_items.json', type: :view do
+RSpec.describe 'application/_items.json', type: :view do
   let(:subscription) { create(:subscription) }
   let!(:item) { create(:item, feed: subscription.feed) }
 

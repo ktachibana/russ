@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe TagsController, type: :controller do
+RSpec.describe TagsController, type: :controller do
   before { bypass_rescue }
   render_views
 
