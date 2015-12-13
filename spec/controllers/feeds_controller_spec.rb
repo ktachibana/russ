@@ -9,8 +9,7 @@ RSpec.describe FeedsController, type: :controller do
     def action
       get :index, params
     end
-    let(:params) { { format: format } }
-    let(:format) { nil }
+    let(:params) { { format: :json } }
     let!(:subscriptions) { [subscription] }
     let(:subscription) { create(:subscription, feed: feed, user: user, tag_list: tags) }
     let(:feed) { create(:feed, item_count: 1) }
@@ -71,15 +70,6 @@ RSpec.describe FeedsController, type: :controller do
           expect(data[:subscriptions][0][:feed][:latestItem]).to be nil
         end
       end
-    end
-  end
-
-  describe 'GET :show' do
-    let(:subscription) { create(:subscription, user: user) }
-
-    it 'Feedを表示できる' do
-      get :show, id: subscription.feed_id
-      expect(assigns(:subscription)).to eq(subscription)
     end
   end
 end

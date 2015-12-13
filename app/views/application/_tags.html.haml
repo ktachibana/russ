@@ -1,7 +1,0 @@
-- tag_names = params[:tag] || []
-- current_user.subscriptions.tag_counts.each do |tag|
-  - active = tag.name.in?(tag_names)
-  .btn-group.btn-group-sm.tag-button
-    = link_to "#{tag.name} (#{tag.count})", params.merge(tag: [tag.name]), class: %W(btn) + (active ? %w(btn-info active) : %w(btn-default))
-    = link_to params.merge(tag: active ? tag_names - [tag.name] : (tag_names + [tag.name])), class:  %W(btn btn-default) do
-      %span.glyphicon{ class: "glyphicon-#{active ? :minus : :plus}" }
