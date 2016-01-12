@@ -8,6 +8,7 @@ describe Subscription, type: :model do
   end
 
   describe 'validations' do
+    subject { build(:subscription) }
     it { is_expected.to validate_presence_of(:user_id) }
     it { is_expected.to validate_uniqueness_of(:feed_id).scoped_to(:user_id) }
     it { is_expected.to validate_length_of(:title).is_at_most(255) }
