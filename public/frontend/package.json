@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "name": "russ",
+  "version": "1.0.0",
+  "description": "== README",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "bootstrap": "^3.3.6",
+    "bootstrap-tokenfield": "^0.12.0",
+    "coffee-loader": "^0.7.2",
+    "coffee-script": "^1.10.0",
+    "expose-loader": "^0.7.1",
+    "jquery": "^2.2.0",
+    "jquery-ujs": "^1.0.4",
+    "pathjs": "^0.8.1",
+    "underscore": "^1.8.3",
+    "vue": "^0.11.5",
+    "webpack": "^1.12.11"
+  }
+}

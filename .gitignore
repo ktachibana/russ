@@ -22,3 +22,6 @@ public/assets
 vendor/bower_components
 vendor/bundle
 .envrc
+
+node_modules
+

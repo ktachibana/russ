@@ -50,4 +50,4 @@
       %div
         %div{ v: { component: '{{currentPage}}', ref: 'currentComponent' } }
         = yield
-    = javascript_include_tag 'application'
+    %script{ src: '/frontend/bundle.js' }
