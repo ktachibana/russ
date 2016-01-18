@@ -1,7 +1,9 @@
+var path = require('path');
+
 module.exports = {
   entry: 'application.js.coffee',
   output: {
-    path: __dirname,
+    path: path.resolve(__dirname, '../public'),
     filename: 'bundle.js'
   },
   module: {
