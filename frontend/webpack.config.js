@@ -1,14 +1,17 @@
 var path = require('path');
 
 module.exports = {
-  entry: 'application.js.coffee',
+  entry: 'application',
   output: {
     path: path.resolve(__dirname, '../public'),
     filename: 'bundle.js'
   },
   module: {
     loaders: [
-      { test: /\.js.coffee$/, loaders: ['coffee'] }
+      { test: /\.coffee$/, loaders: ['coffee'] }
     ]
+  },
+  resolve: {
+    extensions: ['', '.webpack.js', '.web.js', '.coffee', '.js']
   }
 };

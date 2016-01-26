@@ -32,10 +32,10 @@ require('expose?jQuery!jquery');
 require('bootstrap');
 require('bootstrap-tokenfield');
 
-require('vue-filters.js.coffee');
-require('russ.js.coffee');
-require('root.js.coffee');
-require('feeds.js.coffee');
-require('subscriptions.js.coffee');
-require('tags.js.coffee');
-require('items.js.coffee');
+require('vue-filters');
+require('russ');
+require('root');
+require('feeds');
+require('subscriptions');
+require('tags');
+require('items');
