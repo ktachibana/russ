@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Subscription do
+describe Subscription, type: :model do
   describe 'associations' do
     it { is_expected.to belong_to(:user) }
     it { is_expected.to belong_to(:feed) }
@@ -8,6 +8,7 @@ describe Subscription do
   end
 
   describe 'validations' do
+    subject { build(:subscription) }
     it { is_expected.to validate_presence_of(:user_id) }
     it { is_expected.to validate_uniqueness_of(:feed_id).scoped_to(:user_id) }
     it { is_expected.to validate_length_of(:title).is_at_most(255) }

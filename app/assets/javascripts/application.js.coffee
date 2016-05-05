@@ -18,6 +18,9 @@
 #= require underscore
 #= require path
 #= require js-routes
+#= require date-ja-JP
+
+#= require vue-filters
 #= require russ
 #= require root
 #= require feeds

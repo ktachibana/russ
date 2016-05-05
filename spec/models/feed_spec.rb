@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Feed do
+describe Feed, type: :model do
   describe 'validations' do
     it { is_expected.to validate_presence_of(:url) }
     it { is_expected.to validate_length_of(:url).is_at_most(2048) }
@@ -15,47 +15,7 @@ describe Feed do
 
   describe 'associations' do
     it { is_expected.to have_many(:items).dependent(:destroy) }
-    it { is_expected.to have_many(:tags) }
     it { is_expected.to have_many(:subscriptions).dependent(:destroy) }
-  end
-
-  describe '.acts_as_tagging_on' do
-    let(:feed) { create(:feed) }
-
-    it '一括して追加できる' do
-      feed.update_attributes!(tag_list: %w(tag1 tag2))
-      expect(feed.tags.map(&:name)).to eq(%w(tag1 tag2))
-    end
-
-    it '削除できる' do
-      feed.update_attributes!(tag_list: %w(tag1 tag2))
-      expect(ActsAsTaggableOn::Tag.pluck(:name)).to eq(%w(tag1 tag2))
-
-      feed.reload
-      feed.update_attributes!(tag_list: %w(tag1 tag3))
-      expect(feed.tags.map(&:name)).to eq(%w(tag1 tag3))
-      expect(ActsAsTaggableOn::Tagging.count).to eq(2)
-    end
-
-    it 'フィードとタグを一括して登録できる' do
-      feed = Feed.create(attributes_for(:feed, tag_list: 'tagname'))
-      expect(feed.tag_list).to eq(%w(tagname))
-      expect(Feed.count).to eq(1)
-      expect(ActsAsTaggableOn::Tagging.count).to eq(1)
-    end
-  end
-
-  describe '.search' do
-    describe '.by_tag_id' do
-      it '特定のタグのついたものだけに絞り込む' do
-        feeds = ['tag1', 'tag1, tag2', []].map do |tags|
-          create(:feed, tag_list: tags)
-        end
-        expect(Feed.search(tag: %w(tag1))).to match_array(feeds.values_at(0, 1))
-        expect(Feed.search(tag: %w(tag1 tag2))).to match_array(feeds.values_at(1))
-        expect(Feed.search(tag: %w(tag2 tag1))).to match_array(feeds.values_at(1))
-      end
-    end
   end
 
   describe '#load!' do
@@ -111,11 +71,10 @@ describe Feed do
       it 'guidが無い時はlinkで重複を判断する' do
         mock_rss!(url: feed.url, body: <<-EOS)
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0">
   <channel>
     <title>RSS Title</title>
     <link>http://test.com/content</link>
-    <atom:link rel="self" type="application/rss+xml" href="http://test.com/rss.xml?rss=2.0"/>
     <description>My description</description>
 
     <item>
@@ -150,6 +109,17 @@ describe Feed do
       end
     end
 
+    context 'link_urlにホスト名が含まれないとき' do
+      let(:rss_data) { rss_data_relative_link }
+      let(:feed) { build(:feed_only_url, url: 'http://test.com/rss.xml') }
+
+      it 'urlからの相対URLとして解決する' do
+        feed.load!
+        expect(feed.link_url).to eq('http://test.com/site/mypage')
+        expect(feed.items[0].link).to eq('http://test.com/content/1')
+      end
+    end
+
     context 'Atom形式のとき' do
       let(:rss_data) { rss_data_atom }
       before { feed.load! }
@@ -157,7 +127,7 @@ describe Feed do
       it 'Atomも読み込める' do
         expect(feed.title).to eq('Riding Rails')
         expect(feed.link_url).to eq('http://weblog.rubyonrails.org/')
-        expect(feed.description).to eq(nil)
+        expect(feed.description).to eq('Sub Title')
 
         expect(feed.items.size).to eq(1)
 

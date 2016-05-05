@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RootController, type: :controller do
+RSpec.describe RootController, type: :controller do
   let(:user) { create(:user) }
   before { sign_in(user) }
 

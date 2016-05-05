@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SubscriptionsController, type: :controller do
+RSpec.describe SubscriptionsController, type: :controller do
   let!(:user) { create(:user) }
   before { sign_in(user) }
 

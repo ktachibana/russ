@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Item do
+describe Item, type: :model do
   describe 'associations' do
     it { is_expected.to belong_to(:feed) }
   end
@@ -51,7 +51,7 @@ describe Item do
 
     describe ':subscription_id' do
       it 'subscription_idで絞り込める' do
-        subscriptions =  create_list(:subscription, 2, user: user, item_count: 1)
+        subscriptions = create_list(:subscription, 2, user: user, item_count: 1)
         expect(Item.search(user, subscription_id: subscriptions[0].id)).to eq(subscriptions[0].feed.items)
         expect(Item.search(user, subscription_id: subscriptions[1].id)).to eq(subscriptions[1].feed.items)
       end

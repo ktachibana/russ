@@ -6,7 +6,6 @@ class Feed < ActiveRecord::Base
   has_many :items, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
   has_one :latest_item, class_name: 'Item'
-  acts_as_taggable
 
   accepts_nested_attributes_for :items
 
@@ -16,19 +15,6 @@ class Feed < ActiveRecord::Base
   validates :description, length: { maximum: 4096 }
 
   attr_accessor :users_subscription
-
-  scope :search, lambda { |conditions|
-    scope = self
-    conditions[:tag].presence.try do |tag_names|
-      scope = scope.tagged_with(tag_names)
-    end
-    scope = scope.page(conditions[:page])
-    scope
-  }
-
-  def tags_string
-    tags.map(&:name).join(', ')
-  end
 
   module FileLoadable
     extend ActiveSupport::Concern
@@ -41,6 +27,7 @@ class Feed < ActiveRecord::Base
 
     def update_by_atom!(atom)
       self.title = atom.title.content
+      self.description = atom.subtitle.try(:content)
       self.link_url = atom.links.find { |link| link.rel == 'alternate' }.try(:href)
       self.link_url ||= atom.links[0].try(:href) || url
 
@@ -75,10 +62,20 @@ class Feed < ActiveRecord::Base
           end
           self.items_attributes = attributes
         end
+        resolve_relative_url!
       end
     rescue => e
       Rails.logger.error([e.message, *e.backtrace].join("\n"))
       nil # TODO: エラーハンドリング
+    end
+
+    def resolve_relative_url!
+      return if url.blank?
+
+      self.link_url = URI.join(url, link_url).to_s if link_url.present?
+      items.each do |item|
+        item.link = URI.join(url, item.link) if item.link.present?
+      end
     end
 
     def to_item_attributes(parsed_item)

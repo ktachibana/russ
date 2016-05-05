@@ -1,9 +1,0 @@
-%h1.page-header= link_to @subscription.user_title, @subscription.feed.link_url
-
-%p= @subscription.feed.description
-%small
-  = link_to @subscription.feed.url, @subscription.feed.url, target: '_blank'
-
-%p= render @items
-
-= paginate @items

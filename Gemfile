@@ -5,6 +5,7 @@ ruby File.read('.ruby-version').strip
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 4.2'
 gem 'sprockets'
+gem 'bundler'
 
 gem 'pg'
 
@@ -19,7 +20,6 @@ gem 'coffee-rails'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'execjs'
-gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -59,7 +59,6 @@ group :development, :test do
   gem 'timecop'
   gem 'rubocop'
   gem 'guard-rubocop'
-  gem 'konacha'
 end
 
 group :development do
