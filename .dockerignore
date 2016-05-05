@@ -6,6 +6,5 @@ vendor/bundle/*
 .bundle
 bundle_bin
 .dockerignore
-.docker-compose.yml
-containers
+docker-compose.yml
 spec

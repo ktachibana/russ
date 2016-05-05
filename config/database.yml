@@ -46,10 +46,3 @@ test:
 #   production:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
-production:
-  <<: *default
-  host: <%= ENV['DATABASE_PORT_5432_TCP_ADDR'] %>
-  port: <%= ENV['DATABASE_PORT_5432_TCP_PORT'] %>
-  username: postgres
-  password: <%= ENV['DATABASE_PASSWORD'] %>
-  database: russ

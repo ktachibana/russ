@@ -1,34 +1,25 @@
-reverseproxy:
-  build: 'containers/reverse-proxy'
-  links:
-    - webapp
-  volumes_from:
-    - webapp
-    - datastore
-  ports:
-    - '80:80'
-
 webapp:
-  build: 'containers/webapp'
+  build: '.'
   links:
     - database
   volumes_from:
     - datastore
+  ports:
+    - '8080'
+  command: [bundle, exec, unicorn_rails, -c, config/unicorn.rb]
   env_file: .env
 
 crawler:
-  build: 'containers/crawler'
+  build: '.'
   links:
     - database
-  volumes_from:
-    - datastore
+  command: [/usr/sbin/cron, -f]
   env_file: .env
 
 database:
-  image: 'postgres:latest'
+  image: 'postgres:9.5'
   volumes_from:
     - datastore
-  env_file: .env
 
 datastore:
   build: 'containers/datastore'
