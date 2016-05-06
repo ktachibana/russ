@@ -95,3 +95,4 @@ gem 'oj_mimic_json'
 gem 'feedbag'
 gem 'activerecord-import'
 gem 'rails_12factor'
+gem 'rufus-scheduler', require: false

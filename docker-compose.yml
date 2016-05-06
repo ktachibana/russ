@@ -6,14 +6,14 @@ webapp:
     - datastore
   ports:
     - '8080'
-  command: [bundle, exec, unicorn_rails, -c, config/unicorn.rb]
+  command: ['unicorn_rails', '-c', 'config/unicorn.rb']
   env_file: .env
 
 crawler:
   build: '.'
   links:
     - database
-  command: [/usr/sbin/cron, -f]
+  command: ['rake', 'russ:crawler']
   env_file: .env
 
 database:

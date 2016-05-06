@@ -296,6 +296,7 @@ GEM
       uuid (~> 2.3, >= 2.3.5)
     ruby-progressbar (1.7.5)
     rubyzip (1.2.0)
+    rufus-scheduler (3.2.1)
     safe_yaml (1.0.4)
     sass (3.4.21)
     sass-rails (5.0.4)
@@ -418,6 +419,7 @@ DEPENDENCIES
   rspec-rails
   rubocop
   ruby-growl
+  rufus-scheduler
   sass-rails
   sdoc
   selenium-webdriver

@@ -20,4 +20,5 @@ RUN bundle install --without test development
 RUN bundle exec whenever --write-crontab
 RUN bundle exec rake assets:precompile
 
+ENTRYPOINT ["bundle", "exec"]
 EXPOSE 8080
