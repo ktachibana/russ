@@ -5,7 +5,7 @@ webapp:
   volumes_from:
     - datastore
   ports:
-    - '8080'
+    - '8080:8080'
   command: ['unicorn_rails', '-c', 'config/unicorn.rb']
   env_file: .env
 
