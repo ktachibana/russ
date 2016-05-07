@@ -1,25 +1,41 @@
-webapp:
-  build: '.'
-  links:
-    - database
-  volumes_from:
-    - datastore
-  ports:
-    - '8080:8080'
-  command: ['unicorn_rails', '-c', 'config/unicorn.rb']
-  env_file: .env
+version: '2'
 
-crawler:
-  build: '.'
-  links:
-    - database
-  command: ['rake', 'russ:crawler']
-  env_file: .env
+services:
+  rproxy:
+    build:
+      context: './'
+      dockerfile: './containers/rproxy/Dockerfile'
+    links:
+      - webapp
+    volumes:
+      - $CERT_DIR:/certs
+    env_file: .env
+    ports:
+      - '80'
+      - '443'
 
-database:
-  image: 'postgres:9.5'
-  volumes_from:
-    - datastore
+  webapp:
+    build: '.'
+    links:
+      - database
+    volumes_from:
+      - datastore
+    ports:
+      - '8080:8080'
+    command: ['unicorn_rails', '-c', 'config/unicorn.rb']
+    env_file: .env
 
-datastore:
-  build: 'containers/datastore'
+  crawler:
+    build: '.'
+    links:
+      - database
+    command: ['rake', 'russ:crawler']
+    env_file: .env
+
+  database:
+    image: 'postgres:9.5'
+    volumes_from:
+      - datastore
+
+  datastore:
+    build: 'containers/datastore'

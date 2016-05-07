@@ -12,13 +12,11 @@ COPY Gemfile Gemfile.lock .ruby-version /russ/
 RUN bundle install --without test development
 
 COPY . /russ
-VOLUME /russ/log
 
 ENV RAILS_ENV=production
 
 RUN bundle install --without test development
 RUN bundle exec whenever --write-crontab
-RUN bundle exec rake assets:precompile
 
 ENTRYPOINT ["bundle", "exec"]
 EXPOSE 8080

@@ -1,6 +1,5 @@
 .git
 tmp/*
-public/assets/*
 log/*
 vendor/bundle/*
 .bundle
