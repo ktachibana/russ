@@ -5,32 +5,35 @@ services:
     build:
       context: './'
       dockerfile: './containers/rproxy/Dockerfile'
-    links:
+    depends_on:
       - webapp
     volumes:
       - $CERT_DIR:/certs
-    env_file: .env
+    environment:
+      SERVER_NAME: $SERVER_NAME
     ports:
       - '80'
       - '443'
 
-  webapp:
+  app:
     build: '.'
-    links:
-      - database
-    volumes_from:
-      - datastore
-    ports:
-      - '8080:8080'
-    command: ['unicorn_rails', '-c', 'config/unicorn.rb']
     env_file: .env
+    environment:
+      DATABASE_URL: 'postgres://postgres@database/postgres'
+
+  webapp:
+    extends:
+      service: app
+    depends_on:
+      - database
+    command: ['unicorn_rails', '-c', 'config/unicorn.rb']
 
   crawler:
-    build: '.'
-    links:
+    extends:
+      service: app
+    depends_on:
       - database
     command: ['rake', 'russ:crawler']
-    env_file: .env
 
   database:
     image: 'postgres:9.5'
