@@ -4,6 +4,16 @@ namespace :russ do
     `tar -c -z -f tmp/russ.tar.gz --exclude 'vendor/bundle' --exclude .git --exclude 'tmp' --exclude log .`
   end
 
+  desc 'デプロイする'
+  task :deploy do
+    host = ENV['DEPLOY_HOST'] || abort('$DEPLOY_HOST required.')
+    path = ENV['DEPLOY_PATH'] || abort('$DEPLOY_PATH required.')
+
+    system "scp ./docker-compose.yml #{host}:#{path}/"
+    system "DOCKER_HOST=tcp://#{host}:2375 rake russ:build"
+    system "ssh #{host} 'cd #{path}; docker-compose up -d'"
+  end
+
   desc '開発用に自己証明書を生成する'
   task :dev_cert do
     FileUtils.mkpath 'tmp/dev_cert'
