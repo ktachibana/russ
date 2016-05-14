@@ -5,8 +5,11 @@ rproxy:
     - webapp
   expose:
     - '80'
+  env_file: .env
   environment:
     VIRTUAL_HOST: $VIRTUAL_HOST
+    LETSENCRYPT_HOST: $VIRTUAL_HOST
+    LETSENCRYPT_EMAIL: deadzone@be.to
   restart: always
 
 app:
@@ -14,6 +17,7 @@ app:
   env_file: .env
   environment:
     DATABASE_URL: 'postgres://postgres@database/postgres'
+  command: /bin/true
 
 webapp:
   extends:
@@ -39,5 +43,15 @@ database:
     - datastore
   restart: always
 
+database-client:
+  image: 'postgres:9.5'
+  links:
+    - database
+  environment:
+    PGHOST: database
+    PGUSER: postgres
+  command: /bin/true
+
 datastore:
   build: 'containers/datastore'
+  command: /bin/true
