@@ -7,7 +7,7 @@ RUN apt-get update -qq && apt-get -y install \
 
 COPY ./public /public
 RUN ls -l /public
-COPY ./containers/rproxy/nginx.conf.tmpl /etc/nginx/conf.d/
+COPY ./containers/rproxy/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 443 80
-CMD ["/bin/bash", "-c", "envsubst '$SERVER_NAME $CERT_DIR' < /etc/nginx/conf.d/nginx.conf.tmpl > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+CMD ["nginx", "-g", "daemon off;"]

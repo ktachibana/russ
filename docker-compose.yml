@@ -1,44 +1,39 @@
-version: '2'
+rproxy:
+  build: './'
+  dockerfile: './containers/rproxy/Dockerfile'
+  links:
+    - webapp
+  expose:
+    - '80'
+  environment:
+    VIRTUAL_HOST: $VIRTUAL_HOST
 
-services:
-  rproxy:
-    build:
-      context: './'
-      dockerfile: './containers/rproxy/Dockerfile'
-    depends_on:
-      - webapp
-    volumes:
-      - $CERT_DIR:/certs
-    environment:
-      SERVER_NAME: $SERVER_NAME
-    ports:
-      - '80'
-      - '443'
+app:
+  build: '.'
+  env_file: .env
+  environment:
+    DATABASE_URL: 'postgres://postgres@database/postgres'
 
-  app:
-    build: '.'
-    env_file: .env
-    environment:
-      DATABASE_URL: 'postgres://postgres@database/postgres'
+webapp:
+  extends:
+    service: app
+  links:
+    - database
+  command: ['unicorn_rails', '-c', 'config/unicorn.rb']
+  expose:
+    - 8080
 
-  webapp:
-    extends:
-      service: app
-    depends_on:
-      - database
-    command: ['unicorn_rails', '-c', 'config/unicorn.rb']
+crawler:
+  extends:
+    service: app
+  links:
+    - database
+  command: ['rake', 'russ:crawler']
 
-  crawler:
-    extends:
-      service: app
-    depends_on:
-      - database
-    command: ['rake', 'russ:crawler']
+database:
+  image: 'postgres:9.5'
+  volumes_from:
+    - datastore
 
-  database:
-    image: 'postgres:9.5'
-    volumes_from:
-      - datastore
-
-  datastore:
-    build: 'containers/datastore'
+datastore:
+  build: 'containers/datastore'

@@ -8,10 +8,10 @@ namespace :russ do
   task :dev_cert do
     FileUtils.mkpath 'tmp/dev_cert'
     FileUtils.chdir 'tmp/dev_cert' do
-      system 'openssl genrsa 2048 > privkey.pem'
-      system 'openssl req -new -key privkey.pem > server.csr'
-      system 'openssl x509 -days 3650 -req -signkey privkey.pem < server.csr > fullchain.pem'
-      system 'openssl dhparam 2048 -out dhparam.pem'
+      system 'openssl genrsa 2048 > localhost.key'
+      system 'openssl req -new -key localhost.key > server.csr'
+      system 'openssl x509 -days 3650 -req -signkey localhost.key < server.csr > localhost.crt'
+      system 'openssl dhparam 2048 -out localhost.dhparam.pem'
     end
   end
 
