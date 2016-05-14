@@ -6,7 +6,6 @@ RUN apt-get update -qq && apt-get -y install \
   && rm -rf /var/lib/apt/lists/*
 
 COPY ./public /public
-RUN ls -l /public
 COPY ./containers/rproxy/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 443 80
