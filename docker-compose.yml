@@ -7,6 +7,7 @@ rproxy:
     - '80'
   environment:
     VIRTUAL_HOST: $VIRTUAL_HOST
+  restart: always
 
 app:
   build: '.'
@@ -22,6 +23,7 @@ webapp:
   command: ['unicorn_rails', '-c', 'config/unicorn.rb']
   expose:
     - 8080
+  restart: always
 
 crawler:
   extends:
@@ -29,11 +31,13 @@ crawler:
   links:
     - database
   command: ['rake', 'russ:crawler']
+  restart: always
 
 database:
   image: 'postgres:9.5'
   volumes_from:
     - datastore
+  restart: always
 
 datastore:
   build: 'containers/datastore'
