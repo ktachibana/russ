@@ -20,6 +20,7 @@ module Russ
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.i18n.default_locale = 'ja'
     config.assets.paths << Rails.root + 'vendor' + 'bower_components'
+    config.assets.paths << Rails.root + 'frontend' + 'node_modules'
 
     config.middleware.use Rack::Deflater
   end

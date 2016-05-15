@@ -25,5 +25,5 @@ vendor/bundle
 .envrc
 
 node_modules
-/public/bundle.js
+bundle.js
 frontend/web_modules/app
