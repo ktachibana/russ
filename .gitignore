@@ -26,4 +26,4 @@ vendor/bundle
 
 node_modules
 bundle.js
-frontend/web_modules/app
+web_modules/app
