@@ -78,6 +78,10 @@ group :test do
   gem 'database_rewinder'
 end
 
+group :production do
+  gem 'rails_12factor'
+end
+
 gem 'devise'
 gem 'haml'
 gem 'kaminari'
@@ -88,5 +92,4 @@ gem 'oj'
 gem 'oj_mimic_json'
 gem 'feedbag'
 gem 'activerecord-import'
-gem 'rails_12factor'
 gem 'rufus-scheduler', require: false
