@@ -1,9 +1,4 @@
 namespace :russ do
-  desc 'プロジェクトをtar.gzにアーカイブする'
-  task :archive do
-    `tar -c -z -f tmp/russ.tar.gz --exclude 'vendor/bundle' --exclude .git --exclude 'tmp' --exclude log .`
-  end
-
   desc 'デプロイする'
   task :deploy do
     host = ENV['DEPLOY_HOST'] || abort('$DEPLOY_HOST required.')

@@ -66,10 +66,6 @@ group :development do
   gem 'i18n-generators'
   gem 'coffee-rails-source-maps'
   gem 'bullet'
-  gem 'capistrano', require: false
-  gem 'capistrano-rails', require: false
-  gem 'capistrano-rbenv', require: false
-  gem 'capistrano-bundler', require: false
   gem 'quiet_assets'
 end
 
@@ -85,10 +81,8 @@ end
 gem 'devise'
 gem 'haml'
 gem 'kaminari'
-gem 'whenever', require: false
 gem 'unicorn'
 gem 'acts-as-taggable-on'
-gem 'dotenv-rails'
 gem 'js-routes'
 gem 'oj'
 gem 'oj_mimic_json'
