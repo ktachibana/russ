@@ -70,7 +70,7 @@ group :development do
 end
 
 group :test do
-  gem 'webmock'
+  gem 'webmock', require: 'webmock/rspec'
   gem 'capybara'
   gem 'launchy'
   gem 'poltergeist'
