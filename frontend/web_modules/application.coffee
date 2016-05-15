@@ -10,27 +10,8 @@
 # WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 # GO AFTER THE REQUIRES BELOW.
 #
-#= require jquery
-#= require jquery_ujs
-#= require bootstrap
-#= require bootstrap-tokenfield
-#= require vue
-#= require underscore
-#= require path
-#= require js-routes
-#= require date-ja-JP
-
-#= require vue-filters
-#= require russ
-#= require root
-#= require feeds
-#= require subscriptions
-#= require tags
-#= require items
 
 require('expose?jQuery!jquery');
-require('bootstrap');
-require('bootstrap-tokenfield');
 
 require('vue-filters');
 require('russ');

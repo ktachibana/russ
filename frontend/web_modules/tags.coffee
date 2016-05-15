@@ -1,4 +1,5 @@
 Vue = require('vue');
+_ = require('underscore');
 
 Vue.component 'tag-buttons',
   template: '#tag-buttons'

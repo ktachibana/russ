@@ -5,7 +5,7 @@
   "description": "== README",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rake russ:routesjs && webpack"
   },
   "author": "",
   "license": "ISC",
