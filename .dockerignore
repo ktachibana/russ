@@ -1,0 +1,9 @@
+.git
+tmp/*
+log/*
+vendor/bundle/*
+.bundle
+bundle_bin
+.dockerignore
+docker-compose.yml
+spec

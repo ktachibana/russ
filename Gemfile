@@ -66,15 +66,11 @@ group :development do
   gem 'i18n-generators'
   gem 'coffee-rails-source-maps'
   gem 'bullet'
-  gem 'capistrano', require: false
-  gem 'capistrano-rails', require: false
-  gem 'capistrano-rbenv', require: false
-  gem 'capistrano-bundler', require: false
   gem 'quiet_assets'
 end
 
 group :test do
-  gem 'webmock'
+  gem 'webmock', require: 'webmock/rspec'
   gem 'capybara'
   gem 'launchy'
   gem 'poltergeist'
@@ -82,15 +78,18 @@ group :test do
   gem 'database_rewinder'
 end
 
+group :production do
+  gem 'rails_12factor'
+end
+
 gem 'devise'
 gem 'haml'
 gem 'kaminari'
-gem 'whenever', require: false
 gem 'unicorn'
 gem 'acts-as-taggable-on'
-gem 'dotenv-rails'
 gem 'js-routes'
 gem 'oj'
 gem 'oj_mimic_json'
 gem 'feedbag'
 gem 'activerecord-import'
+gem 'rufus-scheduler', require: false

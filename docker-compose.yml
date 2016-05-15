@@ -1,0 +1,57 @@
+rproxy:
+  build: './'
+  dockerfile: './containers/rproxy/Dockerfile'
+  links:
+    - webapp
+  expose:
+    - '80'
+  env_file: .env
+  environment:
+    VIRTUAL_HOST: $VIRTUAL_HOST
+    LETSENCRYPT_HOST: $VIRTUAL_HOST
+    LETSENCRYPT_EMAIL: deadzone@be.to
+  restart: always
+
+app:
+  build: '.'
+  env_file: .env
+  environment:
+    DATABASE_URL: 'postgres://postgres@database/postgres'
+  command: /bin/true
+
+webapp:
+  extends:
+    service: app
+  links:
+    - database
+  command: ['unicorn_rails', '-c', 'config/unicorn.rb']
+  expose:
+    - 8080
+  restart: always
+
+crawler:
+  extends:
+    service: app
+  links:
+    - database
+  command: ['rake', 'russ:crawler']
+  restart: always
+
+database:
+  image: 'postgres:9.5'
+  volumes_from:
+    - datastore
+  restart: always
+
+database-client:
+  image: 'postgres:9.5'
+  links:
+    - database
+  environment:
+    PGHOST: database
+    PGUSER: postgres
+  command: /bin/true
+
+datastore:
+  build: 'containers/datastore'
+  command: /bin/true

@@ -48,7 +48,4 @@ test:
 #
 production:
   <<: *default
-  host: localhost
   database: russ
-  username: russ
-  password: <%= ENV['RUSS_DATABASE_PASSWORD'] %>
