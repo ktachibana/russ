@@ -29,17 +29,6 @@ namespace :russ do
     system "ssh #{host} 'cd #{path}; docker-compose up -d'"
   end
 
-  desc '開発用に自己証明書を生成する'
-  task :dev_cert do
-    FileUtils.mkpath 'tmp/dev_cert'
-    FileUtils.chdir 'tmp/dev_cert' do
-      system 'openssl genrsa 2048 > localhost.key'
-      system 'openssl req -new -key localhost.key > server.csr'
-      system 'openssl x509 -days 3650 -req -signkey localhost.key < server.csr > localhost.crt'
-      system 'openssl dhparam 2048 -out localhost.dhparam.pem'
-    end
-  end
-
   desc 'クローラーを定期実行する'
   task crawler: :environment do
     require 'rufus-scheduler'
@@ -49,6 +38,34 @@ namespace :russ do
       Feed.load_all!
     end
     scheduler.join
+  end
+
+  namespace :dev do
+    desc '開発環境のセットアップを行う'
+    task setup: ['db:setup', 'russ:build_frontend', 'russ:dev:env_file', 'russ:dev:cert']
+
+    desc '開発用にdocker-compose用の.envファイルを生成する'
+    task :env_file do
+      env_file = Pathname.pwd.join('.env')
+      unless env_file.exist?
+        secret = `bundle exec rake secret`.strip
+        env_file.write(<<-EOS)
+SECRET_KEY_BASE=#{secret}
+VIRTUAL_HOST=localhost
+EOS
+      end
+    end
+
+    desc '開発用に自己証明書を生成する'
+    task :cert do
+      FileUtils.mkpath 'tmp/dev_cert'
+      FileUtils.chdir 'tmp/dev_cert' do
+        system 'openssl genrsa 2048 > localhost.key'
+        system 'openssl req -new -key localhost.key > server.csr'
+        system 'openssl x509 -days 3650 -req -signkey localhost.key < server.csr > localhost.crt'
+        system 'openssl dhparam 2048 -out localhost.dhparam.pem'
+      end
+    end
   end
 end
 

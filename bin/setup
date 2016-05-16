@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+require 'pathname'
+
+# path to your application root.
+APP_ROOT = Pathname.new File.expand_path('../../',  __FILE__)
+
+Dir.chdir APP_ROOT do
+  puts '= Installing bundler'
+  system 'gem install bundler --conservative'
+
+  puts '= Executing bundle install'
+  system 'bundle install --path=vendor/bundle'
+
+  puts '= Executing npm install'
+  system 'npm install'
+
+  puts '= Executing rake russ:dev:setup'
+  system 'bundle exec rake russ:dev:setup'
+end
