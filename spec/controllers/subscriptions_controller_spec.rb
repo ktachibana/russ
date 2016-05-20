@@ -70,7 +70,7 @@ RSpec.describe SubscriptionsController, type: :controller do
 
       it '登録済みのフィードのURLを指定するとリダイレクト' do
         action
-        expect(response).to redirect_to(feed_path(feed))
+        expect(response).to redirect_to(root_path)
         expect(flash[:notice]).to eq(I18n.t('messages.feed_already_registed', url: mock_rss_url))
       end
 
@@ -160,7 +160,7 @@ RSpec.describe SubscriptionsController, type: :controller do
     end
   end
 
-  describe 'POST :update' do
+  describe 'PATCH :update' do
     def action
       put :update, id: subscription.id, subscription: subscription_params
     end
