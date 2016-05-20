@@ -1,22 +1,24 @@
 namespace :russ do
   desc 'Dockerイメージをビルドする'
   task build: %w(assets:clobber assets:precompile) do
-    system 'docker-compose build'
+    sh 'docker-compose build'
   end
 
   desc 'webpackでweb_modulesをビルドしてbundle.jsを作成する'
   task build_frontend: 'russ:routesjs' do
-    system 'npm run build'
+    chdir 'frontend' do
+      sh 'npm run build'
+    end
   end
 
-  desc 'genrate routes.js'
+  desc 'RailsのルーティングをJSにexportするためのroutes.jsを生成する'
   task routesjs: :environment do
-    content = <<-EOS
-(function() {
-#{JsRoutes.generate.indent(2)}
-}).call(module.exports);
+    content = <<~EOS
+      (function() {
+      #{JsRoutes.generate.indent(2)}
+      }).call(module.exports);
     EOS
-    Rails.root.join('web_modules', 'app').tap(&:mkpath).join('routes.js').write(content)
+    Rails.root.join('frontend', 'web_modules', 'app').tap(&:mkpath).join('routes.js').write(content)
   end
 
   desc 'デプロイする'
@@ -24,9 +26,9 @@ namespace :russ do
     host = ENV['DEPLOY_HOST'] || abort('$DEPLOY_HOST required.')
     path = ENV['DEPLOY_PATH'] || abort('$DEPLOY_PATH required.')
 
-    system "scp ./docker-compose.yml #{host}:#{path}/"
-    system "DOCKER_HOST=tcp://#{host}:2375 rake russ:build"
-    system "ssh #{host} 'cd #{path}; docker-compose up -d'"
+    sh "scp ./docker-compose.yml #{host}:#{path}/"
+    sh "DOCKER_HOST=tcp://#{host}:2375 rake russ:build"
+    sh "ssh #{host} 'cd #{path}; docker-compose up -d'"
   end
 
   desc 'クローラーを定期実行する'
@@ -42,28 +44,28 @@ namespace :russ do
 
   namespace :dev do
     desc '開発環境のセットアップを行う'
-    task setup: ['db:setup', 'russ:build_frontend', 'russ:dev:env_file', 'russ:dev:cert']
+    task setup: %w(db:setup russ:build_frontend russ:dev:env_file russ:dev:cert)
 
     desc '開発用にdocker-compose用の.envファイルを生成する'
     task :env_file do
       env_file = Pathname.pwd.join('.env')
       unless env_file.exist?
         secret = `bundle exec rake secret`.strip
-        env_file.write(<<-EOS)
-SECRET_KEY_BASE=#{secret}
-VIRTUAL_HOST=localhost
-EOS
+        env_file.write(<<~EOS)
+          SECRET_KEY_BASE=#{secret}
+          VIRTUAL_HOST=localhost
+        EOS
       end
     end
 
     desc '開発用に自己証明書を生成する'
     task :cert do
-      FileUtils.mkpath 'tmp/dev_cert'
-      FileUtils.chdir 'tmp/dev_cert' do
-        system 'openssl genrsa 2048 > localhost.key'
-        system 'openssl req -new -key localhost.key > server.csr'
-        system 'openssl x509 -days 3650 -req -signkey localhost.key < server.csr > localhost.crt'
-        system 'openssl dhparam 2048 -out localhost.dhparam.pem'
+      mkpath 'tmp/dev_cert'
+      chdir 'tmp/dev_cert' do
+        sh 'openssl genrsa 2048 > localhost.key'
+        sh 'openssl req -new -key localhost.key > server.csr'
+        sh 'openssl x509 -days 3650 -req -signkey localhost.key < server.csr > localhost.crt'
+        sh 'openssl dhparam 2048 -out localhost.dhparam.pem'
       end
     end
   end
