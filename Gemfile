@@ -83,6 +83,7 @@ group :production do
 end
 
 gem 'devise'
+gem 'simple_token_authentication'
 gem 'haml'
 gem 'kaminari'
 gem 'unicorn'
