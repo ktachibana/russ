@@ -16,7 +16,6 @@ COPY . /russ
 ENV RAILS_ENV=production
 
 RUN bundle install --without test development
-RUN bundle exec whenever --write-crontab
 
 ENTRYPOINT ["bundle", "exec"]
 EXPOSE 8080
