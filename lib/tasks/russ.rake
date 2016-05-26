@@ -1,12 +1,11 @@
 namespace :russ do
   desc 'デプロイする'
   task :deploy do
-    host = ENV['DEPLOY_HOST'] || abort('$DEPLOY_HOST required.')
-    path = ENV['DEPLOY_PATH'] || abort('$DEPLOY_PATH required.')
+    host = ENV['DEPLOY_HOST']
+    docker_host = ENV['DOCKER_HOST'] || "tcp://#{host}:2375" # $DOCKER_HOSTが空白なら空白を使う
 
-    system "scp ./docker-compose.yml #{host}:#{path}/"
-    system "DOCKER_HOST=tcp://#{host}:2375 rake russ:build"
-    system "ssh #{host} 'cd #{path}; docker-compose up -d'"
+    system "DOCKER_HOST=#{docker_host} rake russ:build"
+    system "DOCKER_HOST=#{docker_host} docker-compose up -d"
   end
 
   desc '開発用に自己証明書を生成する'
