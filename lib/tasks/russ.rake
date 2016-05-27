@@ -5,7 +5,7 @@ namespace :russ do
     docker_host = ENV['DOCKER_HOST'] || "tcp://#{host}:2375" # $DOCKER_HOSTが空白なら空白を使う
 
     system "DOCKER_HOST=#{docker_host} rake russ:build"
-    system "DOCKER_HOST=#{docker_host} docker-compose up -d"
+    system "DOCKER_HOST=#{docker_host} docker-compose up -d --build"
   end
 
   desc '開発用に自己証明書を生成する'
@@ -21,7 +21,7 @@ namespace :russ do
 
   desc 'Dockerイメージをビルドする'
   task build: %w(assets:clobber assets:precompile) do
-    system 'docker-compose build'
+    system 'docker build -t ktachiv/russ'
   end
 
   desc 'クローラーを定期実行する'

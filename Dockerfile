@@ -1,8 +1,8 @@
 FROM ruby:2.3.1
+MAINTAINER Kenichi Tachibana
 
 RUN apt-get update -qq && apt-get -y install \
   libpq-dev \
-  cron \
   nodejs \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
@@ -15,7 +15,7 @@ COPY . /russ
 
 ENV RAILS_ENV=production
 
-RUN bundle install --without test development
-
 ENTRYPOINT ["bundle", "exec"]
+CMD ["unicorn_rails", "-c", "config/unicorn.rb"]
+
 EXPOSE 8080

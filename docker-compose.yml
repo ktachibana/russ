@@ -13,7 +13,7 @@ rproxy:
   restart: always
 
 app:
-  build: '.'
+  image: 'ktachiv/russ'
   env_file: .env
   environment:
     DATABASE_URL: 'postgres://postgres@database/postgres'
@@ -26,6 +26,8 @@ webapp:
     - database
   command: ['unicorn_rails', '-c', 'config/unicorn.rb']
   expose:
+    - 8080
+  ports:
     - 8080
   restart: always
 
@@ -43,6 +45,13 @@ database:
     - datastore
   restart: always
 
+rails-console:
+  extends:
+    service: app
+  links:
+    - database
+  command: ['rails', 'console']
+
 database-client:
   image: 'postgres:9.5'
   links:
@@ -53,5 +62,7 @@ database-client:
   command: /bin/true
 
 datastore:
-  build: 'containers/datastore'
+  image: 'busybox:latest'
+  volumes:
+    - /var/lib/postgresql/data
   command: /bin/true
