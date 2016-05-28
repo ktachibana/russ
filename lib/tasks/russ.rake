@@ -1,11 +1,21 @@
 namespace :russ do
+  namespace :deploy_to do
+    task :production do
+      ENV['DOCKER_HOST'] = 'tcp://192.168.0.6:2375'
+      ENV['VIRTUAL_HOST'] = 'russ.deadzone.mydns.jp'
+    end
+
+    task :local do
+      ENV['DOCKER_HOST'] = ''
+      ENV['VIRTUAL_HOST'] = 'localhost'
+    end
+  end
+
   desc 'デプロイする'
   task :deploy do
-    host = ENV['DEPLOY_HOST']
-    docker_host = ENV['DOCKER_HOST'] || "tcp://#{host}:2375" # $DOCKER_HOSTが空白なら空白を使う
-
-    system "DOCKER_HOST=#{docker_host} rake russ:build"
-    system "DOCKER_HOST=#{docker_host} docker-compose up -d --build"
+    ENV['RAILS_ENV'] = 'production'
+    sh "rake russ:build"
+    sh "docker-compose up -d --build"
   end
 
   desc 'webpackでweb_modulesをビルドしてbundle.jsを作成する'
