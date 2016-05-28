@@ -21,7 +21,7 @@ namespace :russ do
 
   desc 'Dockerイメージをビルドする'
   task build: %w(assets:clobber assets:precompile) do
-    system 'docker build -t ktachiv/russ'
+    system 'docker build -t ktachiv/russ .'
   end
 
   desc 'クローラーを定期実行する'
@@ -33,5 +33,22 @@ namespace :russ do
       Feed.load_all!
     end
     scheduler.join
+  end
+
+  desc 'config/vars/SECRET_KEY_BASEを生成する'
+  task :write_secret, :overwrite do |_t, args|
+    file = Pathname.pwd + 'config' + 'vars' + 'SECRET_KEY_BASE'
+    exists = file.exist?
+
+    if exists && !args[:overwrite]
+      puts "#{file} exists."
+      next
+    end
+
+    require 'securerandom'
+    file.parent.mkpath
+    file.write SecureRandom.hex(64)
+
+    puts "#{file} #{exists ? 'changed' : 'created'}."
   end
 end

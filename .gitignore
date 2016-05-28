@@ -23,3 +23,8 @@ public/assets
 vendor/bower_components
 vendor/bundle
 .envrc
+config/vars
+
+node_modules
+bundle.js
+web_modules/app

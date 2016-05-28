@@ -24,6 +24,8 @@ webapp:
     service: app
   links:
     - database
+  volumes_from:
+    - datastore
   command: ['unicorn_rails', '-c', 'config/unicorn.rb']
   expose:
     - 8080
@@ -36,6 +38,8 @@ crawler:
     service: app
   links:
     - database
+  volumes_from:
+    - datastore
   command: ['rake', 'russ:crawler']
   restart: always
 
@@ -50,6 +54,8 @@ rails-console:
     service: app
   links:
     - database
+  volumes_from:
+    - datastore
   command: ['rails', 'console']
 
 database-client:
@@ -65,4 +71,5 @@ datastore:
   image: 'busybox:latest'
   volumes:
     - /var/lib/postgresql/data
+    - /russ/config/vars
   command: /bin/true
