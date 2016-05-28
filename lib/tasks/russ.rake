@@ -72,6 +72,11 @@ namespace :russ do
         sh 'openssl dhparam 2048 -out localhost.dhparam.pem'
       end
     end
+
+    desc '自己証明書を利用してSSLを有効にしたnginx-proxyを起動する'
+    task :nginxproxy do
+      sh 'docker run -ti -p 80:80 -p 443:443 -v /var/run/docker.sock:/tmp/docker.sock:ro -v $PWD/tmp/dev_cert:/etc/nginx/certs jwilder/nginx-proxy'
+    end
   end
 end
 
