@@ -1,4 +1,4 @@
 Vue = require('vue');
 
-Vue.filter 'date', (date) ->
-  date && date.toString('yyyy/M/d(ddd) HH:mm:ss')
+Vue.filter 'date', (momentDate) ->
+  momentDate && momentDate.format('YYYY/M/D(ddd) HH:mm')

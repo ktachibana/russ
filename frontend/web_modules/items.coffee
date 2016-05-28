@@ -1,4 +1,5 @@
 Vue = require('vue');
+moment = require('moment')
 
 Vue.component 'item-panel',
   template: '#item-panel',
@@ -10,8 +11,8 @@ Vue.component 'item-panel',
   computed:
     subscriptionPath: ->
       "#/subscriptions/#{@feed.usersSubscription.id}"
-    publishedAtDate: ->
-      new Date(@publishedAt)
+    publishedAtMoment: ->
+      moment(@publishedAt)
   methods:
     showAll: ->
       @shorten = false
