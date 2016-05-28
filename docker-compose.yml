@@ -27,8 +27,6 @@ webapp:
   command: ['unicorn_rails', '-c', 'config/unicorn.rb']
   expose:
     - 8080
-  ports:
-    - 8080
   restart: always
 
 crawler:
@@ -47,14 +45,14 @@ database:
     - datastore
   restart: always
 
-rails-console:
+app-env:
   extends:
     service: app
   links:
     - database
   volumes_from:
     - datastore
-  command: ['rails', 'console']
+  command: /bin/true
 
 database-client:
   image: 'postgres:9.5'
