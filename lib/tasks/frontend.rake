@@ -5,10 +5,13 @@ task frontend: 'frontend:routesjs' do
   end
 end
 
+namespace :assets do
+  task precompile: 'frontend'
+end
+
 namespace :frontend do
   desc 'RailsのルーティングをJSにexportするためのroutes.jsを生成する'
   task routesjs: :environment do
-    p ENV['RAILS_ENV']
     content = <<~EOS
       (function() {
       #{JsRoutes.generate.indent(2)}
