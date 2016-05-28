@@ -60,19 +60,7 @@ namespace :russ do
 
   namespace :dev do
     desc '開発環境のセットアップを行う'
-    task setup: %w(db:setup russ:build_frontend russ:dev:env_file russ:dev:cert)
-
-    desc '開発用にdocker-compose用の.envファイルを生成する'
-    task :env_file do
-      env_file = Pathname.pwd.join('.env')
-      unless env_file.exist?
-        secret = `bundle exec rake secret`.strip
-        env_file.write(<<~EOS)
-          SECRET_KEY_BASE=#{secret}
-          VIRTUAL_HOST=localhost
-        EOS
-      end
-    end
+    task setup: %w(db:setup russ:build_frontend russ:dev:cert)
 
     desc '開発用に自己証明書を生成する'
     task :cert do
