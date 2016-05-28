@@ -295,6 +295,10 @@ GEM
     shellany (0.0.1)
     shoulda-matchers (3.1.1)
       activesupport (>= 4.0.0)
+    simple_token_authentication (1.13.0)
+      actionmailer (>= 3.2.6, < 5)
+      actionpack (>= 3.2.6, < 5)
+      devise (>= 3.2, < 5)
     slop (3.6.0)
     spring (1.7.1)
     spring-commands-rspec (1.0.4)
@@ -391,6 +395,7 @@ DEPENDENCIES
   sdoc
   selenium-webdriver
   shoulda-matchers
+  simple_token_authentication
   spring
   spring-commands-rspec
   sprockets

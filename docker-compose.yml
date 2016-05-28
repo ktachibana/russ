@@ -5,7 +5,6 @@ rproxy:
     - webapp
   expose:
     - '80'
-  env_file: .env
   environment:
     VIRTUAL_HOST: $VIRTUAL_HOST
     LETSENCRYPT_HOST: $VIRTUAL_HOST
@@ -13,8 +12,7 @@ rproxy:
   restart: always
 
 app:
-  build: '.'
-  env_file: .env
+  image: 'ktachiv/russ'
   environment:
     DATABASE_URL: 'postgres://postgres@database/postgres'
   command: /bin/true
@@ -24,6 +22,8 @@ webapp:
     service: app
   links:
     - database
+  volumes_from:
+    - datastore
   command: ['unicorn_rails', '-c', 'config/unicorn.rb']
   expose:
     - 8080
@@ -34,6 +34,8 @@ crawler:
     service: app
   links:
     - database
+  volumes_from:
+    - datastore
   command: ['rake', 'russ:crawler']
   restart: always
 
@@ -42,6 +44,15 @@ database:
   volumes_from:
     - datastore
   restart: always
+
+app-env:
+  extends:
+    service: app
+  links:
+    - database
+  volumes_from:
+    - datastore
+  command: /bin/true
 
 database-client:
   image: 'postgres:9.5'
@@ -53,5 +64,8 @@ database-client:
   command: /bin/true
 
 datastore:
-  build: 'containers/datastore'
+  image: 'busybox:latest'
+  volumes:
+    - /var/lib/postgresql/data
+    - /russ/config/vars
   command: /bin/true

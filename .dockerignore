@@ -7,3 +7,5 @@ bundle_bin
 .dockerignore
 docker-compose.yml
 spec
+config/vars
+frontend

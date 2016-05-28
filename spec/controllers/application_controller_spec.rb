@@ -4,7 +4,7 @@ RSpec.describe ApplicationController, type: :controller do
   describe '.rescue_from' do
     describe 'ActiveRecord::RecordInvalid' do
       controller do
-        skip_before_filter :authenticate_user!
+        skip_before_filter :authenticate_user!, :authenticate_user_from_token!
 
         def index
           FactoryGirl.create(:user, email: '', password: '')
