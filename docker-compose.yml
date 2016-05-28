@@ -36,7 +36,7 @@ crawler:
     - database
   volumes_from:
     - datastore
-  command: ['rake', 'russ:crawler']
+  command: ['rake', 'app:crawler']
   restart: always
 
 database:

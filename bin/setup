@@ -14,6 +14,6 @@ Dir.chdir APP_ROOT do
   puts '= Executing npm install'
   system 'cd frontend && npm install'
 
-  puts '= Executing rake russ:dev:setup'
-  system 'bundle exec rake russ:dev:setup'
+  puts '= Executing rake dev:setup'
+  system 'bundle exec rake dev:setup'
 end
