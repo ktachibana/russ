@@ -5,8 +5,8 @@
   "description": "== README",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
-    "watch": "webpack -w"
+    "build": "cd frontend && webpack",
+    "watch": "cd frontend && webpack -w"
   },
   "author": "",
   "license": "ISC",
