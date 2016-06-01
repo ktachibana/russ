@@ -1,14 +1,15 @@
 var path = require('path');
 
 module.exports = {
-  entry: 'application',
+  entry: 'entry',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js'
   },
   module: {
     loaders: [
-      { test: /\.coffee$/, loaders: ['coffee'] }
+      { test: /\.coffee$/, loaders: ['coffee'] },
+      { test: /\.js$/, loaders: ['babel'] }
     ]
   },
   resolve: {
