@@ -1,6 +1,6 @@
 namespace :dev do
   desc '開発環境のセットアップを行う'
-  task setup: %w(app:write_secret db:setup frontend cert)
+  task setup: %w(app:write_secret db:create db:migrate frontend cert)
 
   desc '開発用に自己証明書を生成する'
   task :cert do
