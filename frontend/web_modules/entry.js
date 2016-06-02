@@ -1,6 +1,5 @@
-require('expose?jQuery!jquery'); // bootstraが要求する
-import App from 'app';
-import React from 'react';
+require('expose?jQuery!jquery'); // bootstrapが要求する
 import ReactDOM from 'react-dom';
+import Routing from 'routing';
 
-ReactDOM.render(<App/>, document.getElementById('main-content'));
+ReactDOM.render(Routing, document.getElementById('main-content'));

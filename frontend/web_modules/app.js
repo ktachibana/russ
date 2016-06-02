@@ -76,6 +76,9 @@ class App extends React.Component {
             </ul>
           </div>
         </nav>
+        <div>
+          {this.props.children}
+        </div>
       </div>
     );
   }
