@@ -1,6 +1,16 @@
 require('expose?jQuery!jquery'); // bootstrapが要求する
-require('jquery-ujs')
+require('jquery-ujs');
+import React from 'react';
 import ReactDOM from 'react-dom';
-import Routing from 'routing';
+import {Router, Route, IndexRoute, hashHistory} from 'react-router';
+import App from 'app';
+import RootPage from 'root-page';
 
-ReactDOM.render(Routing, document.getElementById('main-content'));
+ReactDOM.render(
+  <Router history={hashHistory}>
+    <Route path="/" component={App}>
+      <IndexRoute component={RootPage}/>
+    </Route>
+  </Router>,
+  document.getElementById('main-content')
+);
