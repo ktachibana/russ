@@ -15,14 +15,12 @@
     = render 'subscriptions/components'
     = render 'items/components'
 
-    .container#main-content{ class: ('vue-app' if yield(:vue_app).present?) }
+    .container
       - { notice: :success, alert: :danger }.each do |flash_name, alert_type|
         - flash[flash_name].presence.try do |message|
           .alert.alert-dismissable{ class: "alert-#{alert_type}" }
             %button.close{ 'data-dismiss' => :alert, 'aria-hidden' => :true } &times;
             = message
 
-      %div
-        %div{ v: { component: '{{currentPage}}', ref: 'currentComponent' } }
-        = yield
+      = yield
     = javascript_include_tag 'application'

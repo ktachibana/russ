@@ -39,7 +39,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="container">
+      <div>
         <nav className="navbar navbar-default" role="navigation">
           <div className="navbar-header">
             <button className="navbar-toggle" data-target=".navbar-ex1-collapse" data-toggle="collapse" type="button">

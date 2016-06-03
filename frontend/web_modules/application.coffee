@@ -11,8 +11,6 @@
 # GO AFTER THE REQUIRES BELOW.
 #
 
-require('expose?jQuery!jquery');
-
 require('vue-filters');
 require('russ');
 require('root');
