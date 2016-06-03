@@ -12,7 +12,7 @@ Dir.chdir APP_ROOT do
   system 'bundle install --path=vendor/bundle'
 
   puts '= Executing npm install'
-  system 'cd frontend && npm install'
+  system 'npm install'
 
   puts '= Executing rake dev:setup'
   system 'bundle exec rake dev:setup'
