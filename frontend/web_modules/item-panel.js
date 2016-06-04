@@ -14,7 +14,7 @@ class ItemPanel extends React.Component {
   }
 
   get publishedAtMoment() {
-    return moment(this.props.publishedAt);
+    return moment(this.props.item.publishedAt);
   }
 
   showAll() {

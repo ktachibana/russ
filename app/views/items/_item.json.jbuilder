@@ -1,1 +1,1 @@
-json.call(item, :title, :link, :guid, :published_at, :description)
+json.call(item, :id, :title, :link, :guid, :published_at, :description)

@@ -134,6 +134,7 @@ RSpec.describe SubscriptionsController, type: :controller do
     it 'Subscriptionを登録できる' do
       expect { action }.to change(Subscription, :count).by(1)
       is_expected.to respond_with(:ok)
+      expect(JSON.parse(response.body)).to eq('id' => Subscription.last.id)
     end
 
     context 'パラメータが不正なとき' do
@@ -200,7 +201,7 @@ RSpec.describe SubscriptionsController, type: :controller do
       it 'jsonでレスポンスする' do
         action
         expect(response.content_type).to eq('application/json')
-        expect(JSON.parse(response.body)).to eq('status' => 'OK')
+        expect(JSON.parse(response.body)).to eq('id' => subscription.id)
       end
     end
   end
