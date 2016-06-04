@@ -5,9 +5,12 @@ import Routes from './app/routes';
 export default class SubscriptionForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
+    this.state = props.subscription.id ? {
       title: props.subscription.title,
       tags: props.subscription.tags.map(tag => tag.name).join(', ')
+    } : {
+      title: '',
+      tags: ''
     };
   }
 
@@ -73,10 +76,6 @@ export default class SubscriptionForm extends React.Component {
   render() {
     return (
       <form onSubmit={this.submit.bind(this)}>
-        {!this.props.subscription.id ?
-          <input defaultValue={this.props.subscription.feed.url} type="hidden" name="subscription[feed_attributes][url]"/> :
-          null
-        }
         <div className='form-group'>
           <label for="subscription_title">Title</label>
           <input className="form-control" placeholder={this.props.subscription.feed.title} value={this.state.title} onChange={this.titleChanged.bind(this)} type="text" name="subscription[title]" id="subscription_title"/>

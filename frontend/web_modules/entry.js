@@ -14,6 +14,7 @@ ReactDOM.render(
       <IndexRedirect to="items/"/>
       <Route path="items/(:tags)" component={ItemsPage}/>
       <Route path="feeds/(:tags)" component={FeedsPage}/>
+      <Route path="subscriptions/new/:url" component={SubscriptionPage}/>
       <Route path="subscriptions/:id" component={SubscriptionPage}/>
     </Route>
   </Router>,

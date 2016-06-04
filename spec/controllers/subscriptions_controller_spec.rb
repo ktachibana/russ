@@ -87,7 +87,7 @@ RSpec.describe SubscriptionsController, type: :controller do
       it 'フィード登録ページにリダイレクトする' do
         mock_rss!(url: url, body: rss_data, content_type: 'application/rss+xml')
         action
-        is_expected.to redirect_to(root_path(anchor: '/subscriptions/new/' + Base64.strict_encode64(url)))
+        is_expected.to redirect_to(root_path(anchor: '/subscriptions/new/' + CGI.escape(url)))
       end
 
       context 'RSSへのリンクを持つHTMLページのとき' do
@@ -106,7 +106,7 @@ RSpec.describe SubscriptionsController, type: :controller do
           mock_url!(url: url, body: html, content_type: 'text/html')
           mock_url!(url: mock_rss_url, body: rss_data, content_type: 'application.rss+xml')
           action
-          is_expected.to redirect_to(root_path(anchor: '/subscriptions/new/' + Base64.strict_encode64(mock_rss_url)))
+          is_expected.to redirect_to(root_path(anchor: '/subscriptions/new/' + CGI.escape(mock_rss_url)))
         end
       end
 

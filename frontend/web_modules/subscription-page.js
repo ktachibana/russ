@@ -64,20 +64,30 @@ export default class SubscriptionPage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params.id != this.props.params.id) {
+    if (nextProps.params != this.props.params) {
       this.pageChanged(nextProps);
     }
   }
 
   pageChanged(props) {
-    this.loadSubscription(props.params.id).then((subscription) => {
-      this.setState({
-        subscription: subscription,
-        items: subscription.feed.items,
-        page: 1,
-        lastPage: subscription.lastPage
+    if (props.params.id) {
+      this.loadSubscription(props.params.id).then((subscription) => {
+        this.setState({
+          subscription: subscription,
+          items: subscription.feed.items,
+          page: 1,
+          lastPage: subscription.lastPage
+        });
       });
-    });
+    } else {
+      const url = decodeURIComponent(props.params.url);
+      $.getJSON(Routes.newSubscriptionPath(), {
+        url: url
+      }).then((feed) => {
+          this.setState({subscription: {feed: feed}});
+        }
+      );
+    }
   }
 
   render() {
