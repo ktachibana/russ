@@ -23,7 +23,7 @@ Vue.component 'root-page',
 
     showMore: ->
       @page += 1
-      @loadItems().then (items) =>
+      @updateItems().then (items) =>
         @items = @items.concat(items)
 
     onTagButtonsChanged: (newTags) ->
@@ -32,12 +32,12 @@ Vue.component 'root-page',
 
     onCurrentTagsChanged: ->
       @page = 1
-      @loadItems().then (items) =>
+      @updateItems().then (items) =>
         @items = items
       null
 
   compiled: () ->
-    @loadItems().then (items) =>
+    @updateItems().then (items) =>
       @items = items
 
   created: ->

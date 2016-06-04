@@ -1,22 +1,24 @@
 import React from 'react';
 import $ from 'jquery';
 import Routes from './app/routes';
+import TagButton from 'tags';
 
-class App extends React.Component {
+export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.currentPage = null;
-    this.currentTags = [];
-    this.tags = [];
+    this.state = {
+      tags: [],
+      currentTags: []
+    };
     this.params = {};
   }
 
   componentDidMount() {
-    return this.updateTags();
+    this.updateTags();
   }
 
   get currentTagParams() {
-    return this.currentTags.map(tag => encodeURIComponent(tag)).join(',');
+    return this.state.currentTags.map(tag => encodeURIComponent(tag)).join(',');
   }
 
   get rootPath() {
@@ -29,7 +31,7 @@ class App extends React.Component {
 
   updateTags() {
     return $.getJSON(Routes.tagsPath()).then((tags) => {
-      this.tags = tags;
+      this.setState({tags: tags});
     });
   }
 
@@ -77,11 +79,11 @@ class App extends React.Component {
           </div>
         </nav>
         <div>
-          {this.props.children}
+          {(this.props.children && React.cloneElement(this.props.children, {
+            tags: this.state.tags
+          }))}
         </div>
       </div>
     );
   }
 }
-
-export default App;
