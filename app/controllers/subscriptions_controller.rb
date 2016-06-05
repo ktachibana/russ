@@ -45,13 +45,14 @@ class SubscriptionsController < ApplicationController
   def import
     opml_file = params[:file]
     if opml_file.blank?
-      flash[:alert] = 'Select OPML file.'
-      return redirect_to(upload_subscriptions_path)
+      return render json: { error: 'Select OPML file.' }, status: :unprocessable_entity
     end
 
-    OPML.import!(opml_file, current_user)
+    OPML.import!(opml_file.tempfile, current_user)
 
-    redirect_to root_url
+    head :ok
+  rescue OPML::InvalidFormat
+    render json: { error: 'Invalid file format.'}, status: :unprocessable_entity
   end
 
   def destroy

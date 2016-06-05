@@ -1,33 +1,36 @@
+require 'rexml/document'
+require 'nokogiri'
+
 class OPML
   def self.import!(opml, user)
     new(opml, user).import!
   end
 
   private def initialize(opml, user)
-    @doc = REXML::Document.new(opml)
+    @doc = Nokogiri::XML(opml)
     @user = user
   end
   attr_reader :user
 
   def import!
-    root = Outline.new(self, @doc.elements['opml/body'])
+    root = Outline.new(self, @doc.at_xpath('opml/body'))
     root.handle_outlines
   end
 
   class Outline
-    def initialize(opml, rexml_doc)
+    def initialize(opml, node)
+      fail(InvalidFormat) unless node
       @opml = opml
-      @rexml_doc = rexml_doc
+      @node = node
 
-      attrs = rexml_doc.attributes
-      @title = attrs['text'] || attrs['title']
-      @url = attrs['xmlUrl']
-      @link_url = attrs['htmlUrl']
+      @title = node['text'] || node['title']
+      @url = node['xmlUrl']
+      @link_url = node['htmlUrl']
     end
     attr_reader :title, :url, :link_url
 
     def feed?
-      !!(url && title)
+      url && title
     end
 
     def create_subscription(tag_names: nil)
@@ -36,23 +39,25 @@ class OPML
     end
 
     def nest?
-      !!title
+      title
     end
 
     def each_child
-      @rexml_doc.elements.each('outline') do |child|
-        yield Outline.new(@opml, child)
+      @node.xpath('outline').each do |outline|
+        yield Outline.new(@opml, outline)
       end
     end
 
     def handle_outlines(tag_names: [])
-      enum_for(:each_child).map do |child|
-        if child.feed?
-          child.create_subscription(tag_names: tag_names)
-        elsif child.nest?
-          child.handle_outlines(tag_names: tag_names + [child.title])
+      enum_for(:each_child).map do |child_outline|
+        if child_outline.feed?
+          child_outline.create_subscription(tag_names: tag_names)
+        elsif child_outline.nest?
+          child_outline.handle_outlines(tag_names: tag_names + [child_outline.title])
         end
       end
     end
   end
+
+  class InvalidFormat < StandardError; end
 end

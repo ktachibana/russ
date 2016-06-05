@@ -38,5 +38,9 @@ describe OPML, type: :model do
         expect(subscription.tag_list).to eq(%w(category))
       end
     end
+
+    it 'OPML形式でないファイルを与えたらエラー' do
+      expect { OPML.import!('Hello ! this is text.', user) }.to raise_error(OPML::InvalidFormat)
+    end
   end
 end

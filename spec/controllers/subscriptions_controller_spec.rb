@@ -212,23 +212,34 @@ RSpec.describe SubscriptionsController, type: :controller do
       file = Tempfile.new('opml')
       file.write(opml_data)
       file.rewind
-      Rack::Test::UploadedFile.new(file.path, 'application/xml')
+      file
     end
     after { opml_file.close! }
+    let(:upload_file) { Rack::Test::UploadedFile.new(opml_file.path, 'application/xml') }
 
     it 'OPMLをアップロードしてインポートできる' do
       expect do
         mock_opml_rss!
-        post :import, file: Rack::Test::UploadedFile.new(opml_file, 'application/xml')
+        post :import, file: upload_file
       end.to change(Feed, :count).by(2)
 
-      expect(response).to redirect_to(root_url)
+      is_expected.to respond_with(:ok)
     end
 
-    it 'アップロードするファイルを選択しないとflashメッセージを表示' do
+    it 'アップロードするファイルを選択しないとエラーメッセージを返す' do
       post :import
-      expect(flash[:alert]).to eq('Select OPML file.')
-      expect(response).to redirect_to(upload_subscriptions_path)
+      is_expected.to respond_with(:unprocessable_entity)
+      expect(JSON.parse(response.body, symbolize_names: true)).to eq(error: 'Select OPML file.')
+    end
+
+    context '不正なファイルを与えたとき' do
+      let(:opml_data) { 'this is a invalid file.' }
+
+      it 'エラーメッセージを返す' do
+        post :import, file: upload_file
+        is_expected.to respond_with(:unprocessable_entity)
+        expect(JSON.parse(response.body, symbolize_names: true)).to eq(error: 'Invalid file format.')
+      end
     end
   end
 

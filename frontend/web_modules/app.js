@@ -76,9 +76,8 @@ export default class App extends React.Component {
                   <b className="caret"/>
                 </a>
                 <ul className="dropdown-menu">
-                  {/* TODO: implement bookmarklet */}
                   <li><a href={App.subscriptionBookmarklet}>RuSS (Bookmarklet)</a></li>
-                  <li><a href="/subscriptions/upload">Import OPML</a></li>
+                  <li><a href="#/subscriptions/import/">Import OPML</a></li>
                   <li><a rel="nofollow" data-method="delete" href="/users/sign_out">Sign out</a></li>
                 </ul>
               </li>

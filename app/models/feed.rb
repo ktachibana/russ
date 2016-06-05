@@ -1,6 +1,5 @@
 require 'open-uri'
 require 'rss'
-require 'rexml/document'
 
 class Feed < ActiveRecord::Base
   has_many :items, dependent: :destroy
