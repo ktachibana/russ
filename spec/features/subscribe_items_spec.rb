@@ -9,7 +9,7 @@ RSpec.feature 'フィードの購読', type: :feature do
 
   let(:user) { create(:user, password: 'password') }
 
-  scenario '1つのフィードを購読' do
+  scenario '1つのフィードを購読', :js do
     feed = create(:feed)
     item = create(:item, feed: feed, description: 'my description')
     subscription = create(:subscription, user: user, feed: feed, title: 'my title')

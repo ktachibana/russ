@@ -49,10 +49,6 @@ RSpec.configure do |config|
     end
   end
 
-  require 'capybara/rspec'
-  require 'capybara/poltergeist'
-  Capybara.default_driver = :poltergeist
-
   WebMock.disable_net_connect!(allow_localhost: true)
 
   config.include FactoryGirl::Syntax::Methods
@@ -68,6 +64,7 @@ RSpec.configure do |config|
   end
 
   config.before :suite do
+    DatabaseRewinder.strategy = :deletion
     DatabaseRewinder.clean_all
   end
 

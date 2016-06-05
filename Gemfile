@@ -71,9 +71,8 @@ end
 
 group :test do
   gem 'webmock', require: 'webmock/rspec'
-  gem 'capybara'
+  gem 'capybara', require: 'capybara/rspec'
   gem 'launchy'
-  gem 'poltergeist'
   gem 'selenium-webdriver'
   gem 'database_rewinder'
 end
