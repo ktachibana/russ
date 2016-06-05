@@ -9,7 +9,7 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.coffee$/, loaders: ['coffee'] },
-      { test: /\.js$/, loaders: ['babel'] }
+      { test: /\.js$/, loader: 'babel', query: { compact: false } }
     ]
   },
   resolve: {
