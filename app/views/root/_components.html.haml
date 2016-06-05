@@ -1,8 +1,0 @@
-%script#root-page{ type: 'text/x-template' }
-  %tag-buttons{ v: { with: 'tags: tags, currentTags: currentTags' } }
-
-  .items
-    %div{ v: { repeat: 'items', component: 'item-panel' } }
-
-  .more.text-center{ v: { show: '!isLastPage' } }
-    %button.btn.btn-primary{ v: { on: 'click: showMore' } } 続きを表示

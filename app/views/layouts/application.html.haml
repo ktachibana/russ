@@ -9,12 +9,6 @@
     %meta{ name: 'viewport', content: 'width=device-width, initial-scale=1.0' }
 
   %body
-    = render 'tags/components'
-    = render 'root/components'
-    = render 'feeds/components'
-    = render 'subscriptions/components'
-    = render 'items/components'
-
     .container
       - { notice: :success, alert: :danger }.each do |flash_name, alert_type|
         - flash[flash_name].presence.try do |message|
