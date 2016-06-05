@@ -84,9 +84,16 @@ export default class SubscriptionPage extends React.Component {
       $.getJSON(Routes.newSubscriptionPath(), {
         url: url
       }).then((feed) => {
-          this.setState({subscription: {feed: feed}});
+        if (feed.id) {
+          location.href = `#/subscriptions/${feed.id}`;
+        } else {
+          this.setState({
+            subscription: {feed: feed},
+            items: feed.items,
+            lastPage: true
+          });
         }
-      );
+      });
     }
   }
 
@@ -101,7 +108,7 @@ export default class SubscriptionPage extends React.Component {
 
         <div className='items'>
           {this.state.items.map(item =>
-            <ItemPanel key={item.id} item={item} hideFeed={true}/>
+            <ItemPanel key={item.id || item.link} item={item} hideFeed={true}/>
           )}
         </div>
 

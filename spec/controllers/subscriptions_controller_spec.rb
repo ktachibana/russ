@@ -48,6 +48,7 @@ RSpec.describe SubscriptionsController, type: :controller do
       is_expected.to respond_with(:ok)
       data = JSON.parse(response.body, symbolize_names: true)
       expect(data).to be_a(Hash)
+      expect(data[:id]).to be(nil)
       expect(data[:url]).to eq(mock_rss_url)
       expect(data[:title]).to eq('RSS Title')
       expect(data[:linkUrl]).to eq('http://test.com/content')
@@ -70,7 +71,7 @@ RSpec.describe SubscriptionsController, type: :controller do
 
       it '登録済みのフィードのURLを指定するとリダイレクト' do
         action
-        expect(response).to redirect_to(root_path)
+        expect(JSON.parse(response.body)).to eq('id' => subscription.id)
         expect(flash[:notice]).to eq(I18n.t('messages.feed_already_registed', url: mock_rss_url))
       end
 

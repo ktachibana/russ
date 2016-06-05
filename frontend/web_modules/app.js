@@ -1,7 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
 import Routes from './app/routes';
-import TagButton from 'tags';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -39,6 +38,14 @@ export default class App extends React.Component {
     return this.currentTags = tags.sort();
   }
 
+  static get subscriptionBookmarklet() {
+    const l = window.location;
+    const apiURLBase = `${l.protocol}//${l.host}${Routes.newSubscriptionPath({url: ''})}`;
+    const js = `location.href="${apiURLBase}"+encodeURIComponent(location.href);`;
+
+    return `javascript:${js}`;
+  }
+
   render() {
     return (
       <div>
@@ -70,7 +77,7 @@ export default class App extends React.Component {
                 </a>
                 <ul className="dropdown-menu">
                   {/* TODO: implement bookmarklet */}
-                  <li><a href="javascript:location.href=escape(location.href);">RuSS (Bookmarklet)</a></li>
+                  <li><a href={App.subscriptionBookmarklet}>RuSS (Bookmarklet)</a></li>
                   <li><a href="/subscriptions/upload">Import OPML</a></li>
                   <li><a rel="nofollow" data-method="delete" href="/users/sign_out">Sign out</a></li>
                 </ul>

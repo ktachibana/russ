@@ -13,8 +13,8 @@ class ItemPanel extends React.Component {
     return `#/subscriptions/${this.props.item.feed.usersSubscription.id}`;
   }
 
-  get publishedAtMoment() {
-    return moment(this.props.item.publishedAt);
+  get publishedAtString() {
+    return this.props.item.publishedAt ? moment(this.props.item.publishedAt).format('YYYY/M/D(ddd) HH:mm') : '-';
   }
 
   showAll() {
@@ -58,7 +58,7 @@ class ItemPanel extends React.Component {
           })()}
           <small className='published-at pull-right'>
             <span className='glyphicon glyphicon-upload'/>
-            {this.publishedAtMoment.format('YYYY/M/D(ddd) HH:mm')}
+            {this.publishedAtString}
           </small>
         </div>
       </div>
