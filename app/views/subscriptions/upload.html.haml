@@ -1,5 +1,0 @@
-.well
-  = form_tag import_subscriptions_path, method: :create, enctype: 'multipart/form-data', class: 'form' do
-    %p.lead OPMLファイルからフィードを一括登録します。
-    = file_field_tag :file
-    = submit_tag 'Upload OPML', class: 'btn btn-primary'
