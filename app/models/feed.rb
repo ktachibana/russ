@@ -65,7 +65,7 @@ class Feed < ActiveRecord::Base
         resolve_relative_url!
       end
     rescue => e
-      Rails.logger.error([e.message, *e.backtrace].join("\n"))
+      Rails.logger.error(url: url, message: e.message)
       nil # TODO: エラーハンドリング
     end
 
