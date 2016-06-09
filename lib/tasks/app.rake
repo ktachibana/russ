@@ -1,11 +1,11 @@
 namespace :app do
   desc 'クローラーを定期実行する'
-  task crawler: :environment do
+  task :crawler do
     require 'rufus-scheduler'
 
     scheduler = Rufus::Scheduler.new
     scheduler.every '30m' do
-      Feed.load_all!
+      sh 'bundle', 'exec', 'rails', 'runner' 'Feed.load_all!'
     end
     scheduler.join
   end

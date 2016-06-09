@@ -107,9 +107,11 @@ class Feed < ActiveRecord::Base
         logger.info('start load_all!')
         find_each do |feed|
           sleep(5)
+          logger.info "Feed#load! url: #{feed.url}"
           feed.load!
           feed.save
         end
+        logger.info('load_all! completed.')
       end
 
       def load_rss(url)
