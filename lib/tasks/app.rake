@@ -1,7 +1,7 @@
 namespace :app do
   desc 'Webアプリケーションを起動する'
   task :server do
-    sh 'unicorn_rails', '-c', 'config/unicorn.rb'
+    sh 'bundle', 'exec', 'unicorn_rails', '-c', 'config/unicorn.rb'
   end
 
   desc 'クローラーを定期実行する'
@@ -10,7 +10,7 @@ namespace :app do
 
     scheduler = Rufus::Scheduler.new
     scheduler.every '30m' do
-      sh 'bundle', 'exec', 'rails', 'runner' 'Feed.load_all!'
+      sh 'bundle', 'exec', 'rails', 'runner', 'Feed.load_all!'
     end
     scheduler.join
   end
