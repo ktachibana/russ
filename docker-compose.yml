@@ -24,7 +24,7 @@ webapp:
     - database
   volumes_from:
     - datastore
-  command: ['unicorn_rails', '-c', 'config/unicorn.rb']
+  command: ['rake', 'app:server']
   expose:
     - 8080
   restart: always
