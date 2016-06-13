@@ -37,6 +37,7 @@ crawler:
   volumes_from:
     - datastore
   command: ['rake', 'app:crawler']
+  mem_limit: 512m
   restart: always
 
 database:
