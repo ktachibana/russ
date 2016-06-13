@@ -16,6 +16,6 @@ COPY . /russ
 ENV RAILS_ENV=production
 
 ENTRYPOINT ["bundle", "exec"]
-CMD ["unicorn_rails", "-c", "config/unicorn.rb"]
+CMD ["rake", "app:server"]
 
 EXPOSE 8080

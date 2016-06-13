@@ -1,11 +1,16 @@
 namespace :app do
+  desc 'Webアプリケーションを起動する'
+  task :server do
+    sh 'unicorn_rails', '-c', 'config/unicorn.rb'
+  end
+
   desc 'クローラーを定期実行する'
-  task crawler: :environment do
+  task :crawler do
     require 'rufus-scheduler'
 
     scheduler = Rufus::Scheduler.new
     scheduler.every '30m' do
-      Feed.load_all!
+      sh 'rails', 'runner', 'Feed.load_all!'
     end
     scheduler.join
   end
