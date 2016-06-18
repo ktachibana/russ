@@ -173,10 +173,10 @@ describe Feed, type: :model do
       end
     end
 
-    it 'エラーが起きたときはログを出力する' do
+    it 'エラーが起きたときはログを出力する', :stub_logging do
       allow(Feed).to receive(:load_rss).and_raise('error!')
-      expect(Rails.logger).to receive(:error).with(satisfy { |e| expect(e).to include('error!') })
       feed.load!
+      expect(log_string).to include('error!', feed.url)
     end
   end
 
