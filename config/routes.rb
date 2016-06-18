@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :feeds, only: :index
   resources :items, only: :index
   resources :tags, only: :index
-  devise_for :users
+  devise_for :users, controllers: { sessions: 'users/sessions' }
 
   root to: 'root#index'
 end
