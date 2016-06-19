@@ -15,6 +15,6 @@ namespace :frontend do
       #{JsRoutes.generate.indent(2)}
       }).call(module.exports);
     EOS
-    Rails.root.join('frontend', 'web_modules', 'app').tap(&:mkpath).join('routes.js').write(content)
+    Rails.root.join('frontend', 'web_modules', 'app').tap(&:mkpath).join('ApiRoutes.js').write(content)
   end
 end

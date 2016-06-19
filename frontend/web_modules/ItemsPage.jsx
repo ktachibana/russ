@@ -1,8 +1,8 @@
 import React from 'react';
 import $ from 'jquery';
-import Routes from './app/routes';
-import ItemPanel from 'item-panel';
-import TagButtons from 'tag-buttons';
+import ApiRoutes from './app/ApiRoutes';
+import ItemPanel from 'ItemPanel';
+import TagButtons from 'TagButtons';
 
 export default class ItemsPage extends React.Component {
   constructor(props) {
@@ -26,7 +26,7 @@ export default class ItemsPage extends React.Component {
 
   updateItems({page = this.state.page, tagParam = this.props.params.tags}) {
     return new Promise((resolve, reject) => {
-      const url = Routes.itemsPath({tag: tagParam ? tagParam.split(',') : [], page: page});
+      const url = ApiRoutes.itemsPath({tag: tagParam ? tagParam.split(',') : [], page: page});
       $.getJSON(url).then((data) => {
         resolve({
           loadedItems: data.items,

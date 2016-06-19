@@ -1,6 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
-import Routes from './app/routes';
+import ApiRoutes from './app/ApiRoutes';
 
 export default class SubscriptionForm extends React.Component {
   constructor(props) {
@@ -62,7 +62,7 @@ export default class SubscriptionForm extends React.Component {
   }
 
   get url() {
-    return this.isNewRecord ? Routes.subscriptionsPath() : Routes.subscriptionPath(this.props.subscription.id);
+    return this.isNewRecord ? ApiRoutes.subscriptionsPath() : ApiRoutes.subscriptionPath(this.props.subscription.id);
   }
 
   get method() {

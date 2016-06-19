@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'underscore';
-import TagButton from 'tag-button';
+import TagButton from 'TagButton';
 
 export default class TagButtons extends React.Component {
   isActive(tag) {

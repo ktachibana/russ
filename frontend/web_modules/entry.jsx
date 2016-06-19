@@ -3,15 +3,15 @@ require('jquery-ujs');
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router, Route, IndexRedirect, hashHistory} from 'react-router';
-import App from 'app';
-import ItemsPage from 'items-page';
-import FeedsPage from 'feeds-page';
-import SubscriptionPage from 'subscription-page';
-import ImportPage from 'import-page';
+import Application from 'Application';
+import ItemsPage from 'ItemsPage';
+import FeedsPage from 'FeedsPage';
+import SubscriptionPage from 'SubscriptionPage';
+import ImportPage from 'ImportPage';
 
 ReactDOM.render(
   <Router history={hashHistory}>
-    <Route path="/" component={App}>
+    <Route path="/" component={Application}>
       <IndexRedirect to="items/"/>
       <Route path="items/(:tags)" component={ItemsPage}/>
       <Route path="feeds/(:tags)" component={FeedsPage}/>

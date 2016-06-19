@@ -1,7 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
-import Routes from './app/routes';
-import TagButtons from 'tag-buttons';
+import ApiRoutes from './app/ApiRoutes';
+import TagButtons from 'TagButtons';
 
 class SubscriptionRow extends React.Component {
   get href() {
@@ -57,7 +57,7 @@ export default class FeedsPage extends React.Component {
 
   updateFeeds({page = this.state.page, tagParam = this.props.params.tags}) {
     return new Promise((resolve, reject) => {
-      const url = Routes.feedsPath({tag: tagParam ? tagParam.split(',') : [], page: page});
+      const url = ApiRoutes.feedsPath({tag: tagParam ? tagParam.split(',') : [], page: page});
       $.getJSON(url).then((data) => {
           resolve({
             loadedSubscriptions: data.subscriptions,

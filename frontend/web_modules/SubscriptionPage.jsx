@@ -1,8 +1,8 @@
 import React from 'react';
 import $ from 'jquery';
-import Routes from './app/routes';
-import ItemPanel from 'item-panel';
-import SubscriptionPanel from 'subscription-panel';
+import ApiRoutes from './app/ApiRoutes';
+import ItemPanel from 'ItemPanel';
+import SubscriptionPanel from 'SubscriptionPanel';
 
 export default class SubscriptionPage extends React.Component {
   constructor(props) {
@@ -18,7 +18,7 @@ export default class SubscriptionPage extends React.Component {
 
   loadSubscription(id) {
     return new Promise((resolve, reject) => {
-      const url = Routes.subscriptionPath(id);
+      const url = ApiRoutes.subscriptionPath(id);
       $.getJSON(url).then((subscription) => {
           resolve(subscription);
         },
@@ -28,7 +28,7 @@ export default class SubscriptionPage extends React.Component {
 
   updateItems({page = this.state.page}) {
     return new Promise((resolve, reject) => {
-      const url = Routes.itemsPath({subscription_id: this.state.subscription.id, page: page});
+      const url = ApiRoutes.itemsPath({subscription_id: this.state.subscription.id, page: page});
       $.getJSON(url).then((data) => {
         resolve({
           loadedItems: data.items,
@@ -81,7 +81,7 @@ export default class SubscriptionPage extends React.Component {
       });
     } else {
       const url = decodeURIComponent(props.params.url);
-      $.getJSON(Routes.newSubscriptionPath(), {
+      $.getJSON(ApiRoutes.newSubscriptionPath(), {
         url: url
       }).then((feed) => {
         if (feed.id) {

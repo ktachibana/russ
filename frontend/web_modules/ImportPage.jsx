@@ -1,5 +1,5 @@
 import React from 'react';
-import Routes from './app/routes';
+import ApiRoutes from './app/ApiRoutes';
 import $ from 'jquery';
 
 export default class ImportPage extends React.Component {
@@ -21,7 +21,7 @@ export default class ImportPage extends React.Component {
     let data = new FormData();
     data.append('file', this.file);
     this.setState({processing: true});
-    $.ajax(Routes.importSubscriptionsPath(), {
+    $.ajax(ApiRoutes.importSubscriptionsPath(), {
       type: 'post',
       dataType: 'json',
       data: data,

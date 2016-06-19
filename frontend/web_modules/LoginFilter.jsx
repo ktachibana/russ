@@ -1,6 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
-import Routes from './app/routes';
+import ApiRoutes from './app/ApiRoutes';
 
 export default class LoginFilter extends React.Component {
   constructor(props) {
@@ -22,7 +22,7 @@ export default class LoginFilter extends React.Component {
       }
     };
 
-    $.ajax(Routes.userSessionPath(), {
+    $.ajax(ApiRoutes.userSessionPath(), {
       method: 'post',
       dataType: 'json',
       data: formData

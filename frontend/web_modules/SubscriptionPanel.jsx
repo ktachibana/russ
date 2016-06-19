@@ -1,7 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
-import Routes from './app/routes';
-import SubscriptionForm from 'subscription-form';
+import ApiRoutes from './app/ApiRoutes';
+import SubscriptionForm from 'SubscriptionForm';
 
 export default class SubscriptionPanel extends React.Component {
   constructor(props) {
@@ -26,7 +26,7 @@ export default class SubscriptionPanel extends React.Component {
       return;
     }
 
-    $.ajax(Routes.subscriptionPath(this.props.subscription.id), {
+    $.ajax(ApiRoutes.subscriptionPath(this.props.subscription.id), {
       type: 'delete',
       dataType: 'json'
     }).then(() => {

@@ -1,9 +1,9 @@
 import React from 'react';
 import $ from 'jquery';
-import Routes from './app/routes';
-import LoginFilter from 'login-filter';
+import ApiRoutes from './app/ApiRoutes';
+import LoginFilter from 'LoginFilter';
 
-export default class App extends React.Component {
+export default class Application extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,7 +31,7 @@ export default class App extends React.Component {
   }
 
   updateTags() {
-    return $.getJSON(Routes.tagsPath()).then((tags) => {
+    return $.getJSON(ApiRoutes.tagsPath()).then((tags) => {
       this.setState({tags: tags});
     });
   }
@@ -42,7 +42,7 @@ export default class App extends React.Component {
 
   static get subscriptionBookmarklet() {
     const l = window.location;
-    const apiURLBase = `${l.protocol}//${l.host}${Routes.newSubscriptionPath({url: ''})}`;
+    const apiURLBase = `${l.protocol}//${l.host}${ApiRoutes.newSubscriptionPath({url: ''})}`;
     const js = `location.href="${apiURLBase}"+encodeURIComponent(location.href);`;
 
     return `javascript:${js}`;
@@ -86,7 +86,7 @@ export default class App extends React.Component {
                   <b className="caret"/>
                 </a>
                 <ul className="dropdown-menu">
-                  <li><a href={App.subscriptionBookmarklet}>RuSS (Bookmarklet)</a></li>
+                  <li><a href={Application.subscriptionBookmarklet}>RuSS (Bookmarklet)</a></li>
                   <li><a href="#/subscriptions/import/">Import OPML</a></li>
                   <li><a rel="nofollow" data-method="delete" href="/users/sign_out">Sign out</a></li>
                 </ul>
