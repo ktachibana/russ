@@ -57,6 +57,18 @@ export default class Application extends React.Component {
     this.setState({user: user});
   }
 
+  signOutClicked(e) {
+    e.preventDefault();
+
+    $.ajax(ApiRoutes.destroyUserSessionPath(), {
+      method: 'delete'
+    }).then(() => {
+      this.setState({user: null});
+    }, () => {
+      this.setState({user: null});
+    });
+  }
+
   render() {
     if(!this.state.initialized) {
       return <NowLoadingFilter/>
@@ -97,7 +109,7 @@ export default class Application extends React.Component {
                 <ul className="dropdown-menu">
                   <li><a href={Application.subscriptionBookmarklet}>RuSS (Bookmarklet)</a></li>
                   <li><a href="#/subscriptions/import/">Import OPML</a></li>
-                  <li><a rel="nofollow" data-method="delete" href="/users/sign_out">Sign out</a></li>
+                  <li><a rel="nofollow" href="#" onClick={this.signOutClicked.bind(this)}>Sign out</a></li>
                 </ul>
               </li>
             </ul>
