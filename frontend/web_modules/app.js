@@ -1,13 +1,15 @@
 import React from 'react';
 import $ from 'jquery';
 import Routes from './app/routes';
+import LoginFilter from 'login-filter';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       tags: [],
-      currentTags: []
+      currentTags: [],
+      user: null
     };
     this.params = {};
   }
@@ -46,7 +48,15 @@ export default class App extends React.Component {
     return `javascript:${js}`;
   }
 
+  loggedIn(user) {
+    this.setState({user: user});
+  }
+
   render() {
+    if(!this.state.user) {
+      return <LoginFilter onLogin={this.loggedIn.bind(this)}/>;
+    }
+
     return (
       <div>
         <nav className="navbar navbar-default" role="navigation">
@@ -72,7 +82,7 @@ export default class App extends React.Component {
             <ul className="nav navbar-nav navbar-right">
               <li className="dropdown">
                 <a className="dropdown-toggle" data-toggle="dropdown" href="#">
-                  {/* TODO: implement email */}
+                  {this.state.user.email}
                   <b className="caret"/>
                 </a>
                 <ul className="dropdown-menu">

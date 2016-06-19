@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.feature 'フィードの購読', type: :feature do
+RSpec.feature 'フィードの購読', skip: 'webdriver/firefox', type: :feature do
   def login_on_form
     fill_in 'Email', with: user.email
     fill_in 'Password', with: 'password'
