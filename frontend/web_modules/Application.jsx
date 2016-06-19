@@ -2,11 +2,13 @@ import React from 'react';
 import $ from 'jquery';
 import ApiRoutes from './app/ApiRoutes';
 import LoginFilter from 'LoginFilter';
+import NowLoadingFilter from 'NowLoadingFilter';
 
 export default class Application extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      initialized: false,
       user: null,
       tags: [],
       currentTags: []
@@ -32,7 +34,10 @@ export default class Application extends React.Component {
 
   fetchInitialState() {
     return $.getJSON(ApiRoutes.initialPath()).then((data) => {
-      this.setState({user: data.user, tags: data.tags});
+      this.setState({initialized: true, user: data.user, tags: data.tags});
+    }, (xhr, type, statusText) => {
+      // TODO: show error message.
+      this.setState({initialized: true, user: null});
     });
   }
 
@@ -53,6 +58,10 @@ export default class Application extends React.Component {
   }
 
   render() {
+    if(!this.state.initialized) {
+      return <NowLoadingFilter/>
+    }
+
     if(!this.state.user) {
       return <LoginFilter onLogin={this.loggedIn.bind(this)}/>;
     }
