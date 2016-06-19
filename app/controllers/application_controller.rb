@@ -8,6 +8,8 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActiveRecord::RecordInvalid, with: :record_invalid
 
+  after_action :set_csrf_token_header
+
   private
 
   def record_invalid(error)
@@ -22,5 +24,9 @@ class ApplicationController < ActionController::Base
 
   def render_json_ok
     render json: { status: 'OK' }
+  end
+
+  def set_csrf_token_header
+    response.headers['X-CSRF-Token'] = form_authenticity_token
   end
 end

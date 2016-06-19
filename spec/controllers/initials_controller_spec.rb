@@ -25,12 +25,16 @@ RSpec.describe InitialsController, type: :controller do
     end
 
     context 'ログインしていないとき' do
-      it '401 Unauthorizedでエラーメッセージを返し、初期化情報は返さない' do
+      it '401 Unauthorizedを返し、初期化情報は返さない' do
         action
         is_expected.to respond_with(:unauthorized)
 
-        data = JSON.parse(response.body, symbolize_names: true)
-        expect(data.keys).to eq([:error])
+        expect(response.body).to be_blank
+      end
+
+      it 'X-CSRF-Tokenヘッダは返す' do
+        action
+        expect(response.header['X-CSRF-Token']).to be_present
       end
     end
   end
