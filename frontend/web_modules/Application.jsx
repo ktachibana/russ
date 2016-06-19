@@ -7,15 +7,15 @@ export default class Application extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: null,
       tags: [],
-      currentTags: [],
-      user: null
+      currentTags: []
     };
     this.params = {};
   }
 
   componentDidMount() {
-    this.updateTags();
+    this.fetchInitialState();
   }
 
   get currentTagParams() {
@@ -30,9 +30,9 @@ export default class Application extends React.Component {
     return `#/feeds/${this.currentTagParams}`;
   }
 
-  updateTags() {
-    return $.getJSON(ApiRoutes.tagsPath()).then((tags) => {
-      this.setState({tags: tags});
+  fetchInitialState() {
+    return $.getJSON(ApiRoutes.initialPath()).then((data) => {
+      this.setState({user: data.user, tags: data.tags});
     });
   }
 
