@@ -30,9 +30,9 @@ export default class LoginFilter extends React.Component {
       this.props.onLogin(initialState);
     }, (xhr, type, errorThrown) => {
       if (xhr.responseJSON && xhr.responseJSON.error) {
-        this.setState({error: xhr.responseJSON.error});
+        this.props.onLoginFailure(xhr.responseJSON.error);
       } else {
-        alert(`${type}: ${errorThrown}`);
+        this.props.onLoginFailure(`${type}: ${errorThrown}`);
       }
     });
   }
@@ -40,17 +40,10 @@ export default class LoginFilter extends React.Component {
   render() {
     return (
       <div>
-        {this.state.error ?
-          <div className="alert alert-dismissable alert-danger">
-            <button className="close" data-dismiss="alert" area-hidden="true"/> &times;
-            {this.state.error}
-          </div>
-          : null}
-
         <h2 className="page-header">Sign in</h2>
 
         <div className="jumbotron">
-          <form onSubmit={this.submit.bind(this)}>
+          <form onSubmit={this.submit.bind(this)} method="post">
             <div className="form-group">
               <label for="user_email">Email</label><br />
               <input ref={(c) => { this.email = c; }} autofocus="autofocus" className="form-control" type="email" name="user[email]" />

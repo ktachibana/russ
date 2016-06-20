@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActiveRecord::RecordInvalid, with: :record_invalid
 
-  after_action :set_csrf_token_header
+  after_action :set_csrf_token_header, :set_flash_header
 
   private
 
@@ -28,6 +28,12 @@ class ApplicationController < ActionController::Base
 
   def set_csrf_token_header
     response.headers['X-CSRF-Token'] = form_authenticity_token
+  end
+
+  def set_flash_header
+    messages = flash.to_a
+    logger.error(messages)
+    response.headers['X-Flash-Messages'] = Base64.strict_encode64(messages.to_json) if messages.present?
   end
 
   def initial_states

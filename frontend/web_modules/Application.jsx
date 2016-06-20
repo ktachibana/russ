@@ -1,35 +1,42 @@
 import React from 'react';
 import $ from 'jquery';
+import {Base64} from 'js-base64';
 import ApiRoutes from './app/ApiRoutes';
 import LoginFilter from 'LoginFilter';
 import NowLoadingFilter from 'NowLoadingFilter';
+import FlashMessage from 'FlashMessage';
+import Layout from 'Layout';
 
 export default class Application extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       initialized: false,
+      flashMessages: [],
       user: null,
-      tags: [],
-      currentTags: []
+      tags: []
     };
-    this.params = {};
   }
 
   componentDidMount() {
+    $.ajaxSetup({
+      complete: (xhr) => {
+        var token = xhr.getResponseHeader('X-CSRF-Token');
+        if (token) {
+          $('meta[name="csrf-token"]').attr('content', token);
+        }
+
+        var flash = xhr.getResponseHeader('X-Flash-Messages');
+        if (flash) {
+          var flashMessages = JSON.parse(Base64.decode(flash));
+          if (flashMessages && flashMessages.length) {
+            this.setState({flashMessages});
+          }
+        }
+      }
+    });
+
     this.fetchInitialState();
-  }
-
-  get currentTagParams() {
-    return this.state.currentTags.map(tag => encodeURIComponent(tag)).join(',');
-  }
-
-  get rootPath() {
-    return `#/items/${this.currentTagParams}`;
-  }
-
-  get feedsPath() {
-    return `#/feeds/${this.currentTagParams}`;
   }
 
   fetchInitialState() {
@@ -41,85 +48,38 @@ export default class Application extends React.Component {
     });
   }
 
-  setCurrentTags(tags) {
-    return this.currentTags = tags.sort();
-  }
-
-  static get subscriptionBookmarklet() {
-    const l = window.location;
-    const apiURLBase = `${l.protocol}//${l.host}${ApiRoutes.newSubscriptionPath({url: ''})}`;
-    const js = `location.href="${apiURLBase}"+encodeURIComponent(location.href);`;
-
-    return `javascript:${js}`;
-  }
-
   loggedIn(initialState) {
     this.setState({user: initialState.user, tags: initialState.tags});
   }
 
-  signOutClicked(e) {
-    e.preventDefault();
+  loginFailed(message) {
+    this.setState({flashMessages: [...this.state.flashMessages, ['alert', message]]});
+  }
 
-    $.ajax(ApiRoutes.destroyUserSessionPath(), {
-      method: 'delete'
-    }).then(() => {
-      this.setState({user: null});
-    }, () => {
-      this.setState({user: null});
-    });
+  loggedOut() {
+    this.setState({user: null});
   }
 
   render() {
-    if(!this.state.initialized) {
-      return <NowLoadingFilter/>
-    }
-
-    if(!this.state.user) {
-      return <LoginFilter onLogin={this.loggedIn.bind(this)}/>;
+    let content = null;
+    if (!this.state.initialized) {
+      content = <NowLoadingFilter/>;
+    } else if (!this.state.user) {
+      content = <LoginFilter onLogin={this.loggedIn.bind(this)} onLoginFailure={this.loginFailed.bind(this)}/>;
+    } else {
+      content =
+        <Layout user={this.state.user} tags={this.state.tags} onLogout={this.loggedOut.bind(this)}>
+          {this.props.children}
+        </Layout>;
     }
 
     return (
       <div>
-        <nav className="navbar navbar-default" role="navigation">
-          <div className="navbar-header">
-            <button className="navbar-toggle" data-target=".navbar-ex1-collapse" data-toggle="collapse" type="button">
-              <span className="sr-only">Toggle navigation</span>
-              <span className="icon-bar"/>
-              <span className="icon-bar"/>
-              <span className="icon-bar"/>
-            </button>
-            <a href={this.rootPath} className="navbar-brand">
-              RuSS
-            </a>
-          </div>
-          <div className="collapse navbar-collapse navbar-ex1-collapse">
-            <ul className="nav navbar-nav">
-              <li>
-                <a href={this.feedsPath}>
-                  Feeds
-                </a>
-              </li>
-            </ul>
-            <ul className="nav navbar-nav navbar-right">
-              <li className="dropdown">
-                <a className="dropdown-toggle" data-toggle="dropdown" href="#">
-                  {this.state.user.email}
-                  <b className="caret"/>
-                </a>
-                <ul className="dropdown-menu">
-                  <li><a href={Application.subscriptionBookmarklet}>RuSS (Bookmarklet)</a></li>
-                  <li><a href="#/subscriptions/import/">Import OPML</a></li>
-                  <li><a rel="nofollow" href="#" onClick={this.signOutClicked.bind(this)}>Sign out</a></li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </nav>
-        <div>
-          {(this.props.children && React.cloneElement(this.props.children, {
-            tags: this.state.tags
-          }))}
-        </div>
+        {this.state.flashMessages.map((message) =>
+          <FlashMessage key={message[0]} name={message[0]}>{message[1]}</FlashMessage>
+        )}
+
+        {content}
       </div>
     );
   }

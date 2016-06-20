@@ -3,21 +3,11 @@ require('jquery-ujs');
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router, Route, IndexRedirect, hashHistory} from 'react-router';
-import $ from 'jquery';
 import Application from 'Application';
 import ItemsPage from 'ItemsPage';
 import FeedsPage from 'FeedsPage';
 import SubscriptionPage from 'SubscriptionPage';
 import ImportPage from 'ImportPage';
-
-$.ajaxSetup({
-  complete: (xhr) => {
-    var token = xhr.getResponseHeader('X-CSRF-Token');
-    if(token) {
-      $('meta[name="csrf-token"]').attr('content', token);
-    }
-  }
-});
 
 ReactDOM.render(
   <Router history={hashHistory}>
