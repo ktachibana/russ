@@ -6,6 +6,7 @@ AllCops:
     - 'config/**/*'
     - 'bundle_bin/**/*'
     - 'Guardfile'
+    - 'node_modules/**/*'
 
 AsciiComments:
   Enabled: false
