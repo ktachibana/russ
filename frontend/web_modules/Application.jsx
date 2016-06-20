@@ -53,8 +53,8 @@ export default class Application extends React.Component {
     return `javascript:${js}`;
   }
 
-  loggedIn(user) {
-    this.setState({user: user});
+  loggedIn(initialState) {
+    this.setState({user: initialState.user, tags: initialState.tags});
   }
 
   signOutClicked(e) {

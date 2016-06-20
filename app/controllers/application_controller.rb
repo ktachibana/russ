@@ -29,4 +29,8 @@ class ApplicationController < ActionController::Base
   def set_csrf_token_header
     response.headers['X-CSRF-Token'] = form_authenticity_token
   end
+
+  def initial_states
+    { user: current_user, tags: current_user.subscriptions.tag_counts }
+  end
 end

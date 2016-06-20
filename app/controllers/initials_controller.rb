@@ -4,6 +4,6 @@ class InitialsController < ApplicationController
 
   def show
     return head(:unauthorized) unless user_signed_in?
-    render json: { user: current_user, tags: current_user.subscriptions.tag_counts }
+    render json: initial_states
   end
 end

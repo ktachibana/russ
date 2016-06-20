@@ -26,8 +26,8 @@ export default class LoginFilter extends React.Component {
       method: 'post',
       dataType: 'json',
       data: formData
-    }).then((user) => {
-      this.props.onLogin(user);
+    }).then((initialState) => {
+      this.props.onLogin(initialState);
     }, (xhr, type, errorThrown) => {
       if (xhr.responseJSON && xhr.responseJSON.error) {
         this.setState({error: xhr.responseJSON.error});
