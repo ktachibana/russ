@@ -72,7 +72,8 @@ RSpec.describe SubscriptionsController, type: :controller do
       it '登録済みのフィードのURLを指定するとリダイレクト' do
         action
         expect(JSON.parse(response.body)).to eq('id' => subscription.id)
-        expect(flash[:notice]).to eq(I18n.t('messages.feed_already_registed', url: mock_rss_url))
+        flash_messages = JSON.parse(Base64.strict_decode64(response.headers['X-Flash-Messages']))
+        expect(flash_messages).to eq([['notice', I18n.t('messages.feed_already_registed', url: mock_rss_url)]])
       end
 
       it '再読み込みはしない' do
@@ -119,7 +120,8 @@ RSpec.describe SubscriptionsController, type: :controller do
           mock_url!(url: url, body: html, content_type: 'text/html')
           action
           is_expected.to redirect_to(root_path)
-          expect(flash[:alert]).to eq(I18n.t('messages.feed_not_found'))
+          flash_messages = JSON.parse(Base64.strict_decode64(response.headers['X-Flash-Messages']))
+          expect(flash_messages).to eq([['alert', I18n.t('messages.feed_not_found')]])
         end
       end
     end

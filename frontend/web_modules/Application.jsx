@@ -32,7 +32,7 @@ export default class Application extends React.Component {
           var flashMessages = JSON.parse(Base64.decode(flash));
           if (flashMessages && flashMessages.length) {
             const messages = flashMessages.map(message => this.createFlashMessage(message[0], message[1]));
-            this.setState({flashMessages: messages});
+            this.addFlashMessages(messages);
           }
         }
       }
@@ -49,6 +49,16 @@ export default class Application extends React.Component {
     };
   }
 
+  addFlashMessages(newFlashMessages) {
+    this.setState({flashMessages: [...this.state.flashMessages, ...newFlashMessages]});
+    const addedIds = newFlashMessages.map(message => message.id);
+
+    window.setTimeout(() => {
+      var restMessages = this.state.flashMessages.filter(message => !addedIds.includes(message.id));
+      this.setState({flashMessages: restMessages});
+    }, 3000);
+  }
+
   fetchInitialState() {
     return $.getJSON(ApiRoutes.initialPath()).then((data) => {
       this.setState({initialized: true, user: data.user, tags: data.tags});
@@ -63,7 +73,7 @@ export default class Application extends React.Component {
   }
 
   loginFailed(message) {
-    this.setState({flashMessages: [...this.state.flashMessages, this.createFlashMessage('alert', message)]});
+    this.addFlashMessages([this.createFlashMessage('alert', message)]);
   }
 
   loggedOut() {
@@ -90,9 +100,8 @@ export default class Application extends React.Component {
 
     return (
       <div>
-        <FlashMessages messages={this.state.flashMessages} onClose={this.flashMessageClosed.bind(this)}/>
-
         {content}
+        <FlashMessages messages={this.state.flashMessages} onClose={this.flashMessageClosed.bind(this)}/>
       </div>
     );
   }

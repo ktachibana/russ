@@ -33,6 +33,7 @@ class ApplicationController < ActionController::Base
   def set_flash_header
     messages = flash.to_a
     response.headers['X-Flash-Messages'] = Base64.strict_encode64(messages.to_json) if messages.present?
+    flash.clear
   end
 
   def initial_states

@@ -29,7 +29,7 @@ export default class FlashMessages extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="fixed-alerts">
         {this.props.messages.map(message =>
           <FlashMessage key={message.id} message={message} onClose={this.props.onClose}/>
         )}
