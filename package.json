@@ -5,7 +5,7 @@
   "description": "== README",
   "main": "index.js",
   "scripts": {
-    "build": "cd frontend && webpack",
+    "build": "cd frontend && webpack -p",
     "watch": "cd frontend && webpack -w"
   },
   "author": "",
