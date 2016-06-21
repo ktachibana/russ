@@ -1,10 +1,11 @@
 import React from 'react';
 import $ from 'jquery';
+import _ from 'underscore';
 import {Base64} from 'js-base64';
 import ApiRoutes from './app/ApiRoutes';
 import LoginFilter from 'LoginFilter';
 import NowLoadingFilter from 'NowLoadingFilter';
-import FlashMessage from 'FlashMessage';
+import FlashMessages from 'FlashMessages';
 import Layout from 'Layout';
 
 export default class Application extends React.Component {
@@ -30,13 +31,22 @@ export default class Application extends React.Component {
         if (flash) {
           var flashMessages = JSON.parse(Base64.decode(flash));
           if (flashMessages && flashMessages.length) {
-            this.setState({flashMessages});
+            const messages = flashMessages.map(message => this.createFlashMessage(message[0], message[1]));
+            this.setState({flashMessages: messages});
           }
         }
       }
     });
 
     this.fetchInitialState();
+  }
+
+  createFlashMessage(type, text) {
+    return {
+      id: _.uniqueId(),
+      type: type,
+      text: text
+    };
   }
 
   fetchInitialState() {
@@ -53,11 +63,16 @@ export default class Application extends React.Component {
   }
 
   loginFailed(message) {
-    this.setState({flashMessages: [...this.state.flashMessages, ['alert', message]]});
+    this.setState({flashMessages: [...this.state.flashMessages, this.createFlashMessage('alert', message)]});
   }
 
   loggedOut() {
     this.setState({user: null});
+  }
+
+  flashMessageClosed(id) {
+    var newFlashMessages = this.state.flashMessages.filter(message => message.id != id);
+    this.setState({flashMessages: newFlashMessages});
   }
 
   render() {
@@ -75,9 +90,7 @@ export default class Application extends React.Component {
 
     return (
       <div>
-        {this.state.flashMessages.map((message) =>
-          <FlashMessage key={message[0]} name={message[0]}>{message[1]}</FlashMessage>
-        )}
+        <FlashMessages messages={this.state.flashMessages} onClose={this.flashMessageClosed.bind(this)}/>
 
         {content}
       </div>
