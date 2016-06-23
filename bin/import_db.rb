@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 dir = Rails.root + 'tmp' + 'exports'
 dir.children.each do |path|
   next unless path.fnmatch?('*.json')

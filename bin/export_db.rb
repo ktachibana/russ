@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 dir = Rails.root + 'tmp' + 'exports'
 dir.mkpath
 
