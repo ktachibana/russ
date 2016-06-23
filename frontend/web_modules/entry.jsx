@@ -1,5 +1,8 @@
 require('expose?jQuery!jquery'); // bootstrapが要求する
 require('jquery-ujs');
+require('bootstrap/dist/js/bootstrap');
+require('bootstrap-tokenfield/dist/bootstrap-tokenfield');
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router, Route, IndexRedirect, hashHistory} from 'react-router';

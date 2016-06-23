@@ -20,7 +20,6 @@ db/schema.rb
 erd.pdf
 bundle_bin
 public/assets
-public/index.html*
 vendor/bundle
 .envrc
 config/vars
