@@ -5,7 +5,7 @@ end
 
 namespace :deploy do
   desc 'メインとなるappのDockerイメージをビルドする'
-  task build_app: %w(assets:clobber assets:precompile) do
+  task build_app: :frontend do
     sh 'docker build -t ktachiv/russ .'
   end
 

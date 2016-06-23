@@ -1,20 +1,13 @@
 desc 'webpackでweb_modulesをビルドしてbundle.jsを作成する'
-task frontend: 'frontend:routesjs' do
+task frontend: %w(frontend:clean frontend:routesjs) do
   sh 'npm run build'
 end
 
-namespace :assets do
-  task precompile: 'frontend'
-end
-
-Rake::Task['assets:precompile'].enhance do
-  %w(html html.gz).each do |suffix|
-    html = Pathname.glob(Rails.public_path.join('assets', "application-*.#{suffix}")).first || next
-    mv html, Rails.public_path + "index.#{suffix}"
-  end
-end
-
 namespace :frontend do
+  task :clean do
+    rm_rf 'public/assets'
+  end
+
   desc 'RailsのルーティングをJSにexportするためのroutes.jsを生成する'
   task routesjs: :environment do
     content = <<~EOS
