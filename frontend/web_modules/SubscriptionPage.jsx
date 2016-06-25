@@ -1,10 +1,11 @@
 import React from 'react';
+import { withRouter } from 'react-router';
 import $ from 'jquery';
 import ApiRoutes from 'app/ApiRoutes';
 import ItemPanel from 'ItemPanel';
 import SubscriptionPanel from 'SubscriptionPanel';
 
-export default class SubscriptionPage extends React.Component {
+class SubscriptionPage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -80,12 +81,12 @@ export default class SubscriptionPage extends React.Component {
         });
       });
     } else {
-      const url = decodeURIComponent(props.params.url);
+      const url = props.params.url;
       $.getJSON(ApiRoutes.newSubscriptionPath(), {
         url: url
       }).then((feed) => {
         if (feed.id) {
-          location.href = `#/subscriptions/${feed.id}`;
+          this.props.router.push(`/subscriptions/${feed.id}`);
         } else {
           this.setState({
             subscription: {feed: feed},
@@ -95,7 +96,7 @@ export default class SubscriptionPage extends React.Component {
         }
       }, (xhr) => {
         if(xhr.responseJSON.type == 'feedNotFound') {
-          location.href = '#/items/'
+          this.props.router.push('/items/');
         }
       });
     }
@@ -126,3 +127,5 @@ export default class SubscriptionPage extends React.Component {
     );
   }
 }
+
+export default withRouter(SubscriptionPage);

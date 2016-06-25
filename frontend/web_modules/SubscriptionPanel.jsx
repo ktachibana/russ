@@ -1,9 +1,10 @@
 import React from 'react';
+import { withRouter } from 'react-router';
 import $ from 'jquery';
 import ApiRoutes from 'app/ApiRoutes';
 import SubscriptionForm from 'SubscriptionForm';
 
-export default class SubscriptionPanel extends React.Component {
+class SubscriptionPanel extends React.Component {
   constructor(props) {
     super(props);
 
@@ -30,7 +31,7 @@ export default class SubscriptionPanel extends React.Component {
       type: 'delete',
       dataType: 'json'
     }).then(() => {
-      location.href = '#/feeds/';
+      this.props.router.push('/feeds/');
     });
   }
 
@@ -91,3 +92,5 @@ export default class SubscriptionPanel extends React.Component {
     );
   }
 }
+
+export default withRouter(SubscriptionPanel);

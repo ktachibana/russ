@@ -1,11 +1,12 @@
 import React from 'react';
+import { Link, withRouter } from 'react-router';
 import $ from 'jquery';
 import ApiRoutes from 'app/ApiRoutes';
 import TagButtons from 'TagButtons';
 
 class SubscriptionRow extends React.Component {
   get href() {
-    return `#/subscriptions/${this.props.subscription.id}`;
+    return `/subscriptions/${this.props.subscription.id}`;
   }
 
   render() {
@@ -13,9 +14,9 @@ class SubscriptionRow extends React.Component {
       <ul className='list-group'>
         <li className='list-group-item'>
           <div className='list-group-item-heading'>
-            <a href={this.href}>
+            <Link to={this.href}>
               <b>{this.props.subscription.userTitle}</b>
-            </a>
+            </Link>
 
             {this.props.subscription.tags.map(tag =>
               <span key={tag.id} className='label label-default' style={{margin: '2px'}}>
@@ -25,9 +26,12 @@ class SubscriptionRow extends React.Component {
           </div>
 
           <div className='list-group-item-text'>
-            <a href={this.href}>
-              <i>{this.props.subscription.feed.latestItem.title}</i>
-            </a>
+            {this.props.subscription.feed.latestItem ?
+              <Link to={this.href}>
+                <i>{this.props.subscription.feed.latestItem.title}</i>
+              </Link>
+              : 'No Item'
+            }
           </div>
         </li>
       </ul>
@@ -35,7 +39,7 @@ class SubscriptionRow extends React.Component {
   }
 }
 
-export default class FeedsPage extends React.Component {
+class FeedsPage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -82,7 +86,7 @@ export default class FeedsPage extends React.Component {
 
   tagButtonsChanged(newTags) {
     const tagNames = newTags.map(tag => encodeURIComponent(tag.name));
-    location.hash = `#/feeds/${tagNames.join(',')}`;
+    this.props.router.push(`/feeds/${tagNames.join(',')}`);
   }
 
   componentDidMount() {
@@ -123,3 +127,5 @@ export default class FeedsPage extends React.Component {
     );
   }
 }
+
+export default withRouter(FeedsPage);

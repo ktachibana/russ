@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 import $ from 'jquery';
 import ApiRoutes from 'app/ApiRoutes';
 
@@ -15,11 +16,11 @@ export default class Layout extends React.Component {
   }
 
   get rootPath() {
-    return `#/items/${this.currentTagParams}`;
+    return `/items/${this.currentTagParams}`;
   }
 
   get feedsPath() {
-    return `#/feeds/${this.currentTagParams}`;
+    return `/feeds/${this.currentTagParams}`;
   }
 
   static get subscriptionBookmarklet() {
@@ -53,16 +54,16 @@ export default class Layout extends React.Component {
               <span className="icon-bar"/>
               <span className="icon-bar"/>
             </button>
-            <a href={this.rootPath} className="navbar-brand">
+            <Link to={this.rootPath} className="navbar-brand">
               RuSS
-            </a>
+            </Link>
           </div>
           <div className="collapse navbar-collapse navbar-ex1-collapse">
             <ul className="nav navbar-nav">
               <li>
-                <a href={this.feedsPath}>
+                <Link to={this.feedsPath}>
                   Feeds
-                </a>
+                </Link>
               </li>
             </ul>
             <ul className="nav navbar-nav navbar-right">
@@ -73,7 +74,7 @@ export default class Layout extends React.Component {
                 </a>
                 <ul className="dropdown-menu">
                   <li><a href={Layout.subscriptionBookmarklet}>RuSS (Bookmarklet)</a></li>
-                  <li><a href="#/subscriptions/import/">Import OPML</a></li>
+                  <li><Link to="/subscriptions/import/">Import OPML</Link></li>
                   <li><a rel="nofollow" href="#" onClick={this.logOutClicked.bind(this)}>Sign out</a></li>
                 </ul>
               </li>

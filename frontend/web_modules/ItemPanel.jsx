@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 import moment from 'moment';
 import classNames from 'classnames';
 
@@ -10,7 +11,7 @@ class ItemPanel extends React.Component {
   }
 
   get subscriptionPath() {
-    return `#/subscriptions/${this.props.item.feed.usersSubscription.id}`;
+    return `/subscriptions/${this.props.item.feed.usersSubscription.id}`;
   }
 
   get publishedAtString() {
@@ -33,9 +34,9 @@ class ItemPanel extends React.Component {
               return (
                 <div className='pull-right'>
                   <small>
-                    <a href={this.subscriptionPath}>
+                    <Link to={this.subscriptionPath}>
                       {this.props.item.feed.usersSubscription.userTitle}
-                    </a>
+                    </Link>
                   </small>
                 </div>
               );

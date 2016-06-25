@@ -49,7 +49,6 @@ export default class SubscriptionForm extends React.Component {
       }
     }).then((data) => {
       this.props.onClose();
-      location.href = `#/subscriptions/${data.id}`;
     });
   }
 

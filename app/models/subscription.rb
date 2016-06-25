@@ -20,6 +20,8 @@ class Subscription < ActiveRecord::Base
     scope
   }
 
+  scope :url, -> (url) { joins(:feed).merge(Feed.where(url: url)) }
+
   # XXX: もっとスマートにしたい
   def subscribe!
     persisted_feed = Feed.find_by(url: feed.url)

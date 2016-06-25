@@ -1,8 +1,9 @@
 import React from 'react';
+import { withRouter } from 'react-router';
 import ApiRoutes from 'app/ApiRoutes';
 import $ from 'jquery';
 
-export default class ImportPage extends React.Component {
+class ImportPage extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -29,7 +30,7 @@ export default class ImportPage extends React.Component {
       contentType: false
     }).then(
       (result) => {
-        location.href = '#/items/';
+        this.props.router.push('/feeds/');
       },
       (xhr, type, errorThrown) => {
         if (xhr.responseJSON && xhr.responseJSON.error) {
@@ -53,3 +54,5 @@ export default class ImportPage extends React.Component {
     );
   }
 }
+
+export default withRouter(ImportPage);

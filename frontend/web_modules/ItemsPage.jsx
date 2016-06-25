@@ -1,10 +1,11 @@
 import React from 'react';
 import $ from 'jquery';
+import { withRouter } from 'react-router';
 import ApiRoutes from 'app/ApiRoutes';
 import ItemPanel from 'ItemPanel';
 import TagButtons from 'TagButtons';
 
-export default class ItemsPage extends React.Component {
+class ItemsPage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -51,7 +52,7 @@ export default class ItemsPage extends React.Component {
 
   tagButtonsChanged(newTags) {
     const tagNames = newTags.map(tag => encodeURIComponent(tag.name));
-    location.hash = `#/items/${tagNames.join(',')}`;
+    this.props.router.push(`/items/${tagNames.join(',')}`);
   }
 
   componentDidMount() {
@@ -89,3 +90,5 @@ export default class ItemsPage extends React.Component {
     );
   }
 }
+
+export default withRouter(ItemsPage);

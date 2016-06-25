@@ -6,21 +6,29 @@ class SubscriptionsController < ApplicationController
 
   def new
     url = params[:url]
-    owned_subscriptions.joins(:feed).merge(Feed.where(url: url)).first.try do |subscription|
-      flash[:notice] = I18n.t('messages.feed_already_registed', url: url)
-      return render json: { id: subscription.id }
-    end
+    render_if_already_registed(url) && return
 
     feed_url = Feedbag.find(url)[0]
     unless feed_url
       flash['alert'] = I18n.t('messages.feed_not_found')
       return render json: { type: 'feedNotFound' }, status: :unprocessable_entity
     end
+    render_if_already_registed(feed_url) && return
 
     @feed = Feed.find_or_initialize_by(url: feed_url)
     @feed.load! if @feed.new_record?
     @subscription = current_user.subscriptions.build(feed: @feed)
   end
+
+  def render_if_already_registed(url)
+    owned_subscriptions.url(url).first.try! do |subscription|
+      flash[:notice] = I18n.t('messages.feed_already_registed', url: url)
+      render json: { id: subscription.id }
+      return true
+    end
+    false
+  end
+  private :render_if_already_registed
 
   def create
     @subscription = owned_subscriptions.build(subscription_params.permit(:title, :tag_list, feed_attributes: [:url]))
@@ -42,7 +50,7 @@ class SubscriptionsController < ApplicationController
 
     OPML.import!(opml_file.tempfile, current_user)
 
-    head :ok
+    render_json_ok
   rescue OPML::InvalidFormat
     render json: { error: 'Invalid file format.' }, status: :unprocessable_entity
   end
