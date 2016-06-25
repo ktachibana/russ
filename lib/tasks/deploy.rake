@@ -12,8 +12,6 @@ namespace :deploy do
   namespace :to do
     desc '本番環境にデプロイする'
     task :production do
-      abort('assets:precompileをproductionで行うため RAILS_ENV=production を指定してください') if ENV['RAILS_ENV'] != 'production'
-
       ENV['DOCKER_HOST'] = 'tcp://192.168.0.6:2375'
       ENV['VIRTUAL_HOST'] = 'russ.deadzone.mydns.jp'
       Rake::Task['deploy'].invoke
