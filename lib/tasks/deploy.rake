@@ -9,6 +9,11 @@ namespace :deploy do
     sh 'docker build -t ktachiv/russ .'
   end
 
+  desc 'Dockerイメージをpushする'
+  task push: :build_app do
+    sh 'docker push ktachiv/russ'
+  end
+
   namespace :to do
     desc '本番環境にデプロイする'
     task :production do
