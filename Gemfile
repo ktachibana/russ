@@ -4,25 +4,9 @@ ruby File.read(__dir__ + '/.ruby-version').strip
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 4.2'
-gem 'sprockets'
 gem 'bundler'
 
 gem 'pg'
-
-# Use SCSS for stylesheets
-gem 'sass-rails'
-
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier'
-
-# Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails'
-
-# See https://github.com/sstephenson/execjs#readme for more supported runtimes
-gem 'execjs'
-
-# Use jquery as the JavaScript library
-gem 'jquery-rails'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder'
@@ -42,7 +26,6 @@ group :development, :test do
   gem 'powder'
   gem 'rspec'
   gem 'rspec-rails'
-  gem 'minitest' #  for warning
   gem 'factory_girl'
   gem 'factory_girl_rails'
   gem 'guard'
@@ -64,9 +47,7 @@ end
 group :development do
   gem 'rails-erd'
   gem 'i18n-generators'
-  gem 'coffee-rails-source-maps'
   gem 'bullet'
-  gem 'quiet_assets'
 end
 
 group :test do
@@ -83,7 +64,6 @@ end
 
 gem 'devise'
 gem 'simple_token_authentication'
-gem 'haml'
 gem 'kaminari'
 gem 'unicorn'
 gem 'acts-as-taggable-on'
