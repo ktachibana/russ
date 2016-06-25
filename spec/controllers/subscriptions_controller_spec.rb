@@ -71,7 +71,7 @@ RSpec.describe SubscriptionsController, type: :controller do
       it 'SubscriptionのIDをflashメッセージ付きで返す' do
         action
         expect(JSON.parse(response.body)).to eq('id' => subscription.id)
-        flash_messages = JSON.parse(Base64.strict_decode64(response.headers['X-Flash-Messages']))
+        flash_messages = JSON.parse(Rack::Utils.unescape(response.headers['X-Flash-Messages']))
         expect(flash_messages).to eq([['notice', I18n.t('messages.feed_already_registed', url: mock_rss_url)]])
       end
 
@@ -114,7 +114,7 @@ RSpec.describe SubscriptionsController, type: :controller do
         it 'エラーメッセージをflashで表示する' do
           mock_url!(url: url, body: html, content_type: 'text/html')
           action
-          flash_messages = JSON.parse(Base64.strict_decode64(response.headers['X-Flash-Messages']))
+          flash_messages = JSON.parse(Rack::Utils.unescape(response.headers['X-Flash-Messages']))
           expect(flash_messages).to eq([['alert', I18n.t('messages.feed_not_found')]])
         end
       end

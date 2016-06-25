@@ -29,7 +29,7 @@ export default class Application extends React.Component {
 
         var flash = xhr.getResponseHeader('X-Flash-Messages');
         if (flash) {
-          var flashMessages = JSON.parse(Base64.decode(flash));
+          var flashMessages = JSON.parse(decodeURIComponent(flash));
           if (flashMessages && flashMessages.length) {
             const messages = flashMessages.map(message => this.createFlashMessage(message[0], message[1]));
             this.addFlashMessages(messages);
