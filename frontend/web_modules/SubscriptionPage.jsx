@@ -93,6 +93,10 @@ export default class SubscriptionPage extends React.Component {
             lastPage: true
           });
         }
+      }, (xhr) => {
+        if(xhr.responseJSON.type == 'feedNotFound') {
+          location.href = '#/items/'
+        }
       });
     }
   }

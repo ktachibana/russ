@@ -36,10 +36,9 @@ RSpec.describe SubscriptionsController, type: :controller do
     render_views
 
     def action
-      get :new, url: url, format: format
+      get :new, url: url, format: :json
     end
     let(:url) { mock_rss_url }
-    let(:format) { :json }
 
     it 'Feedの情報をURLからロードできる' do
       mock_rss!(body: rss_data_one_item)
@@ -65,11 +64,11 @@ RSpec.describe SubscriptionsController, type: :controller do
       expect(item[:description]).to eq('Item description')
     end
 
-    context '登録済みのフィードを指定したとき' do
+    context '登録済みのフィードのURLを指定したとき' do
       let!(:subscription) { create(:subscription, user: user, feed: feed) }
       let(:feed) { create(:feed, url: mock_rss_url) }
 
-      it '登録済みのフィードのURLを指定するとリダイレクト' do
+      it 'SubscriptionのIDをflashメッセージ付きで返す' do
         action
         expect(JSON.parse(response.body)).to eq('id' => subscription.id)
         flash_messages = JSON.parse(Base64.strict_decode64(response.headers['X-Flash-Messages']))
@@ -83,32 +82,28 @@ RSpec.describe SubscriptionsController, type: :controller do
       end
     end
 
-    context 'bookmarkletから呼び出されたとき' do
-      let(:format) { :html }
-
-      it 'フィード登録ページにリダイレクトする' do
-        mock_rss!(url: url, body: rss_data, content_type: 'application/rss+xml')
-        action
-        is_expected.to redirect_to(root_path(anchor: '/subscriptions/new/' + CGI.escape(url)))
-      end
-
+    context 'URLがRSSでないとき' do
       context 'RSSへのリンクを持つHTMLページのとき' do
         let(:url) { 'http://test.com/index.html' }
         let(:html) do
-          <<-HTML
-<html>
-<head>
-<link rel="alternate" type="application/rss+xml" href="http://test.com/rss.xml"/>
-</head>
-</html>
+          <<~HTML
+            <html>
+            <head>
+            <link rel="alternate" type="application/rss+xml" href="http://test.com/rss.xml"/>
+            </head>
+            </html>
           HTML
         end
 
-        it 'HTMLからRSSを自動で探し出す' do
+        it 'HTMLからRSSを自動で探し出して読み込む' do
           mock_url!(url: url, body: html, content_type: 'text/html')
           mock_url!(url: mock_rss_url, body: rss_data, content_type: 'application.rss+xml')
           action
-          is_expected.to redirect_to(root_path(anchor: '/subscriptions/new/' + CGI.escape(mock_rss_url)))
+
+          data = JSON.parse(response.body, symbolize_names: true)
+          expect(data[:id]).to be(nil)
+          expect(data[:url]).to eq(mock_rss_url)
+          expect(data[:title]).to eq('RSS Title')
         end
       end
 
@@ -119,7 +114,6 @@ RSpec.describe SubscriptionsController, type: :controller do
         it 'エラーメッセージをflashで表示する' do
           mock_url!(url: url, body: html, content_type: 'text/html')
           action
-          is_expected.to redirect_to(root_path)
           flash_messages = JSON.parse(Base64.strict_decode64(response.headers['X-Flash-Messages']))
           expect(flash_messages).to eq([['alert', I18n.t('messages.feed_not_found')]])
         end

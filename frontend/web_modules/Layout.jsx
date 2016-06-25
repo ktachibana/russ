@@ -24,7 +24,7 @@ export default class Layout extends React.Component {
 
   static get subscriptionBookmarklet() {
     const l = window.location;
-    const apiURLBase = `${l.protocol}//${l.host}${ApiRoutes.newSubscriptionPath({url: ''})}`;
+    const apiURLBase = `${l.protocol}//${l.host}/#/subscriptions/new/`;
     const js = `location.href="${apiURLBase}"+encodeURIComponent(location.href);`;
 
     return `javascript:${js}`;

@@ -6,23 +6,20 @@ class SubscriptionsController < ApplicationController
 
   def new
     url = params[:url]
-    respond_to do |format|
-      format.json do
-        owned_subscriptions.joins(:feed).merge(Feed.where(url: url)).first.try do |subscription|
-          flash[:notice] = I18n.t('messages.feed_already_registed', url: url)
-          return render json: { id: subscription.id }
-        end
-        @feed = Feed.find_or_initialize_by(url: url)
-        @feed.load! if @feed.new_record?
-        @subscription = current_user.subscriptions.build(feed: @feed)
-      end
-      format.html do
-        url = Feedbag.find(url)[0]
-        return redirect_to(root_path, alert: I18n.t('messages.feed_not_found')) unless url
-        encoded = CGI.escape(url)
-        redirect_to(root_path(anchor: "/subscriptions/new/#{encoded}"))
-      end
+    owned_subscriptions.joins(:feed).merge(Feed.where(url: url)).first.try do |subscription|
+      flash[:notice] = I18n.t('messages.feed_already_registed', url: url)
+      return render json: { id: subscription.id }
     end
+
+    feed_url = Feedbag.find(url)[0]
+    unless feed_url
+      flash['alert'] = I18n.t('messages.feed_not_found')
+      return render json: { type: 'feedNotFound' }, status: :unprocessable_entity
+    end
+
+    @feed = Feed.find_or_initialize_by(url: feed_url)
+    @feed.load! if @feed.new_record?
+    @subscription = current_user.subscriptions.build(feed: @feed)
   end
 
   # JSON API
@@ -52,7 +49,7 @@ class SubscriptionsController < ApplicationController
 
     head :ok
   rescue OPML::InvalidFormat
-    render json: { error: 'Invalid file format.'}, status: :unprocessable_entity
+    render json: { error: 'Invalid file format.' }, status: :unprocessable_entity
   end
 
   def destroy

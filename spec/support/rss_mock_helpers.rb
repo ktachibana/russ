@@ -4,7 +4,7 @@ module RssMockHelpers
     url
   end
 
-  def mock_rss!(url: mock_rss_url, body: rss_data, content_type: nil)
+  def mock_rss!(url: mock_rss_url, body: rss_data, content_type: 'application/xml')
     mock_url!(url: url, body: body, content_type: content_type)
   end
 
