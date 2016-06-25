@@ -1,6 +1,9 @@
 desc 'webpackでweb_modulesをビルドしてbundle.jsを作成する'
 task frontend: %w(frontend:clean frontend:routesjs) do
   sh 'npm run build'
+  chdir 'public/assets' do
+    sh 'gzip -k *'
+  end
 end
 
 namespace :frontend do
