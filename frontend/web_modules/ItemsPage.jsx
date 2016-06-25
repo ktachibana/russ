@@ -1,6 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
-import ApiRoutes from './app/ApiRoutes';
+import ApiRoutes from 'app/ApiRoutes';
 import ItemPanel from 'ItemPanel';
 import TagButtons from 'TagButtons';
 

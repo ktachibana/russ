@@ -1,6 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
-import ApiRoutes from './app/ApiRoutes';
+import ApiRoutes from 'app/ApiRoutes';
 
 export default class SubscriptionForm extends React.Component {
   constructor(props) {

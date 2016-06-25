@@ -1,6 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
-import ApiRoutes from './app/ApiRoutes';
+import ApiRoutes from 'app/ApiRoutes';
 
 export default class LoginFilter extends React.Component {
   constructor(props) {

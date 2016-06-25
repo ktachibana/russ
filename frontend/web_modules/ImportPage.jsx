@@ -1,5 +1,5 @@
 import React from 'react';
-import ApiRoutes from './app/ApiRoutes';
+import ApiRoutes from 'app/ApiRoutes';
 import $ from 'jquery';
 
 export default class ImportPage extends React.Component {

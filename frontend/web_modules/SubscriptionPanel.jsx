@@ -1,6 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
-import ApiRoutes from './app/ApiRoutes';
+import ApiRoutes from 'app/ApiRoutes';
 import SubscriptionForm from 'SubscriptionForm';
 
 export default class SubscriptionPanel extends React.Component {

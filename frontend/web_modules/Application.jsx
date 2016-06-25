@@ -2,7 +2,7 @@ import React from 'react';
 import $ from 'jquery';
 import _ from 'underscore';
 import {Base64} from 'js-base64';
-import ApiRoutes from './app/ApiRoutes';
+import ApiRoutes from 'app/ApiRoutes';
 import LoginFilter from 'LoginFilter';
 import NowLoadingFilter from 'NowLoadingFilter';
 import FlashMessages from 'FlashMessages';
