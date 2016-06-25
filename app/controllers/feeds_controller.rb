@@ -1,9 +1,6 @@
 class FeedsController < ApplicationController
   def index
-    respond_to do |f|
-      f.html
-      f.json { @subscriptions = owned_subscriptions.preload(:tags, feed: :latest_item).order(:id).search(params) }
-    end
+    @subscriptions = owned_subscriptions.preload(:tags, feed: :latest_item).order(:id).search(params)
   end
 
   private

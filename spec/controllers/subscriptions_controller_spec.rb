@@ -160,7 +160,7 @@ RSpec.describe SubscriptionsController, type: :controller do
 
   describe 'PATCH :update' do
     def action
-      put :update, id: subscription.id, subscription: subscription_params
+      put :update, id: subscription.id, subscription: subscription_params, format: :json
     end
     let(:subscription_params) { { title: 'NewTitle', tag_list: 'tag1, tag2' } }
     let(:subscription) { create(:subscription, user: user) }
@@ -189,16 +189,6 @@ RSpec.describe SubscriptionsController, type: :controller do
 
       it 'フィードのURLは変更できない' do
         expect { action }.not_to change { subscription.reload.feed.url }
-      end
-    end
-
-    context 'accept_typeをjsonにしたとき' do
-      before { request.accept = 'application/json' }
-
-      it 'jsonでレスポンスする' do
-        action
-        expect(response.content_type).to eq('application/json')
-        expect(JSON.parse(response.body)).to eq('id' => subscription.id)
       end
     end
   end

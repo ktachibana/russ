@@ -12,6 +12,4 @@ Rails.application.routes.draw do
   resources :tags, only: :index
   resource :initial, only: :show
   devise_for :users, controllers: { sessions: 'users/sessions' }
-
-  root to: 'root#index'
 end

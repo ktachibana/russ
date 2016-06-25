@@ -22,7 +22,6 @@ class SubscriptionsController < ApplicationController
     @subscription = current_user.subscriptions.build(feed: @feed)
   end
 
-  # JSON API
   def create
     @subscription = owned_subscriptions.build(subscription_params.permit(:title, :tag_list, feed_attributes: [:url]))
     @subscription.subscribe!
@@ -32,11 +31,7 @@ class SubscriptionsController < ApplicationController
   def update
     @subscription = owned_subscriptions.find(params[:id])
     @subscription.update_attributes!(subscription_params.permit(:title, :tag_list))
-    respond_to do |format|
-      format.json { render json: { id: @subscription.id } }
-      format.js
-      format.html { redirect_to(feeds_path) }
-    end
+    render json: { id: @subscription.id }
   end
 
   def import
