@@ -6,8 +6,8 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run build-js && npm run build-css",
-    "build-js": "cd frontend && webpack -p",
-    "build-css": "stylus -I node_modules --include-css < frontend/application.styl | cleancss > public/assets/application.css",
+    "build-js": "cd frontend && NODE_ENV=production webpack -p",
+    "build-css": "NODE_ENV=production stylus -I node_modules --include-css < frontend/application.styl | cleancss > public/assets/application.css",
     "watch": "concurrently 'npm run watch-js' 'npm run watch-css'",
     "watch-js": "cd frontend && webpack -w",
     "watch-css": "stylus --watch -I node_modules --include-css frontend/application.styl -o public/assets/application.css"
