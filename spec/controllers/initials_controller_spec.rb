@@ -29,7 +29,7 @@ RSpec.describe InitialsController, type: :controller do
         action
         is_expected.to respond_with(:unauthorized)
 
-        expect(response.body).to be_blank
+        expect(JSON.parse(response.body)).to be_blank
       end
 
       it 'X-CSRF-Tokenヘッダは返す' do
