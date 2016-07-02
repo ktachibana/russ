@@ -9,7 +9,7 @@ RSpec.describe Users::SessionsController, type: :controller do
     let!(:subscription) { create(:subscription, user: user, tag_list: %w(foo)) }
 
     it '認証が通ったら200 OKで初期化情報を返す' do
-      post :create, user: { email: user.email, password: user.password }, format: :json
+      post :create, params: { user: { email: user.email, password: user.password }, format: :json }
 
       is_expected.to respond_with(:ok)
 

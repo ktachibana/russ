@@ -7,7 +7,7 @@ RSpec.describe FeedsController, type: :controller do
 
   describe 'GET :index' do
     def action
-      get :index, params
+      get :index, params: params
     end
     let(:params) { { format: :json } }
     let!(:subscriptions) { [subscription] }

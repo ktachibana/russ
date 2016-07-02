@@ -7,7 +7,7 @@ RSpec.describe ItemsController, type: :controller do
     render_views
 
     def action
-      get :index, page: page, format: :json
+      get :index, params: { page: page, format: :json }
     end
     let(:page) { nil }
     let(:data) { JSON.parse(response.body, symbolize_names: true) }

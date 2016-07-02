@@ -9,7 +9,7 @@ RSpec.describe TagsController, type: :controller do
 
   describe 'GET :index' do
     def action
-      get :index, format: :json
+      get :index, params: { format: :json }
     end
 
     it 'サインインが必要' do

@@ -7,7 +7,7 @@ RSpec.describe SubscriptionsController, type: :controller do
   describe 'GET :show' do
     render_views
     def action
-      get :show, id: subscription.id, format: :json
+      get :show, params: { id: subscription.id, format: :json }
     end
     let(:subscription) { create(:subscription, :with_title, user: user, tag_list: %w(foo bar)) }
 
@@ -36,7 +36,7 @@ RSpec.describe SubscriptionsController, type: :controller do
     render_views
 
     def action
-      get :new, url: url, format: :json
+      get :new, params: { url: url, format: :json }
     end
     let(:url) { mock_rss_url }
 
@@ -123,7 +123,7 @@ RSpec.describe SubscriptionsController, type: :controller do
 
   describe 'POST :create' do
     def action
-      post :create, subscription: subscription_params, format: :json
+      post :create, params: { subscription: subscription_params, format: :json }
     end
     let(:subscription_params) { { title: '', tag_list: '', feed_attributes: { url: mock_rss_url } } }
     before { mock_rss! }
@@ -160,7 +160,7 @@ RSpec.describe SubscriptionsController, type: :controller do
 
   describe 'PATCH :update' do
     def action
-      put :update, id: subscription.id, subscription: subscription_params, format: :json
+      put :update, params: { id: subscription.id, subscription: subscription_params, format: :json }
     end
     let(:subscription_params) { { title: 'NewTitle', tag_list: 'tag1, tag2' } }
     let(:subscription) { create(:subscription, user: user) }
@@ -194,6 +194,10 @@ RSpec.describe SubscriptionsController, type: :controller do
   end
 
   describe 'POST :import' do
+    def action
+      post :import, params: params
+    end
+    let(:params) { { file: upload_file } }
     let!(:opml_file) do
       file = Tempfile.new('opml')
       file.write(opml_data)
@@ -206,23 +210,27 @@ RSpec.describe SubscriptionsController, type: :controller do
     it 'OPMLをアップロードしてインポートできる' do
       expect do
         mock_opml_rss!
-        post :import, file: upload_file
+        action
       end.to change(Feed, :count).by(2)
 
       is_expected.to respond_with(:ok)
     end
 
-    it 'アップロードするファイルを選択しないとエラーメッセージを返す' do
-      post :import
-      is_expected.to respond_with(:unprocessable_entity)
-      expect(JSON.parse(response.body, symbolize_names: true)).to eq(error: 'Select OPML file.')
+    context 'アップロードするファイルを選択しなかったとき' do
+      let(:params) { super().except(:file) }
+
+      it 'エラーメッセージを返す' do
+        action
+        is_expected.to respond_with(:unprocessable_entity)
+        expect(JSON.parse(response.body, symbolize_names: true)).to eq(error: 'Select OPML file.')
+      end
     end
 
     context '不正なファイルを与えたとき' do
       let(:opml_data) { 'this is a invalid file.' }
 
       it 'エラーメッセージを返す' do
-        post :import, file: upload_file
+        action
         is_expected.to respond_with(:unprocessable_entity)
         expect(JSON.parse(response.body, symbolize_names: true)).to eq(error: 'Invalid file format.')
       end
@@ -231,7 +239,7 @@ RSpec.describe SubscriptionsController, type: :controller do
 
   describe '#destroy' do
     def action
-      delete :destroy, id: subscription.id, format: :json
+      delete :destroy, params: { id: subscription.id, format: :json }
     end
     let!(:subscription) { create(:subscription, user: user) }
 

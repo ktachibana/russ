@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe InitialsController, type: :controller do
   describe 'GET #show' do
     def action
-      get :show, format: :json
+      get :show, params: { format: :json }
     end
 
     let!(:user) { create(:user) }
