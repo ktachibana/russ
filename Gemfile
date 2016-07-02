@@ -63,7 +63,6 @@ group :production do
 end
 
 gem 'devise'
-gem 'simple_token_authentication'
 gem 'kaminari'
 gem 'unicorn'
 gem 'acts-as-taggable-on'

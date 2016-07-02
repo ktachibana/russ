@@ -57,17 +57,6 @@ RSpec.describe ItemsController, type: :controller do
       end
     end
 
-    context 'authentication_tokenが付いているとき' do
-      def action
-        get :index, user_email: user.email, user_token: user.authentication_token, format: :json
-      end
-
-      it 'Itemを取得できる' do
-        action
-        is_expected.to respond_with(:ok)
-      end
-    end
-
     context 'サインインしていないとき' do
       it 'アクセスできない' do
         action
