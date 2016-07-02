@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 ruby File.read(__dir__ + '/.ruby-version').strip
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 4.2'
+gem 'rails', '~> 5.0'
 gem 'bundler'
 
 gem 'pg'
@@ -56,6 +56,7 @@ group :test do
   gem 'launchy'
   gem 'selenium-webdriver'
   gem 'database_rewinder'
+  gem 'rails-controller-testing'
 end
 
 group :production do
@@ -65,7 +66,7 @@ end
 gem 'devise'
 gem 'kaminari'
 gem 'unicorn'
-gem 'acts-as-taggable-on'
+gem 'acts-as-taggable-on', github: 'mbleigh/acts-as-taggable-on', branch: 'master'
 gem 'js-routes'
 gem 'oj'
 gem 'oj_mimic_json'
