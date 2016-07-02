@@ -1,6 +1,6 @@
 require 'stringio'
 
-RSpec.shared_context 'Rails.loggerの出力内容がlog_stringとして参照できる', stub_logging: true do
+RSpec.shared_context 'Rails.loggerの出力内容がlog_stringとして参照できる', :stub_logging do
   around do |example|
     backup = Rails.logger
     begin

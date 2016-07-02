@@ -23,5 +23,6 @@ public/assets
 vendor/bundle
 .envrc
 config/vars
+spec/examples.txt
 
 node_modules

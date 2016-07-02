@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Item, type: :model do
+RSpec.describe Item, type: :model do
   describe 'associations' do
     it { is_expected.to belong_to(:feed) }
   end

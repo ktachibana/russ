@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe OPML, type: :model do
+RSpec.describe OPML, type: :model do
   let(:user) { create(:user) }
 
   describe '.import' do
