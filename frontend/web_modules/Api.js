@@ -30,7 +30,7 @@ class Api extends EventEmitter2 {
     });
   }
 
-  initial() {
+  loadInitial() {
     return $.getJSON(ApiRoutes.initialPath());
   }
 
@@ -68,16 +68,23 @@ class Api extends EventEmitter2 {
     return $.getJSON(ApiRoutes.feedsPath({tag, page}));
   }
 
-  saveFeed(id, subscription) {
-    const url = id ?
-      ApiRoutes.subscriptionPath(id) :
+  subscribeFeed(subscriptionId, subscription) {
+    const url = subscriptionId ?
+      ApiRoutes.subscriptionPath(subscriptionId) :
       ApiRoutes.subscriptionsPath();
-    const method = id ? 'put' : 'post';
+    const method = subscriptionId ? 'put' : 'post';
 
     return $.ajax(url, {
       type: method,
       dataType: 'json',
       data: {subscription}
+    });
+  }
+
+  unsubscribeFeed(subscriptionId) {
+    return $.ajax(ApiRoutes.subscriptionPath(subscriptionId), {
+      type: 'delete',
+      dataType: 'json'
     });
   }
 
@@ -88,6 +95,28 @@ class Api extends EventEmitter2 {
   fetchFeed(feedUrl) {
     return $.getJSON(ApiRoutes.newSubscriptionPath(), {
       url: feedUrl
+    });
+  }
+
+  importOPML(file) {
+    return new Promise((resolve, reject) => {
+      let data = new FormData();
+      data.append('file', file);
+      $.ajax(ApiRoutes.importSubscriptionsPath(), {
+        type: 'post',
+        dataType: 'json',
+        data: data,
+        processData: false,
+        contentType: false
+      }).then(
+        resolve,
+        (xhr, type, errorThrown) => {
+          const errorMessage = (xhr.responseJSON && xhr.responseJSON.error) ?
+            xhr.responseJSON.error :
+            `${type}: ${errorThrown}`;
+          reject(errorMessage);
+        }
+      );
     });
   }
 }

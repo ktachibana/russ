@@ -40,7 +40,7 @@ export default class SubscriptionForm extends React.Component {
       });
     }
 
-    api.saveFeed(this.props.subscription.id, subscriptionData).then((data) => {
+    api.subscribeFeed(this.props.subscription.id, subscriptionData).then((data) => {
       this.props.onSave(data.id);
     });
   }

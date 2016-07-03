@@ -1,7 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import ApiRoutes from 'app/ApiRoutes';
-import $ from 'jquery';
+import api from 'Api';
 
 class ImportPage extends React.Component {
   constructor(props) {
@@ -19,25 +18,13 @@ class ImportPage extends React.Component {
       return;
     }
 
-    let data = new FormData();
-    data.append('file', this.file);
     this.setState({processing: true});
-    $.ajax(ApiRoutes.importSubscriptionsPath(), {
-      type: 'post',
-      dataType: 'json',
-      data: data,
-      processData: false,
-      contentType: false
-    }).then(
-      (result) => {
+    api.importOPML(this.file).then(
+      () => {
         this.props.router.push('/feeds/');
       },
-      (xhr, type, errorThrown) => {
-        if (xhr.responseJSON && xhr.responseJSON.error) {
-          alert(xhr.responseJSON.error);
-        } else {
-          alert(`${type}: ${errorThrown}`);
-        }
+      (errorMessage) => {
+        alert(errorMessage);
       }
     );
   }

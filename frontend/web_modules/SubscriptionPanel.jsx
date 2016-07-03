@@ -1,8 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import $ from 'jquery';
-import ApiRoutes from 'app/ApiRoutes';
 import SubscriptionForm from 'SubscriptionForm';
+import api from 'Api';
 
 class SubscriptionPanel extends React.Component {
   constructor(props) {
@@ -27,10 +26,7 @@ class SubscriptionPanel extends React.Component {
       return;
     }
 
-    $.ajax(ApiRoutes.subscriptionPath(this.props.subscription.id), {
-      type: 'delete',
-      dataType: 'json'
-    }).then(() => {
+    api.unsubscribeFeed(this.props.subscription.id).then(() => {
       this.props.router.push('/feeds/');
     });
   }

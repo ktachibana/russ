@@ -44,7 +44,7 @@ export default class Application extends React.Component {
   }
 
   fetchInitialState() {
-    return api.initial().then((data) => {
+    return api.loadInitial().then((data) => {
       this.setState({initialized: true, user: data.user, tags: data.tags});
     }, (xhr, type, statusText) => {
       // TODO: show error message.
