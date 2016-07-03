@@ -79,19 +79,15 @@ export default class Pagination extends React.Component {
     return (
       <div className='text-center form-inline'>
         <div className="form-group">
-          {this.hasPrevPage ?
-            [
-              <button className="btn btn-primary btn-sm" onClick={this.firstPageClicked.bind(this)}>
+          <div className="input-group">
+            <span className="input-group-btn">
+              <button className="btn btn-default" onClick={this.firstPageClicked.bind(this)} disabled={!this.hasPrevPage}>
                 <span className="glyphicon glyphicon-fast-backward"/>
-              </button>,
-              <button className="btn btn-primary btn-sm" onClick={this.prevPageClicked.bind(this)}>
+              </button>
+              <button className="btn btn-default" onClick={this.prevPageClicked.bind(this)} disabled={!this.hasPrevPage}>
                 <span className="glyphicon glyphicon-chevron-left"/>
               </button>
-            ]
-            : null
-          }
-          <div className="input-group">
-            <div className="input-group-addon">Page</div>
+            </span>
             <input type="number"
                    className="form-control"
                    value={this.state.inputValue}
@@ -100,19 +96,16 @@ export default class Pagination extends React.Component {
                    onKeyPress={this.inputKeyPressed.bind(this)}
                    min="1"
                    max={this.lastPage}/>
-            <div className="input-group-addon">1 - {this.lastPage} ({this.props.pagination.totalCount})</div>
-          </div>
-          {this.hasNextPage ?
-            [
-              <button className="btn btn-primary btn-sm" onClick={this.nextPageClicked.bind(this)}>
+            <div className="input-group-addon">{this.lastPage}({this.props.pagination.totalCount})</div>
+            <span className="input-group-btn">
+              <button className="btn btn-default" onClick={this.nextPageClicked.bind(this)} disabled={!this.hasNextPage}>
                 <span className="glyphicon glyphicon-chevron-right"/>
-              </button>,
-              <button className="btn btn-primary btn-sm" onClick={this.lastPageClicked.bind(this)}>
+              </button>
+              <button className="btn btn-default" onClick={this.lastPageClicked.bind(this)} disabled={!this.hasNextPage}>
                 <span className="glyphicon glyphicon-fast-forward"/>
               </button>
-            ]
-            : null
-          }
+            </span>
+          </div>
         </div>
       </div>
     );
