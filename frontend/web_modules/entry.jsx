@@ -1,5 +1,4 @@
 require('expose?jQuery!jquery'); // bootstrapが要求する
-require('jquery-ujs');
 require('bootstrap/dist/js/bootstrap');
 require('bootstrap-tokenfield/dist/bootstrap-tokenfield');
 

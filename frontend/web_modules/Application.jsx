@@ -1,12 +1,10 @@
 import React from 'react';
-import $ from 'jquery';
 import _ from 'underscore';
-import {Base64} from 'js-base64';
-import ApiRoutes from 'app/ApiRoutes';
 import LoginFilter from 'LoginFilter';
 import NowLoadingFilter from 'NowLoadingFilter';
 import FlashMessages from 'FlashMessages';
 import Layout from 'Layout';
+import api from 'Api';
 
 export default class Application extends React.Component {
   constructor(props) {
@@ -20,24 +18,10 @@ export default class Application extends React.Component {
   }
 
   componentDidMount() {
-    $.ajaxSetup({
-      complete: (xhr) => {
-        var token = xhr.getResponseHeader('X-CSRF-Token');
-        if (token) {
-          $('meta[name="csrf-token"]').attr('content', token);
-        }
-
-        var flash = xhr.getResponseHeader('X-Flash-Messages');
-        if (flash) {
-          var flashMessages = JSON.parse(decodeURIComponent(flash));
-          if (flashMessages && flashMessages.length) {
-            const messages = flashMessages.map(message => this.createFlashMessage(message[0], message[1]));
-            this.addFlashMessages(messages);
-          }
-        }
-      }
+    api.on('flashMessages', (rawMessages) => {
+      const messages = rawMessages.map(message => this.createFlashMessage(message[0], message[1]));
+      this.addFlashMessages(messages);
     });
-
     this.fetchInitialState();
   }
 
@@ -60,7 +44,7 @@ export default class Application extends React.Component {
   }
 
   fetchInitialState() {
-    return $.getJSON(ApiRoutes.initialPath()).then((data) => {
+    return api.initial().then((data) => {
       this.setState({initialized: true, user: data.user, tags: data.tags});
     }, (xhr, type, statusText) => {
       // TODO: show error message.
@@ -81,9 +65,7 @@ export default class Application extends React.Component {
       this.setState({user: null});
     };
 
-    $.ajax(ApiRoutes.destroyUserSessionPath(), {
-      method: 'delete'
-    }).then(clearUser, clearUser);
+    api.logout().then(clearUser, clearUser);
   }
 
   flashMessageClosed(id) {

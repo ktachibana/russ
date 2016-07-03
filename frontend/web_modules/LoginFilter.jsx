@@ -1,6 +1,5 @@
 import React from 'react';
-import $ from 'jquery';
-import ApiRoutes from 'app/ApiRoutes';
+import api from 'Api';
 
 export default class LoginFilter extends React.Component {
   constructor(props) {
@@ -14,26 +13,16 @@ export default class LoginFilter extends React.Component {
   submit(e) {
     e.preventDefault();
 
-    const formData = {
-      user: {
-        email: this.email.value,
-        password: this.password.value,
-        remember_me: this.rememberMe.checked ? '1' : '0'
-      }
+    var user = {
+      email: this.email.value,
+      password: this.password.value,
+      remember_me: this.rememberMe.checked ? '1' : '0'
     };
 
-    $.ajax(ApiRoutes.userSessionPath(), {
-      method: 'post',
-      dataType: 'json',
-      data: formData
-    }).then((initialState) => {
+    api.login(user).then((initialState) => {
       this.props.onLogin(initialState);
-    }, (xhr, type, errorThrown) => {
-      if (xhr.responseJSON && xhr.responseJSON.error) {
-        this.props.onLoginFailure(xhr.responseJSON.error);
-      } else {
-        this.props.onLoginFailure(`${type}: ${errorThrown}`);
-      }
+    }, (errorMessage) => {
+      this.props.onLoginFailure(errorMessage);
     });
   }
 
