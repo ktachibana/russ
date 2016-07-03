@@ -26,7 +26,7 @@ RSpec.describe ItemsController, type: :controller do
 
         action
         expect(data[:items][0][:id]).to eq(item.id)
-        expect(data[:lastPage]).to be true
+        expect(data[:pagination]).to eq(perPage: 25, totalCount: 1)
       end
 
       context 'itemが大量にあるとき' do
@@ -41,7 +41,7 @@ RSpec.describe ItemsController, type: :controller do
         it '取得件数が制限される' do
           action
           expect(data[:items].size).to eq(25)
-          expect(data[:lastPage]).to be false
+          expect(data[:pagination]).to eq(perPage: 25, totalCount: 26)
         end
 
         context 'pageパラメータを指定したとき' do

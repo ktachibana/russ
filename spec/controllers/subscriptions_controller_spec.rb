@@ -27,7 +27,7 @@ RSpec.describe SubscriptionsController, type: :controller do
         action
         data = JSON.parse(response.body, symbolize_names: true)
         expect(data[:feed][:items].size).to eq(25)
-        expect(data[:lastPage]).to be false
+        expect(data[:pagination]).to eq(perPage: 25, totalCount: 26)
       end
     end
   end

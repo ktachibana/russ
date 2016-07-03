@@ -4,7 +4,7 @@ RSpec.describe 'application/_items.json', type: :view do
   let(:subscription) { create(:subscription) }
   let!(:item) { create(:item, feed: subscription.feed) }
 
-  it 'render js' do
+  it 'render json' do
     render 'application/items.json.jbuilder', items: Item.search(subscription.user)
 
     data = JSON.parse(rendered, symbolize_names: true)
@@ -35,6 +35,6 @@ RSpec.describe 'application/_items.json', type: :view do
       end
     end
 
-    expect(data[:lastPage]).to be true
+    expect(data[:pagination]).to eq(perPage: 25, totalCount: 1)
   end
 end
