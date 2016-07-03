@@ -8,3 +8,7 @@ json.items items do |item|
   end
 end
 json.last_page items.last_page?
+json.pagination do
+  json.total_count items.total_count
+  json.per_page items.default_per_page
+end
