@@ -3,6 +3,7 @@ import { Link, withRouter } from 'react-router';
 import $ from 'jquery';
 import ApiRoutes from 'app/ApiRoutes';
 import TagButtons from 'TagButtons';
+import Pagination from 'Pagination';
 
 class SubscriptionRow extends React.Component {
   get href() {
@@ -60,27 +61,14 @@ class FeedsPage extends React.Component {
   }
 
   updateFeeds({page = this.state.page, tagParam = this.props.params.tags}) {
-    return new Promise((resolve, reject) => {
-      const url = ApiRoutes.feedsPath({tag: tagParam ? tagParam.split(',') : [], page: page});
-      $.getJSON(url).then((data) => {
-          resolve({
-            loadedSubscriptions: data.subscriptions,
-            setNextSubscriptions: (nextSubscriptions) => {
-              this.setState({
-                subscriptions: nextSubscriptions,
-                page: page,
-                lastPage: data.lastPage
-              });
-            }
-          });
-        },
-        reject);
-    });
-  }
-
-  showMore() {
-    return this.updateFeeds({page: this.state.page + 1}).then(({loadedSubscriptions, setNextSubscriptions}) => {
-      setNextSubscriptions(this.state.subscriptions.concat(loadedSubscriptions));
+    const url = ApiRoutes.feedsPath({tag: tagParam ? tagParam.split(',') : [], page: page});
+    $.getJSON(url).then((data) => {
+      this.setState({
+        subscriptions: data.subscriptions,
+        page: page,
+        lastPage: data.lastPage,
+        pagination: data.pagination
+      });
     });
   }
 
@@ -90,17 +78,17 @@ class FeedsPage extends React.Component {
   }
 
   componentDidMount() {
-    this.updateFeeds({}).then(({loadedSubscriptions, setNextSubscriptions}) => {
-      setNextSubscriptions(loadedSubscriptions);
-    });
+    this.updateFeeds({});
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.params.tags != this.props.params.tags) {
-      this.updateFeeds({tagParam: nextProps.params.tags || null}).then(({loadedSubscriptions, setNextSubscriptions}) => {
-        setNextSubscriptions(loadedSubscriptions);
-      });
+      this.updateFeeds({tagParam: nextProps.params.tags || null, page: 1});
     }
+  }
+
+  pagenationChanged(newPage) {
+    this.updateFeeds({page: newPage});
   }
 
   render() {
@@ -109,7 +97,14 @@ class FeedsPage extends React.Component {
         <TagButtons tags={this.props.tags} currentTags={this.currentTags} onChange={this.tagButtonsChanged.bind(this)}/>
         <hr/>
 
-        <div className='container-fluid'>
+        {this.state.pagination ?
+          <Pagination pagination={this.state.pagination}
+                      currentPage={this.state.page}
+                      onPageChange={this.pagenationChanged.bind(this)}/>
+          : null
+        }
+
+        <div className='feeds'>
           {this.state.subscriptions.map(subscription =>
             <div key={subscription.id}>
               <SubscriptionRow subscription={subscription}/>
@@ -117,11 +112,11 @@ class FeedsPage extends React.Component {
           )}
         </div>
 
-        {!this.state.lastPage ?
-          <div className='more text-center'>
-            <button className='btn btn-primary' onClick={this.showMore.bind(this)}>続きを表示</button>
-          </div> :
-          null
+        {this.state.pagination ?
+          <Pagination pagination={this.state.pagination}
+                      currentPage={this.state.page}
+                      onPageChange={this.pagenationChanged.bind(this)}/>
+          : null
         }
       </div>
     );
