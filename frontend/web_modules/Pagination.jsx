@@ -96,7 +96,7 @@ export default class Pagination extends React.Component {
                    onKeyPress={this.inputKeyPressed.bind(this)}
                    min="1"
                    max={this.lastPage}/>
-            <div className="input-group-addon">{this.lastPage}({this.props.pagination.totalCount})</div>
+            <div className="input-group-addon">/ {this.lastPage}</div>
             <span className="input-group-btn">
               <button className="btn btn-default" onClick={this.nextPageClicked.bind(this)} disabled={!this.hasNextPage}>
                 <span className="glyphicon glyphicon-chevron-right"/>
