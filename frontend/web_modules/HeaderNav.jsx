@@ -1,7 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router';
-import $ from 'jquery';
-import ApiRoutes from 'app/ApiRoutes';
 
 export default class HeaderNav extends React.Component {
   get subscriptionBookmarklet() {

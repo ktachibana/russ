@@ -76,8 +76,14 @@ export default class Application extends React.Component {
     this.addFlashMessages([this.createFlashMessage('alert', message)]);
   }
 
-  loggedOut() {
-    this.setState({user: null});
+  logout() {
+    const clearUser = () => {
+      this.setState({user: null});
+    };
+
+    $.ajax(ApiRoutes.destroyUserSessionPath(), {
+      method: 'delete'
+    }).then(clearUser, clearUser);
   }
 
   flashMessageClosed(id) {
@@ -93,7 +99,7 @@ export default class Application extends React.Component {
       content = <LoginFilter onLogin={this.loggedIn.bind(this)} onLoginFailure={this.loginFailed.bind(this)}/>;
     } else {
       content =
-        <Layout user={this.state.user} tags={this.state.tags} onLogout={this.loggedOut.bind(this)}>
+        <Layout user={this.state.user} tags={this.state.tags} onLogoutClick={this.logout.bind(this)}>
           {this.props.children}
         </Layout>;
     }
