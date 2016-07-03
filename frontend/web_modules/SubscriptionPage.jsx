@@ -4,6 +4,7 @@ import $ from 'jquery';
 import ApiRoutes from 'app/ApiRoutes';
 import ItemPanel from 'ItemPanel';
 import SubscriptionPanel from 'SubscriptionPanel';
+import Pagination from 'Pagination';
 
 class SubscriptionPage extends React.Component {
   constructor(props) {
@@ -13,7 +14,8 @@ class SubscriptionPage extends React.Component {
       subscription: null,
       items: [],
       page: 1,
-      lastPage: true
+      lastPage: true,
+      pagination: null
     };
   }
 
@@ -28,27 +30,14 @@ class SubscriptionPage extends React.Component {
   }
 
   updateItems({page = this.state.page}) {
-    return new Promise((resolve, reject) => {
-      const url = ApiRoutes.itemsPath({subscription_id: this.state.subscription.id, page: page});
-      $.getJSON(url).then((data) => {
-        resolve({
-          loadedItems: data.items,
-          setNextItems: (nextItems) => {
-            this.setState({
-              items: nextItems,
-              page: page,
-              lastPage: data.lastPage
-            });
-          }
-        });
-      },
-      reject);
-    });
-  }
-
-  showMore() {
-    return this.updateItems({page: this.state.page + 1}).then(({loadedItems, setNextItems}) => {
-      setNextItems(this.state.items.concat(loadedItems));
+    const url = ApiRoutes.itemsPath({subscription_id: this.state.subscription.id, page: page});
+    $.getJSON(url).then((data) => {
+      this.setState({
+        items: data.items,
+        page: page,
+        lastPage: data.lastPage,
+        pagination: data.pagination
+      });
     });
   }
 
@@ -77,7 +66,8 @@ class SubscriptionPage extends React.Component {
           subscription: subscription,
           items: subscription.feed.items,
           page: 1,
-          lastPage: subscription.lastPage
+          lastPage: subscription.lastPage,
+          pagination: subscription.pagination
         });
       });
     } else {
@@ -91,7 +81,8 @@ class SubscriptionPage extends React.Component {
           this.setState({
             subscription: {feed: feed},
             items: feed.items,
-            lastPage: true
+            lastPage: true,
+            pagination: null
           });
         }
       }, (xhr) => {
@@ -100,6 +91,10 @@ class SubscriptionPage extends React.Component {
         }
       });
     }
+  }
+
+  pagenationChanged(newPage) {
+    this.updateItems({page: newPage});
   }
 
   render() {
@@ -111,17 +106,24 @@ class SubscriptionPage extends React.Component {
       <div>
         <SubscriptionPanel subscription={this.state.subscription} tags={this.props.tags}/>
 
+        {this.state.pagination ?
+          <Pagination pagination={this.state.pagination}
+                      currentPage={this.state.page}
+                      onPageChange={this.pagenationChanged.bind(this)}/>
+          : null
+        }
+
         <div className='items'>
           {this.state.items.map(item =>
             <ItemPanel key={item.id || item.link} item={item} hideFeed={true}/>
           )}
         </div>
 
-        {!this.state.lastPage ?
-          <div className='more text-center'>
-            <button className='btn btn-primary' onClick={this.showMore.bind(this)}>続きを表示</button>
-          </div> :
-          null
+        {this.state.pagination ?
+          <Pagination pagination={this.state.pagination}
+                      currentPage={this.state.page}
+                      onPageChange={this.pagenationChanged.bind(this)}/>
+          : null
         }
       </div>
     );
