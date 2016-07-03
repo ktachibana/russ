@@ -14,7 +14,6 @@ class SubscriptionPage extends React.Component {
       subscription: null,
       items: [],
       page: 1,
-      lastPage: true,
       pagination: null
     };
   }
@@ -35,7 +34,6 @@ class SubscriptionPage extends React.Component {
       this.setState({
         items: data.items,
         page: page,
-        lastPage: data.lastPage,
         pagination: data.pagination
       });
     });
@@ -66,7 +64,6 @@ class SubscriptionPage extends React.Component {
           subscription: subscription,
           items: subscription.feed.items,
           page: 1,
-          lastPage: subscription.lastPage,
           pagination: subscription.pagination
         });
       });
@@ -81,7 +78,6 @@ class SubscriptionPage extends React.Component {
           this.setState({
             subscription: {feed: feed},
             items: feed.items,
-            lastPage: true,
             pagination: null
           });
         }

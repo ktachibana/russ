@@ -13,7 +13,6 @@ class ItemsPage extends React.Component {
     this.state = {
       items: [],
       page: 1,
-      lastPage: true,
       pagination: null
     };
   }
@@ -33,7 +32,6 @@ class ItemsPage extends React.Component {
       this.setState({
         items: data.items,
         page: page,
-        lastPage: data.lastPage,
         pagination: data.pagination
       });
     });

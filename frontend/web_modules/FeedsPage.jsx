@@ -47,7 +47,7 @@ class FeedsPage extends React.Component {
     this.state = {
       subscriptions: [],
       page: 1,
-      isLastPage: true
+      pagination: null
     };
   }
 
@@ -66,7 +66,6 @@ class FeedsPage extends React.Component {
       this.setState({
         subscriptions: data.subscriptions,
         page: page,
-        lastPage: data.lastPage,
         pagination: data.pagination
       });
     });

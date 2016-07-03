@@ -15,8 +15,4 @@ json.subscriptions @subscriptions do |subscription|
     json.partial!('tags/tags', tag: tag)
   end
 end
-json.last_page @subscriptions.last_page?
-json.pagination do
-  json.total_count @subscriptions.total_count
-  json.per_page @subscriptions.default_per_page
-end
+json.partial! 'pagination', scope: @subscriptions
