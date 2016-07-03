@@ -68,7 +68,7 @@ class SubscriptionPage extends React.Component {
         }
       }, (xhr) => {
         if(xhr.responseJSON.type == 'feedNotFound') {
-          this.props.router.push('/items/');
+          this.props.router.push('/items/1/');
         }
       });
     }

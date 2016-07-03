@@ -10,49 +10,51 @@ class ItemsPage extends React.Component {
     super(props);
 
     this.state = {
-      page: 1,
       items: [],
       pagination: null
     };
   }
 
   get currentTags() {
-    return this.selectTags(this.props.params.tags);
+    return this.selectTags(this.props.currentTagNames);
   }
 
-  selectTags(tagsParam) {
-    const tagNames = (tagsParam || '').split(',');
+  selectTags(tagNames) {
     return this.props.tags.filter(tag => tagNames.includes(tag.name));
   }
 
-  updateItems({page = this.state.page, tagParam = this.props.params.tags}) {
-    var tag = tagParam ? tagParam.split(',') : [];
-    api.loadItems({tag, page}).then(({items, pagination}) => {
+  updateItems(props) {
+    var query = {
+      page: props.page,
+      tag: props.currentTagNames
+    };
+    api.loadItems(query).then(({items, pagination}) => {
       this.setState({
-        page: page,
         items: items,
         pagination: pagination
       });
     });
   }
 
-  tagButtonsChanged(newTags) {
-    const tagNames = newTags.map(tag => encodeURIComponent(tag.name));
-    this.props.router.push(`/items/${tagNames.join(',')}`);
-  }
-
   componentDidMount() {
-    this.updateItems({});
+    this.updateItems(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params.tags != this.props.params.tags) {
-      this.updateItems({tagParam: nextProps.params.tags || null, page: 1});
-    }
+    this.updateItems(nextProps);
+  }
+
+  changeUrl({page = this.props.page, currentTagNames = this.props.currentTagNames}) {
+    const tagParam = currentTagNames.map(tag => encodeURIComponent(tag)).join(',');
+    this.props.router.push(`/items/${page}/${tagParam}`);
   }
 
   pagenationChanged(newPage) {
-    this.updateItems({page: newPage});
+    this.changeUrl({page: newPage});
+  }
+
+  tagButtonsChanged(newTags) {
+    this.changeUrl({currentTagNames: newTags.map(tag => tag.name)});
   }
 
   render() {
@@ -62,7 +64,7 @@ class ItemsPage extends React.Component {
         <hr/>
 
         <WithPagination pagination={this.state.pagination}
-                        currentPage={this.state.page}
+                        currentPage={this.props.page}
                         onPageChange={this.pagenationChanged.bind(this)}>
           <div className='items'>
             {this.state.items.map(item =>

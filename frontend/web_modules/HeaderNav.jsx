@@ -25,7 +25,7 @@ export default class HeaderNav extends React.Component {
             <span className="icon-bar"/>
             <span className="icon-bar"/>
           </button>
-          <Link to="/items/" className="navbar-brand">
+          <Link to="/items/1/" className="navbar-brand">
             RuSS
           </Link>
         </div>
