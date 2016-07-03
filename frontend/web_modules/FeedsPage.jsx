@@ -44,49 +44,51 @@ class FeedsPage extends React.Component {
     super(props);
 
     this.state = {
-      page: 1,
       subscriptions: [],
       pagination: null
     };
   }
 
   get currentTags() {
-    return this.selectTags(this.props.params.tags);
+    return this.selectTags(this.props.currentTagNames);
   }
 
-  selectTags(tagsParam) {
-    const tagNames = (tagsParam || '').split(',');
+  selectTags(tagNames) {
     return this.props.tags.filter(tag => tagNames.includes(tag.name));
   }
 
-  updateFeeds({page = this.state.page, tagParam = this.props.params.tags}) {
-    var tag = tagParam ? tagParam.split(',') : [];
-    api.loadFeeds({tag, page}).then(({subscriptions, pagination}) => {
+  updateFeeds(props) {
+    var query = {
+      page: props.page,
+      tag: props.currentTagNames
+    };
+    api.loadFeeds(query).then(({subscriptions, pagination}) => {
       this.setState({
-        page: page,
         subscriptions: subscriptions,
         pagination: pagination
       });
     });
   }
 
-  tagButtonsChanged(newTags) {
-    const tagNames = newTags.map(tag => encodeURIComponent(tag.name));
-    this.props.router.push(`/feeds/${tagNames.join(',')}`);
-  }
-
   componentDidMount() {
-    this.updateFeeds({});
+    this.updateFeeds(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params.tags != this.props.params.tags) {
-      this.updateFeeds({tagParam: nextProps.params.tags || null, page: 1});
-    }
+    this.updateFeeds(nextProps);
+  }
+
+  changeUrl({page = this.props.page, currentTagNames = this.props.currentTagNames}) {
+    const tagParam = currentTagNames.map(tag => encodeURIComponent(tag)).join(',');
+    this.props.router.push(`/feeds/${page}/${tagParam}`);
   }
 
   pagenationChanged(newPage) {
-    this.updateFeeds({page: newPage});
+    this.changeUrl({page: newPage});
+  }
+
+  tagButtonsChanged(newTags) {
+    this.changeUrl({currentTagNames: newTags.map(tag => tag.name)});
   }
 
   render() {
@@ -96,7 +98,7 @@ class FeedsPage extends React.Component {
         <hr/>
 
         <WithPagination pagination={this.state.pagination}
-                        currentPage={this.state.page}
+                        currentPage={this.props.page}
                         onPageChange={this.pagenationChanged.bind(this)}>
           <div className='feeds'>
             {this.state.subscriptions.map(subscription =>

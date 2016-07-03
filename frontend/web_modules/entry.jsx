@@ -11,13 +11,31 @@ import FeedsPage from 'FeedsPage';
 import SubscriptionPage from 'SubscriptionPage';
 import ImportPage from 'ImportPage';
 
+const paramParser = {
+  names: function(param) {
+    return param ? param.split(',') : []
+  },
+  integer: function(param) {
+    return parseInt(param) || 1
+  }
+};
+
 const ItemsPageRoute = (props) => {
   const pageProps = {
     tags: props.tags,
-    currentTagNames: props.params.tags ? props.params.tags.split(',') : [],
-    page: parseInt(props.params.page) || 1
+    currentTagNames: paramParser.names(props.params.tags),
+    page: paramParser.integer(props.params.page)
   };
   return <ItemsPage {...pageProps} />
+};
+
+const FeedsPageRoute = (props) => {
+  const pageProps = {
+    tags: props.tags,
+    currentTagNames: paramParser.names(props.params.tags),
+    page: paramParser.integer(props.params.page)
+  };
+  return <FeedsPage {...pageProps}/>;
 };
 
 ReactDOM.render(
@@ -25,7 +43,7 @@ ReactDOM.render(
     <Route path="/" component={Application}>
       <IndexRedirect to="items/1/"/>
       <Route path="items/:page/(:tags)" component={ItemsPageRoute}/>
-      <Route path="feeds/(:tags)" component={FeedsPage}/>
+      <Route path="feeds/:page/(:tags)" component={FeedsPageRoute}/>
       <Route path="subscriptions/import/" component={ImportPage}/>
       <Route path="subscriptions/new/:url" component={SubscriptionPage}/>
       <Route path="subscriptions/:id" component={SubscriptionPage}/>

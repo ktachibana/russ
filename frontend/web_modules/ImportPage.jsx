@@ -21,7 +21,7 @@ class ImportPage extends React.Component {
     this.setState({processing: true});
     api.importOPML(this.file).then(
       () => {
-        this.props.router.push('/feeds/');
+        this.props.router.push('/feeds/1/');
       },
       (errorMessage) => {
         alert(errorMessage);

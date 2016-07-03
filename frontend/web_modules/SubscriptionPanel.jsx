@@ -27,7 +27,7 @@ class SubscriptionPanel extends React.Component {
     }
 
     api.unsubscribeFeed(this.props.subscription.id).then(() => {
-      this.props.router.push('/feeds/');
+      this.props.router.push('/feeds/1/');
     });
   }
 

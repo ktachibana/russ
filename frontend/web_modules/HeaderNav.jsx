@@ -32,7 +32,7 @@ export default class HeaderNav extends React.Component {
         <div className="collapse navbar-collapse navbar-ex1-collapse">
           <ul className="nav navbar-nav">
             <li>
-              <Link to="/feeds/">
+              <Link to="/feeds/1/">
                 Feeds
               </Link>
             </li>
