@@ -3,7 +3,7 @@ import { Link, withRouter } from 'react-router';
 import $ from 'jquery';
 import ApiRoutes from 'app/ApiRoutes';
 import TagButtons from 'TagButtons';
-import Pagination from 'Pagination';
+import WithPagination from 'WithPagination';
 
 class SubscriptionRow extends React.Component {
   get href() {
@@ -96,27 +96,17 @@ class FeedsPage extends React.Component {
         <TagButtons tags={this.props.tags} currentTags={this.currentTags} onChange={this.tagButtonsChanged.bind(this)}/>
         <hr/>
 
-        {this.state.pagination ?
-          <Pagination pagination={this.state.pagination}
-                      currentPage={this.state.page}
-                      onPageChange={this.pagenationChanged.bind(this)}/>
-          : null
-        }
-
-        <div className='feeds'>
-          {this.state.subscriptions.map(subscription =>
-            <div key={subscription.id}>
-              <SubscriptionRow subscription={subscription}/>
-            </div>
-          )}
-        </div>
-
-        {this.state.pagination ?
-          <Pagination pagination={this.state.pagination}
-                      currentPage={this.state.page}
-                      onPageChange={this.pagenationChanged.bind(this)}/>
-          : null
-        }
+        <WithPagination pagination={this.state.pagination}
+                        currentPage={this.state.page}
+                        onPageChange={this.pagenationChanged.bind(this)}>
+          <div className='feeds'>
+            {this.state.subscriptions.map(subscription =>
+              <div key={subscription.id}>
+                <SubscriptionRow subscription={subscription}/>
+              </div>
+            )}
+          </div>
+        </WithPagination>
       </div>
     );
   }

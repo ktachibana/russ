@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import ApiRoutes from 'app/ApiRoutes';
 import ItemPanel from 'ItemPanel';
 import TagButtons from 'TagButtons';
-import Pagination from 'Pagination';
+import WithPagination from 'WithPagination';
 
 class ItemsPage extends React.Component {
   constructor(props) {
@@ -62,25 +62,15 @@ class ItemsPage extends React.Component {
         <TagButtons tags={this.props.tags} currentTags={this.currentTags} onChange={this.tagButtonsChanged.bind(this)}/>
         <hr/>
 
-        {this.state.pagination ?
-          <Pagination pagination={this.state.pagination}
-                      currentPage={this.state.page}
-                      onPageChange={this.pagenationChanged.bind(this)}/>
-          : null
-        }
-
-        <div className='items'>
-          {this.state.items.map(item =>
-            <ItemPanel key={item.id} item={item}/>
-          )}
-        </div>
-
-        {this.state.pagination ?
-          <Pagination pagination={this.state.pagination}
-                      currentPage={this.state.page}
-                      onPageChange={this.pagenationChanged.bind(this)}/>
-          : null
-        }
+        <WithPagination pagination={this.state.pagination}
+                        currentPage={this.state.page}
+                        onPageChange={this.pagenationChanged.bind(this)}>
+          <div className='items'>
+            {this.state.items.map(item =>
+              <ItemPanel key={item.id} item={item}/>
+            )}
+          </div>
+        </WithPagination>
       </div>
     );
   }

@@ -4,7 +4,7 @@ import $ from 'jquery';
 import ApiRoutes from 'app/ApiRoutes';
 import ItemPanel from 'ItemPanel';
 import SubscriptionPanel from 'SubscriptionPanel';
-import Pagination from 'Pagination';
+import WithPagination from 'WithPagination';
 
 class SubscriptionPage extends React.Component {
   constructor(props) {
@@ -102,25 +102,15 @@ class SubscriptionPage extends React.Component {
       <div>
         <SubscriptionPanel subscription={this.state.subscription} tags={this.props.tags}/>
 
-        {this.state.pagination ?
-          <Pagination pagination={this.state.pagination}
-                      currentPage={this.state.page}
-                      onPageChange={this.pagenationChanged.bind(this)}/>
-          : null
-        }
-
-        <div className='items'>
-          {this.state.items.map(item =>
-            <ItemPanel key={item.id || item.link} item={item} hideFeed={true}/>
-          )}
-        </div>
-
-        {this.state.pagination ?
-          <Pagination pagination={this.state.pagination}
-                      currentPage={this.state.page}
-                      onPageChange={this.pagenationChanged.bind(this)}/>
-          : null
-        }
+        <WithPagination pagination={this.state.pagination}
+                        currentPage={this.state.page}
+                        onPageChange={this.pagenationChanged.bind(this)}>
+          <div className='items'>
+            {this.state.items.map(item =>
+              <ItemPanel key={item.id || item.link} item={item} hideFeed={true}/>
+            )}
+          </div>
+        </WithPagination>
       </div>
     );
   }
