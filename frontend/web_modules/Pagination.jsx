@@ -15,28 +15,32 @@ export default class Pagination extends React.Component {
     }
   }
 
-  get maxPage() {
+  get lastPage() {
     return Math.ceil(this.props.pagination.totalCount / this.props.pagination.perPage);
   }
 
-  nextPageClicked() {
-    if (this.hasNextPage) {
-      this.props.onPageChange(this.props.currentPage + 1);
-    }
-  }
-
-  get hasNextPage() {
-    return this.props.currentPage < this.maxPage;
+  firstPageClicked() {
+    this.props.onPageChange(1);
   }
 
   prevPageClicked() {
-    if (this.hasPrevPage) {
-      this.props.onPageChange(this.props.currentPage - 1);
-    }
+    this.props.onPageChange(this.props.currentPage - 1);
   }
 
   get hasPrevPage() {
     return 1 < this.props.currentPage;
+  }
+
+  nextPageClicked() {
+    this.props.onPageChange(this.props.currentPage + 1);
+  }
+
+  lastPageClicked() {
+    this.props.onPageChange(this.lastPage);
+  }
+
+  get hasNextPage() {
+    return this.props.currentPage < this.lastPage;
   }
 
   inputValueChanged(e) {
@@ -68,7 +72,7 @@ export default class Pagination extends React.Component {
 
   isInputValueValid() {
     const value = this.state.inputValue;
-    return typeof(value) === 'number' && 1 <= value && value <= this.maxPage;
+    return typeof(value) === 'number' && 1 <= value && value <= this.lastPage;
   }
 
   render() {
@@ -76,9 +80,14 @@ export default class Pagination extends React.Component {
       <div className='text-center form-inline'>
         <div className="form-group">
           {this.hasPrevPage ?
-            <button className="btn btn-primary btn-sm" onClick={this.prevPageClicked.bind(this)}>
-              <span className="glyphicon glyphicon-arrow-left"/>
-            </button>
+            [
+              <button className="btn btn-primary btn-sm" onClick={this.firstPageClicked.bind(this)}>
+                <span className="glyphicon glyphicon-fast-backward"/>
+              </button>,
+              <button className="btn btn-primary btn-sm" onClick={this.prevPageClicked.bind(this)}>
+                <span className="glyphicon glyphicon-chevron-left"/>
+              </button>
+            ]
             : null
           }
           <div className="input-group">
@@ -90,13 +99,18 @@ export default class Pagination extends React.Component {
                    onBlur={this.inputBlurred.bind(this)}
                    onKeyPress={this.inputKeyPressed.bind(this)}
                    min="1"
-                   max={this.maxPage}/>
-            <div className="input-group-addon">1 - {this.maxPage} ({this.props.pagination.totalCount})</div>
+                   max={this.lastPage}/>
+            <div className="input-group-addon">1 - {this.lastPage} ({this.props.pagination.totalCount})</div>
           </div>
           {this.hasNextPage ?
-            <button className="btn btn-primary btn-sm" onClick={this.nextPageClicked.bind(this)}>
-              <span className="glyphicon glyphicon-arrow-right"/>
-            </button>
+            [
+              <button className="btn btn-primary btn-sm" onClick={this.nextPageClicked.bind(this)}>
+                <span className="glyphicon glyphicon-chevron-right"/>
+              </button>,
+              <button className="btn btn-primary btn-sm" onClick={this.lastPageClicked.bind(this)}>
+                <span className="glyphicon glyphicon-fast-forward"/>
+              </button>
+            ]
             : null
           }
         </div>
