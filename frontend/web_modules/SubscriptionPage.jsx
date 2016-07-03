@@ -10,18 +10,16 @@ class SubscriptionPage extends React.Component {
     super(props);
 
     this.state = {
-      page: 1,
       subscription: null,
       items: [],
       pagination: null
     };
   }
 
-  updateItems({page = this.state.page}) {
+  updateItems({page = this.props.page}) {
     api.loadItems({page, subscriptionId: this.state.subscription.id}).then(({items, pagination}) => {
       this.setState({
         items: items,
-        page: page,
         pagination: pagination
       });
     });
@@ -40,16 +38,13 @@ class SubscriptionPage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params != this.props.params) {
-      this.pageChanged(nextProps);
-    }
+    this.pageChanged(nextProps);
   }
 
   pageChanged(props) {
-    if (props.params.id) {
-      api.loadSubscription(props.params.id).then((subscription) => {
+    if (props.id) {
+      api.loadSubscription({id: props.id, page: props.page}).then((subscription) => {
         this.setState({
-          page: 1,
           subscription: subscription,
           items: subscription.feed.items,
           pagination: subscription.pagination
@@ -58,7 +53,7 @@ class SubscriptionPage extends React.Component {
     } else {
       api.fetchFeed(props.params.url).then((feed) => {
         if (feed.id) {
-          this.props.router.push(`/subscriptions/${feed.id}`);
+          this.props.router.push(`/subscriptions/1/${feed.id}`);
         } else {
           this.setState({
             subscription: {feed: feed},
@@ -75,11 +70,15 @@ class SubscriptionPage extends React.Component {
   }
 
   subscriptionSaved(id) {
-    this.props.router.push(`/subscriptions/${id}`);
+    this.props.router.push(`/subscriptions/1/${id}`);
+  }
+
+  changeUrl({page = this.props.page, id = this.props.id}) {
+    this.props.router.push(`/subscriptions/${page}/${id}`)
   }
 
   pagenationChanged(newPage) {
-    this.updateItems({page: newPage});
+    this.changeUrl({page: newPage});
   }
 
   render() {
@@ -92,7 +91,7 @@ class SubscriptionPage extends React.Component {
         <SubscriptionPanel subscription={this.state.subscription} tags={this.props.tags} onSave={this.subscriptionSaved.bind(this)}/>
 
         <WithPagination pagination={this.state.pagination}
-                        currentPage={this.state.page}
+                        currentPage={this.props.page}
                         onPageChange={this.pagenationChanged.bind(this)}>
           <div className='items'>
             {this.state.items.map(item =>

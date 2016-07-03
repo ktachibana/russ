@@ -38,6 +38,15 @@ const FeedsPageRoute = (props) => {
   return <FeedsPage {...pageProps}/>;
 };
 
+const SubscriptionPageRoute = (props) => {
+  const pageProps = {
+    tags: props.tags,
+    id: props.params.id,
+    page: paramParser.integer(props.params.page)
+  };
+  return <SubscriptionPage {...pageProps}/>;
+};
+
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={Application}>
@@ -46,7 +55,7 @@ ReactDOM.render(
       <Route path="feeds/:page/(:tags)" component={FeedsPageRoute}/>
       <Route path="subscriptions/import/" component={ImportPage}/>
       <Route path="subscriptions/new/:url" component={SubscriptionPage}/>
-      <Route path="subscriptions/:id" component={SubscriptionPage}/>
+      <Route path="subscriptions/:page/:id" component={SubscriptionPageRoute}/>
     </Route>
   </Router>,
   document.getElementById('main-content')

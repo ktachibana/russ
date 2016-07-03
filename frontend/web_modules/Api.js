@@ -88,8 +88,8 @@ class Api extends EventEmitter2 {
     });
   }
 
-  loadSubscription(id) {
-    return $.getJSON(ApiRoutes.subscriptionPath(id));
+  loadSubscription({id, page}) {
+    return $.getJSON(ApiRoutes.subscriptionPath(id, {page}));
   }
 
   fetchFeed(feedUrl) {

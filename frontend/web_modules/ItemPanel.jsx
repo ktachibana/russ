@@ -11,7 +11,7 @@ class ItemPanel extends React.Component {
   }
 
   get subscriptionPath() {
-    return `/subscriptions/${this.props.item.feed.usersSubscription.id}`;
+    return `/subscriptions/1/${this.props.item.feed.usersSubscription.id}`;
   }
 
   get publishedAtString() {

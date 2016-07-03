@@ -6,7 +6,7 @@ import api from 'Api';
 
 class SubscriptionRow extends React.Component {
   get href() {
-    return `/subscriptions/${this.props.subscription.id}`;
+    return `/subscriptions/1/${this.props.subscription.id}`;
   }
 
   render() {
