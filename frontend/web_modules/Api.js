@@ -39,7 +39,7 @@ class Api extends EventEmitter2 {
       $.ajax(ApiRoutes.userSessionPath(), {
         method: 'post',
         dataType: 'json',
-        data: {user: user}
+        data: {user}
       }).then(
         (data) => {
           resolve(data);
@@ -57,6 +57,37 @@ class Api extends EventEmitter2 {
   logout() {
     return $.ajax(ApiRoutes.destroyUserSessionPath(), {
       method: 'delete'
+    });
+  }
+
+  loadItems({tag, page, subscriptionId}) {
+    return $.getJSON(ApiRoutes.itemsPath({tag, page, subscription_id: subscriptionId}));
+  }
+
+  loadFeeds({tag, page}) {
+    return $.getJSON(ApiRoutes.feedsPath({tag, page}));
+  }
+
+  saveFeed(id, subscription) {
+    const url = id ?
+      ApiRoutes.subscriptionPath(id) :
+      ApiRoutes.subscriptionsPath();
+    const method = id ? 'put' : 'post';
+
+    return $.ajax(url, {
+      type: method,
+      dataType: 'json',
+      data: {subscription}
+    });
+  }
+
+  loadSubscription(id) {
+    return $.getJSON(ApiRoutes.subscriptionPath(id));
+  }
+
+  fetchFeed(feedUrl) {
+    return $.getJSON(ApiRoutes.newSubscriptionPath(), {
+      url: feedUrl
     });
   }
 }

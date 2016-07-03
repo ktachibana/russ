@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router';
-import $ from 'jquery';
-import ApiRoutes from 'app/ApiRoutes';
 import TagButtons from 'TagButtons';
 import WithPagination from 'WithPagination';
+import api from 'Api';
 
 class SubscriptionRow extends React.Component {
   get href() {
@@ -45,8 +44,8 @@ class FeedsPage extends React.Component {
     super(props);
 
     this.state = {
-      subscriptions: [],
       page: 1,
+      subscriptions: [],
       pagination: null
     };
   }
@@ -61,12 +60,12 @@ class FeedsPage extends React.Component {
   }
 
   updateFeeds({page = this.state.page, tagParam = this.props.params.tags}) {
-    const url = ApiRoutes.feedsPath({tag: tagParam ? tagParam.split(',') : [], page: page});
-    $.getJSON(url).then((data) => {
+    var tag = tagParam ? tagParam.split(',') : [];
+    api.loadFeeds({tag, page}).then(({subscriptions, pagination}) => {
       this.setState({
-        subscriptions: data.subscriptions,
         page: page,
-        pagination: data.pagination
+        subscriptions: subscriptions,
+        pagination: pagination
       });
     });
   }

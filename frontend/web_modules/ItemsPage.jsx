@@ -1,18 +1,17 @@
 import React from 'react';
-import $ from 'jquery';
 import { withRouter } from 'react-router';
-import ApiRoutes from 'app/ApiRoutes';
 import ItemPanel from 'ItemPanel';
 import TagButtons from 'TagButtons';
 import WithPagination from 'WithPagination';
+import api from 'Api';
 
 class ItemsPage extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      items: [],
       page: 1,
+      items: [],
       pagination: null
     };
   }
@@ -27,12 +26,12 @@ class ItemsPage extends React.Component {
   }
 
   updateItems({page = this.state.page, tagParam = this.props.params.tags}) {
-    const url = ApiRoutes.itemsPath({tag: tagParam ? tagParam.split(',') : [], page: page});
-    $.getJSON(url).then((data) => {
+    var tag = tagParam ? tagParam.split(',') : [];
+    api.loadItems({tag, page}).then(({items, pagination}) => {
       this.setState({
-        items: data.items,
         page: page,
-        pagination: data.pagination
+        items: items,
+        pagination: pagination
       });
     });
   }

@@ -39,8 +39,17 @@ class SubscriptionPanel extends React.Component {
     this.setState({isEdit: true});
   }
 
-  close() {
+  closeForm() {
     this.setState({isEdit: false});
+  }
+
+  saved(id) {
+    this.closeForm();
+    this.props.onSave(id);
+  }
+
+  formCloseClicked() {
+    this.closeForm();
   }
 
   render() {
@@ -73,7 +82,10 @@ class SubscriptionPanel extends React.Component {
 
         {this.isEditing ? (
           <div className='edit-subscription'>
-            <SubscriptionForm subscription={subscription} tags={this.props.tags} onClose={this.close.bind(this)}/>
+            <SubscriptionForm subscription={subscription}
+                              tags={this.props.tags}
+                              onSave={this.saved.bind(this)}
+                              onClose={this.formCloseClicked.bind(this)}/>
           </div>
         ) : (
           <div className='show-subscription'>

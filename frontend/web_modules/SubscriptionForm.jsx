@@ -1,6 +1,5 @@
 import React from 'react';
-import $ from 'jquery';
-import ApiRoutes from 'app/ApiRoutes';
+import api from 'Api';
 
 export default class SubscriptionForm extends React.Component {
   constructor(props) {
@@ -33,7 +32,7 @@ export default class SubscriptionForm extends React.Component {
       title: this.state.title,
       tag_list: this.state.tags
     };
-    if (!this.props.subscription.id) {
+    if (this.isNewRecord) {
       Object.assign(subscriptionData, {
         feed_attributes: {
           url: this.props.subscription.feed.url
@@ -41,14 +40,8 @@ export default class SubscriptionForm extends React.Component {
       });
     }
 
-    $.ajax(this.url, {
-      type: this.method,
-      dataType: 'json',
-      data: {
-        subscription: subscriptionData
-      }
-    }).then((data) => {
-      this.props.onClose();
+    api.saveFeed(this.props.subscription.id, subscriptionData).then((data) => {
+      this.props.onSave(data.id);
     });
   }
 
@@ -58,14 +51,6 @@ export default class SubscriptionForm extends React.Component {
 
   get isNewRecord() {
     return !this.props.subscription.id;
-  }
-
-  get url() {
-    return this.isNewRecord ? ApiRoutes.subscriptionsPath() : ApiRoutes.subscriptionPath(this.props.subscription.id);
-  }
-
-  get method() {
-    return this.isNewRecord ? 'post' : 'put';
   }
 
   get submitText() {
