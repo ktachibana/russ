@@ -88,7 +88,7 @@ class FeedsPage extends React.Component {
   }
 
   tagButtonsChanged(newTags) {
-    this.changeUrl({currentTagNames: newTags.map(tag => tag.name)});
+    this.changeUrl({page: 1, currentTagNames: newTags.map(tag => tag.name)});
   }
 
   render() {
