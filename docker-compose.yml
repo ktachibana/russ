@@ -55,14 +55,14 @@ services:
       - data:/var/lib/postgresql/data
     restart: always
 
-  app-onetime:
+  app-oneoff:
     extends:
       service: app-base
     links:
       - database
     command: /bin/true
 
-  db-onetime:
+  db-oneoff:
     image: 'postgres:9.5'
     links:
       - database
