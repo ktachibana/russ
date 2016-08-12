@@ -1,72 +1,76 @@
-rproxy:
-  build: './'
-  dockerfile: './containers/rproxy/Dockerfile'
-  links:
-    - webapp
-  expose:
-    - '80'
-  environment:
-    VIRTUAL_HOST: $VIRTUAL_HOST
-    LETSENCRYPT_HOST: $VIRTUAL_HOST
-    LETSENCRYPT_EMAIL: deadzone@be.to
-  restart: always
+version: '2'
 
-app:
-  image: 'ktachiv/russ'
-  environment:
-    DATABASE_URL: 'postgres://postgres@database/postgres'
-  command: /bin/true
+volumes:
+  data: {}
+  vars: {}
 
-webapp:
-  extends:
-    service: app
-  links:
-    - database
-  volumes_from:
-    - datastore
-  command: ['rake', 'app:server']
-  expose:
-    - 8080
-  restart: always
+services:
+  rproxy:
+    build:
+      context: '.'
+      dockerfile: './containers/rproxy/Dockerfile'
+    links:
+      - webapp
+    expose:
+      - '80'
+    environment:
+      VIRTUAL_HOST: $VIRTUAL_HOST
+      LETSENCRYPT_HOST: $VIRTUAL_HOST
+      LETSENCRYPT_EMAIL: deadzone@be.to
+    networks:
+      - front
+      - default
+    restart: always
 
-crawler:
-  extends:
-    service: app
-  links:
-    - database
-  volumes_from:
-    - datastore
-  command: ['rake', 'app:crawler']
-  mem_limit: 512m
-  restart: always
+  app-base:
+    image: 'ktachiv/russ'
+    environment:
+      DATABASE_URL: 'postgres://postgres@database/postgres'
+    volumes:
+      - vars:/russ/config/vars
+    command: /bin/true
 
-database:
-  image: 'postgres:9.5'
-  volumes_from:
-    - datastore
-  restart: always
+  webapp:
+    extends:
+      service: app-base
+    links:
+      - database
+    command: ['rails', 'app:server']
+    expose:
+      - 8080
+    restart: always
 
-app-env:
-  extends:
-    service: app
-  links:
-    - database
-  volumes_from:
-    - datastore
-  command: /bin/true
+  crawler:
+    extends:
+      service: app-base
+    links:
+      - database
+    command: ['rails', 'app:crawler']
+    mem_limit: 512m
+    restart: always
 
-database-client:
-  image: 'postgres:9.5'
-  links:
-    - database
-  environment:
-    PGHOST: database
-    PGUSER: postgres
-  command: /bin/true
+  database:
+    image: 'postgres:9.5'
+    volumes:
+      - data:/var/lib/postgresql/data
+    restart: always
 
-datastore:
-  image: 'busybox:latest'
-  volumes:
-    - /var/lib/postgresql/data
-    - /russ/config/vars
-  command: /bin/true
+  app-onetime:
+    extends:
+      service: app-base
+    links:
+      - database
+    command: /bin/true
+
+  db-onetime:
+    image: 'postgres:9.5'
+    links:
+      - database
+    environment:
+      PGHOST: database
+      PGUSER: postgres
+    command: /bin/true
+
+networks:
+  front:
+    external: true
