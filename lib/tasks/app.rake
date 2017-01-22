@@ -15,6 +15,11 @@ namespace :app do
     scheduler.join
   end
 
+  desc 'クローラーを１回実行する'
+  task crawl: :environment do
+    Feed.load_all!
+  end
+
   desc 'config/vars/SECRET_KEY_BASEを生成する'
   task :write_secret, :overwrite do |_t, args|
     file = Pathname.pwd + 'config' + 'vars' + 'SECRET_KEY_BASE'
