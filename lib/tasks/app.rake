@@ -1,7 +1,7 @@
 namespace :app do
   desc 'Webアプリケーションを起動する'
   task :server do
-    sh 'unicorn_rails', '-c', 'config/unicorn.rb'
+    sh 'rails server'
   end
 
   desc 'クローラーを定期実行する'
