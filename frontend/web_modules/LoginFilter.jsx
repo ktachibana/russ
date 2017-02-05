@@ -38,12 +38,12 @@ export default class LoginFilter extends React.Component {
               <input ref={(c) => { this.email = c; }} autofocus="autofocus" className="form-control" type="email" name="user[email]" />
             </div>
 
-            <div>
+            <div className="form-group">
               <label for="user_password">Password</label><br />
               <input ref={(c) => { this.password = c; }} className="form-control" type="password" name="user[password]" id="user_password" />
             </div>
 
-            <div>
+            <div className="form-group">
               <label for="user_remember_me">
                 <input name="user[remember_me]" type="hidden" value="0" />
                 <input ref={(c) => { this.rememberMe = c; }} type="checkbox" value="1" name="user[remember_me]" id="user_remember_me" />
