@@ -21,7 +21,6 @@ erd.pdf
 bundle_bin
 # public/assets heroku上でcompile出来るようにするまでgitにコンパイル済みのを入れとく
 vendor/bundle
-.envrc
 config/vars
 spec/examples.txt
 

@@ -1,0 +1,16 @@
+version: '2'
+
+volumes:
+  data: {}
+  vars: {}
+
+services:
+  database:
+    image: 'postgres:9.5'
+    volumes:
+      - data-development:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+volumes:
+  data-development: {}
