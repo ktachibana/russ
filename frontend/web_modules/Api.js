@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import ApiRoutes from 'app/ApiRoutes';
 import {EventEmitter2} from 'eventemitter2';
 
 class Api extends EventEmitter2 {
@@ -31,12 +30,12 @@ class Api extends EventEmitter2 {
   }
 
   loadInitial() {
-    return $.getJSON(ApiRoutes.initialPath());
+    return $.getJSON('/initial');
   }
 
   login(user) {
     return new Promise((resolve, reject) => {
-      $.ajax(ApiRoutes.userSessionPath(), {
+      $.ajax('/users/sign_in', {
         method: 'post',
         dataType: 'json',
         data: {user}
@@ -55,23 +54,19 @@ class Api extends EventEmitter2 {
   }
 
   logout() {
-    return $.ajax(ApiRoutes.destroyUserSessionPath(), {
-      method: 'delete'
-    });
+    return $.ajax('/users/sign_out', {method: 'delete'});
   }
 
   loadItems({tag, page, subscriptionId}) {
-    return $.getJSON(ApiRoutes.itemsPath({tag, page, subscription_id: subscriptionId}));
+    return $.getJSON('/items', {tag, page, subscription_id: subscriptionId});
   }
 
   loadFeeds({tag, page}) {
-    return $.getJSON(ApiRoutes.feedsPath({tag, page}));
+    return $.getJSON('/feeds', {tag, page});
   }
 
   subscribeFeed(subscriptionId, subscription) {
-    const url = subscriptionId ?
-      ApiRoutes.subscriptionPath(subscriptionId) :
-      ApiRoutes.subscriptionsPath();
+    const url = subscriptionId ? `/subscriptions/${subscriptionId}` : '/subscriptions';
     const method = subscriptionId ? 'put' : 'post';
 
     return $.ajax(url, {
@@ -82,27 +77,25 @@ class Api extends EventEmitter2 {
   }
 
   unsubscribeFeed(subscriptionId) {
-    return $.ajax(ApiRoutes.subscriptionPath(subscriptionId), {
+    return $.ajax(`/subscriptions/${subscriptionId}`, {
       type: 'delete',
       dataType: 'json'
     });
   }
 
   loadSubscription({id, page}) {
-    return $.getJSON(ApiRoutes.subscriptionPath(id, {page}));
+    return $.getJSON(`/subscriptions/${id}`, {page});
   }
 
   fetchFeed(feedUrl) {
-    return $.getJSON(ApiRoutes.newSubscriptionPath(), {
-      url: feedUrl
-    });
+    return $.getJSON('/subscriptions/new', {url: feedUrl});
   }
 
   importOPML(file) {
     return new Promise((resolve, reject) => {
       let data = new FormData();
       data.append('file', file);
-      $.ajax(ApiRoutes.importSubscriptionsPath(), {
+      $.ajax('/subscriptions/import', {
         type: 'post',
         dataType: 'json',
         data: data,
