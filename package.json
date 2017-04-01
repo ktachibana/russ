@@ -5,7 +5,9 @@
   "description": "== README",
   "main": "index.js",
   "scripts": {
-    "build": "npm run build-js && npm run build-css",
+    "postinstall": "npm run build",
+    "build": "npm run clean && npm run build-js && npm run build-css && cd public/assets && gzip -k *.js *.css",
+    "clean": "rm -rf public/assets && mkdir -p public/assets",
     "build-js": "cd frontend && NODE_ENV=production webpack -p",
     "build-css": "NODE_ENV=production stylus -I node_modules --include-css < frontend/application.styl | cleancss > public/assets/application.css",
     "watch": "concurrently 'npm run watch-js' 'npm run watch-css'",

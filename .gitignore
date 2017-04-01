@@ -19,7 +19,7 @@
 db/schema.rb
 erd.pdf
 bundle_bin
-# public/assets heroku上でcompile出来るようにするまでgitにコンパイル済みのを入れとく
+public/assets
 vendor/bundle
 config/vars
 spec/examples.txt
