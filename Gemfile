@@ -9,6 +9,8 @@ gem 'puma'
 
 gem 'pg'
 
+gem 'mail', '~> 2.6.6.rc1' # security fix https://github.com/mikel/mail/pull/1097 TODO: stableが出たら上げる
+
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder'
 
