@@ -69,7 +69,7 @@ end
 gem 'devise'
 gem 'kaminari'
 gem 'unicorn'
-gem 'acts-as-taggable-on', github: 'mbleigh/acts-as-taggable-on', branch: 'master'
+gem 'acts-as-taggable-on'
 gem 'oj'
 gem 'oj_mimic_json'
 gem 'feedbag'
