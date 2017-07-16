@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 RSpec.describe TagsController, type: :controller do
   before { bypass_rescue }

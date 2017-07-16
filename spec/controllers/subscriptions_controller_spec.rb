@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 RSpec.describe SubscriptionsController, type: :controller do
   let!(:user) { create(:user) }

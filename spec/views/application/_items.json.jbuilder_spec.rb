@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 RSpec.describe 'application/_items.json', type: :view do
   let(:subscription) { create(:subscription) }

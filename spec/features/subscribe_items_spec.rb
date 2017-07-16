@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 RSpec.feature 'フィードの購読', skip: 'webdriver/firefox', type: :feature do
   def login_on_form
