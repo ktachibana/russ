@@ -39,7 +39,6 @@ group :development, :test do
   gem 'spring-commands-rspec'
   gem 'pry'
   gem 'pry-rails'
-  gem 'hirb-unicode'
   gem 'tapp'
   gem 'shoulda-matchers'
   gem 'timecop'
