@@ -64,13 +64,13 @@ RSpec.configure do |config|
 
   WebMock.disable_net_connect!(allow_localhost: true)
 
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include RssMockHelpers
   config.include_context 'Rails.loggerの出力内容がlog_stringとして参照できる', :stub_logging
 
   config.before do
-    FactoryGirl.reload
+    FactoryBot.reload
   end
 
   config.after do

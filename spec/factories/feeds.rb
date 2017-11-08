@@ -1,6 +1,6 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :feed do
     sequence(:url) { |n| "http://test.com/rss#{n}.xml" }
     sequence(:title) { |n| "Feed id:#{n}" }

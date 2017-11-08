@@ -7,7 +7,7 @@ RSpec.describe ApplicationController, type: :controller do
         skip_before_action :authenticate_user!
 
         def index
-          FactoryGirl.create(:user, email: '', password: '')
+          FactoryBot.create(:user, email: '', password: '')
         end
       end
 
