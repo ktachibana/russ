@@ -1,4 +1,4 @@
-class AddRememberableToUser < ActiveRecord::Migration
+class AddRememberableToUser < ActiveRecord::Migration[4.2]
   def change
     change_table :users do |t|
       ## Rememberable

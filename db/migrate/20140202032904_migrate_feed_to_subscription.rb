@@ -1,4 +1,4 @@
-class MigrateFeedToSubscription < ActiveRecord::Migration
+class MigrateFeedToSubscription < ActiveRecord::Migration[4.2]
   class Subscription < ActiveRecord::Base; end
   class Feed < ActiveRecord::Base; end
 
