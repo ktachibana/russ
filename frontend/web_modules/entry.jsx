@@ -1,6 +1,5 @@
 require('expose-loader?jQuery!jquery'); // bootstrapが要求する
 require('bootstrap/dist/js/bootstrap');
-require('bootstrap-tokenfield/dist/bootstrap-tokenfield');
 
 import React from 'react';
 import ReactDOM from 'react-dom';
