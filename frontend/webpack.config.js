@@ -15,6 +15,5 @@ module.exports = {
   resolve: {
     modules: ['web_modules', 'node_modules'],
     extensions: ['.webpack.js', '.jsx', '.js']
-  },
-  devtool: 'source-map'
+  }
 };
