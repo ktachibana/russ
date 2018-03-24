@@ -41,5 +41,10 @@
     "underscore": "^1.8.3",
     "webpack": "^4.2.0",
     "webpack-cli": "^2.0.13"
+  },
+  "resolutions": {
+    "debug": "^3.1.0",
+    "hoek": "^5.0.3",
+    "tough-cookie": "^2.3.3"
   }
 }
