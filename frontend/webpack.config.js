@@ -2,23 +2,19 @@ var webpack = require('webpack');
 var path = require('path');
 
 module.exports = {
-  entry: 'entry',
+  entry: './web_modules/entry',
   output: {
     path: path.resolve(__dirname, '../public/assets'),
     filename: 'application.js'
   },
   module: {
-    loaders: [
-      { test: /\.coffee$/, loaders: ['coffee'] },
-      { test: /\.jsx?$/, loader: 'babel', query: { compact: false } }
+    rules: [
+      { loader: 'babel-loader', test: /\.jsx?$/, exclude: /node_modules/, query: { compact: false } }
     ]
   },
   resolve: {
-    extensions: ['', '.webpack.js', '.web.js', '.coffee', '.jsx', '.js']
+    modules: ['web_modules', 'node_modules'],
+    extensions: ['.webpack.js', '.jsx', '.js']
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
-    })
-  ]
+  devtool: 'source-map'
 };

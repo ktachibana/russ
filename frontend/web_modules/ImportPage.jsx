@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import api from 'Api';
 
 class ImportPage extends React.Component {
@@ -21,7 +21,7 @@ class ImportPage extends React.Component {
     this.setState({processing: true});
     api.importOPML(this.file).then(
       () => {
-        this.props.router.push('/feeds/1/');
+        this.props.history.push('/feeds/1/');
       },
       (errorMessage) => {
         alert(errorMessage);

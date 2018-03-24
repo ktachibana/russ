@@ -61,12 +61,12 @@ export default class SubscriptionForm extends React.Component {
     return (
       <form onSubmit={this.submit.bind(this)}>
         <div className='form-group'>
-          <label for="subscription_title">Title</label>
+          <label htmlFor="subscription_title">Title</label>
           <input className="form-control" placeholder={this.props.subscription.feed.title} value={this.state.title} onChange={this.titleChanged.bind(this)} type="text" name="subscription[title]" id="subscription_title"/>
         </div>
         <div className='form-group'>
           <div>
-            <label for="subscription_tag_list">Tags</label>
+            <label htmlFor="subscription_tag_list">Tags</label>
             <input className="form-control" type="text" value={this.state.tags} onChange={this.tagsChanged.bind(this)} name="subscription[tag_list]" id="subscription_tag_list"/>
             <div className='owned-tags'>
               {this.props.tags.map(tag =>
@@ -90,7 +90,7 @@ export default class SubscriptionForm extends React.Component {
             null
           }
         </div>
-        <div className='clearfix'></div>
+        <div className='clearfix'/>
       </form>
     );
   }

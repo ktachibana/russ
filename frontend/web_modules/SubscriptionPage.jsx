@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import ItemPanel from 'ItemPanel';
 import SubscriptionPanel from 'SubscriptionPanel';
 import WithPagination from 'WithPagination';
@@ -10,6 +10,7 @@ class SubscriptionPage extends React.Component {
     super(props);
 
     this.state = {
+      tags: [],
       subscription: null,
       items: [],
       pagination: null
@@ -42,6 +43,9 @@ class SubscriptionPage extends React.Component {
   }
 
   pageChanged(props) {
+    api.loadInitial().then((data) => {
+      this.setState({tags: data.tags});
+    });
     if (props.id) {
       api.loadSubscription({id: props.id, page: props.page}).then((subscription) => {
         this.setState({
@@ -51,9 +55,10 @@ class SubscriptionPage extends React.Component {
         });
       });
     } else {
-      api.fetchFeed(props.params.url).then((feed) => {
+      let url = decodeURIComponent(props.url);
+      api.fetchFeed(url).then((feed) => {
         if (feed.id) {
-          this.props.router.push(`/subscriptions/1/${feed.id}`);
+          this.props.history.push(`/subscriptions/1/${feed.id}`);
         } else {
           this.setState({
             subscription: {feed: feed},
@@ -62,19 +67,19 @@ class SubscriptionPage extends React.Component {
           });
         }
       }, (xhr) => {
-        if(xhr.responseJSON.type == 'feedNotFound') {
-          this.props.router.push('/items/1/');
+        if(xhr.responseJSON.type === 'feedNotFound') {
+          this.props.history.push('/items/1/');
         }
       });
     }
   }
 
   subscriptionSaved(id) {
-    this.props.router.push(`/subscriptions/1/${id}`);
+    this.props.history.push(`/subscriptions/1/${id}`);
   }
 
   changeUrl({page = this.props.page, id = this.props.id}) {
-    this.props.router.push(`/subscriptions/${page}/${id}`)
+    this.props.history.push(`/subscriptions/${page}/${id}`)
   }
 
   pagenationChanged(newPage) {
@@ -88,7 +93,7 @@ class SubscriptionPage extends React.Component {
 
     return (
       <div>
-        <SubscriptionPanel subscription={this.state.subscription} tags={this.props.tags} onSave={this.subscriptionSaved.bind(this)}/>
+        <SubscriptionPanel subscription={this.state.subscription} tags={this.state.tags} onSave={this.subscriptionSaved.bind(this)}/>
 
         <WithPagination pagination={this.state.pagination}
                         currentPage={this.props.page}

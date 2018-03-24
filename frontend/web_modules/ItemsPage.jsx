@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import ItemPanel from 'ItemPanel';
 import TagButtons from 'TagButtons';
 import WithPagination from 'WithPagination';
@@ -10,6 +10,7 @@ class ItemsPage extends React.Component {
     super(props);
 
     this.state = {
+      tags: [],
       items: [],
       pagination: null
     };
@@ -20,11 +21,11 @@ class ItemsPage extends React.Component {
   }
 
   selectTags(tagNames) {
-    return this.props.tags.filter(tag => tagNames.includes(tag.name));
+    return this.state.tags.filter(tag => tagNames.includes(tag.name));
   }
 
   updateItems(props) {
-    var query = {
+    const query = {
       page: props.page,
       tag: props.currentTagNames
     };
@@ -37,6 +38,9 @@ class ItemsPage extends React.Component {
   }
 
   componentDidMount() {
+    api.loadInitial().then((data) => {
+      this.setState({tags: data.tags});
+    });
     this.updateItems(this.props);
   }
 
@@ -46,7 +50,7 @@ class ItemsPage extends React.Component {
 
   changeUrl({page = this.props.page, currentTagNames = this.props.currentTagNames}) {
     const tagParam = currentTagNames.map(tag => encodeURIComponent(tag)).join(',');
-    this.props.router.push(`/items/${page}/${tagParam}`);
+    this.props.history.push(`/items/${page}/${tagParam}`);
   }
 
   pagenationChanged(newPage) {
@@ -60,7 +64,7 @@ class ItemsPage extends React.Component {
   render() {
     return (
       <div>
-        <TagButtons tags={this.props.tags} currentTags={this.currentTags} onChange={this.tagButtonsChanged.bind(this)}/>
+        <TagButtons tags={this.state.tags} currentTags={this.currentTags} onChange={this.tagButtonsChanged.bind(this)}/>
         <hr/>
 
         <WithPagination pagination={this.state.pagination}

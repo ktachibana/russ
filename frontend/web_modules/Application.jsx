@@ -12,8 +12,7 @@ export default class Application extends React.Component {
     this.state = {
       initialized: false,
       flashMessages: [],
-      user: null,
-      tags: []
+      user: null
     };
   }
 
@@ -45,7 +44,7 @@ export default class Application extends React.Component {
 
   fetchInitialState() {
     return api.loadInitial().then((data) => {
-      this.setState({initialized: true, user: data.user, tags: data.tags});
+      this.setState({initialized: true, user: data.user});
     }, (xhr, type, statusText) => {
       // TODO: show error message.
       this.setState({initialized: true, user: null});
@@ -53,7 +52,7 @@ export default class Application extends React.Component {
   }
 
   loggedIn(initialState) {
-    this.setState({user: initialState.user, tags: initialState.tags});
+    this.setState({user: initialState.user});
   }
 
   loginFailed(message) {
@@ -81,7 +80,7 @@ export default class Application extends React.Component {
       content = <LoginFilter onLogin={this.loggedIn.bind(this)} onLoginFailure={this.loginFailed.bind(this)}/>;
     } else {
       content =
-        <Layout user={this.state.user} tags={this.state.tags} onLogoutClick={this.logout.bind(this)}>
+        <Layout user={this.state.user} onLogoutClick={this.logout.bind(this)}>
           {this.props.children}
         </Layout>;
     }

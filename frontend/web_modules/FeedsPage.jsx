@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, withRouter } from 'react-router';
+import { Link, withRouter } from 'react-router-dom';
 import TagButtons from 'TagButtons';
 import WithPagination from 'WithPagination';
 import api from 'Api';
@@ -44,6 +44,7 @@ class FeedsPage extends React.Component {
     super(props);
 
     this.state = {
+      tags: [],
       subscriptions: [],
       pagination: null
     };
@@ -54,11 +55,11 @@ class FeedsPage extends React.Component {
   }
 
   selectTags(tagNames) {
-    return this.props.tags.filter(tag => tagNames.includes(tag.name));
+    return this.state.tags.filter(tag => tagNames.includes(tag.name));
   }
 
   updateFeeds(props) {
-    var query = {
+    const query = {
       page: props.page,
       tag: props.currentTagNames
     };
@@ -71,6 +72,9 @@ class FeedsPage extends React.Component {
   }
 
   componentDidMount() {
+    api.loadInitial().then((data) => {
+      this.setState({tags: data.tags});
+    });
     this.updateFeeds(this.props);
   }
 
@@ -80,7 +84,7 @@ class FeedsPage extends React.Component {
 
   changeUrl({page = this.props.page, currentTagNames = this.props.currentTagNames}) {
     const tagParam = currentTagNames.map(tag => encodeURIComponent(tag)).join(',');
-    this.props.router.push(`/feeds/${page}/${tagParam}`);
+    this.props.history.push(`/feeds/${page}/${tagParam}`);
   }
 
   pagenationChanged(newPage) {
@@ -94,7 +98,7 @@ class FeedsPage extends React.Component {
   render() {
     return (
       <div>
-        <TagButtons tags={this.props.tags} currentTags={this.currentTags} onChange={this.tagButtonsChanged.bind(this)}/>
+        <TagButtons tags={this.state.tags} currentTags={this.currentTags} onChange={this.tagButtonsChanged.bind(this)}/>
         <hr/>
 
         <WithPagination pagination={this.state.pagination}

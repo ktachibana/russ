@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import SubscriptionForm from 'SubscriptionForm';
 import api from 'Api';
 
@@ -27,7 +27,7 @@ class SubscriptionPanel extends React.Component {
     }
 
     api.unsubscribeFeed(this.props.subscription.id).then(() => {
-      this.props.router.push('/feeds/1/');
+      this.props.history.push('/feeds/1/');
     });
   }
 
@@ -49,7 +49,7 @@ class SubscriptionPanel extends React.Component {
   }
 
   render() {
-    var subscription = this.props.subscription;
+    const subscription = this.props.subscription;
 
     return (
       <div className='well'>
@@ -93,7 +93,7 @@ class SubscriptionPanel extends React.Component {
             <button className='btn btn-default pull-right' onClick={this.edit.bind(this)}>
               <span className='glyphicon glyphicon-edit'/>編集
             </button>
-            <div className='clearfix'></div>
+            <div className='clearfix'/>
           </div>
         )}
       </div>

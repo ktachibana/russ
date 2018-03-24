@@ -1,4 +1,4 @@
-desc 'webpackでweb_modulesをビルドしてbundle.jsを作成する'
+desc 'frontendをビルドする'
 task :frontend do
-  sh 'npm run build'
+  sh 'npm install'
 end

@@ -1,9 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 export default class HeaderNav extends React.Component {
-  get subscriptionBookmarklet() {
-    const l = window.location;
+  subscriptionBookmarklet(l) {
     const apiURLBase = `${l.protocol}//${l.host}/#/subscriptions/new/`;
     const js = `location.href="${apiURLBase}"+encodeURIComponent(location.href);`;
 
@@ -44,7 +43,7 @@ export default class HeaderNav extends React.Component {
                 <b className="caret"/>
               </a>
               <ul className="dropdown-menu">
-                <li><a href={this.subscriptionBookmarklet}>RuSS (Bookmarklet)</a></li>
+                <li><a href={this.subscriptionBookmarklet(window.location)}>RuSS (Bookmarklet)</a></li>
                 <li><Link to="/subscriptions/import/">Import OPML</Link></li>
                 <li><a rel="nofollow" href="#" onClick={this.logOutClicked.bind(this)}>Sign out</a></li>
               </ul>
