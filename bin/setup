@@ -23,6 +23,6 @@ chdir APP_ROOT do
   system! 'bin/rails dev:setup'
 
   puts
-  puts '== Executing npm install =='
-  system! 'npm install'
+  puts '== Executing yarn install =='
+  system! 'yarn install'
 end
