@@ -62,7 +62,7 @@ const ApplicationRoute = () => {
 ReactDOM.render(
   <HashRouter>
     <Switch>
-      <Route exact path="/" render={() => <Redirect to="/#/items/1/"/>}/>
+      <Route exact path="/" render={() => <Redirect to="/items/1/"/>}/>
       <Route path="/" component={ApplicationRoute}/>
     </Switch>
   </HashRouter>,
