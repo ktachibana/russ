@@ -169,7 +169,7 @@ RSpec.describe SubscriptionsController, type: :controller do
       action
       subscription.reload
       expect(subscription.title).to eq('NewTitle')
-      expect(subscription.tag_list).to eq(%w(tag1 tag2))
+      expect(subscription.tag_list).to match_array(%w(tag1 tag2))
     end
 
     context 'tag_listの値を削除したとき' do

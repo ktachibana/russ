@@ -18,7 +18,7 @@ RSpec.describe FeedsController, type: :controller do
 
     it 'フィード一覧を表示する' do
       action
-      expect(response).to be_success
+      expect(response).to be_successful
       is_expected.to render_template('index')
     end
 
@@ -56,7 +56,7 @@ RSpec.describe FeedsController, type: :controller do
 
         it '特定のタグがついたSubscriptionだけに絞り込める' do
           action
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(assigns(:subscriptions)).to eq([subscriptions[0]])
         end
       end

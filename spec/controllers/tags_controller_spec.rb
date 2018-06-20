@@ -20,7 +20,7 @@ RSpec.describe TagsController, type: :controller do
 
     it 'サインインしていれば表示できる' do
       action
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it 'JSONを返す' do
