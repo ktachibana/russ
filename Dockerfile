@@ -1,4 +1,4 @@
-FROM ruby:2.3.1
+FROM ruby:2.4.1
 MAINTAINER Kenichi Tachibana
 
 RUN apt-get update -qq && apt-get -y install \
@@ -9,7 +9,7 @@ RUN apt-get update -qq && apt-get -y install \
 
 WORKDIR /russ
 COPY Gemfile Gemfile.lock .ruby-version /russ/
-RUN bundle install --without test development
+RUN gem install bundler --version=1.16.1 && bundle install --without test development
 
 COPY . /russ
 

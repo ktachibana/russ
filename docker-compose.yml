@@ -26,8 +26,7 @@ services:
     image: 'ktachiv/russ'
     environment:
       DATABASE_URL: 'postgres://postgres@database/postgres'
-    volumes:
-      - vars:/russ/config/vars
+      SECRET_KEY_BASE: $SECRET_KEY_BASE
     command: /bin/true
 
   webapp:
@@ -36,8 +35,8 @@ services:
     links:
       - database
     command: ['rails', 'app:server']
-    expose:
-      - 8080
+    ports:
+      - '8080:3000'
     restart: always
 
   crawler:
