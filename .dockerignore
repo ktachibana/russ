@@ -2,10 +2,11 @@
 tmp/*
 log/*
 vendor/bundle/*
+node_modules
 .bundle
 bundle_bin
 .dockerignore
 docker-compose.yml
 spec
-config/vars
-frontend
+public/assets
+docker-app.env

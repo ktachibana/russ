@@ -15,13 +15,12 @@
 /log/*.log
 /tmp
 
-.env
 db/schema.rb
 erd.pdf
 bundle_bin
 public/assets
 vendor/bundle
-config/vars
 spec/examples.txt
 
 node_modules
+docker-app.env

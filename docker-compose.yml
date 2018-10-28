@@ -1,51 +1,42 @@
-version: '2'
+version: '3'
 
 volumes:
   data: {}
-  vars: {}
 
 services:
   rproxy:
     build:
       context: '.'
       dockerfile: './containers/rproxy/Dockerfile'
+    image: 'ktachiv/russ-rproxy'
     links:
       - webapp
-    expose:
-      - '80'
-    environment:
-      VIRTUAL_HOST: $VIRTUAL_HOST
-      LETSENCRYPT_HOST: $VIRTUAL_HOST
-      LETSENCRYPT_EMAIL: deadzone@be.to
-    networks:
-      - front
-      - default
+    ports:
+      - '80:80'
     restart: always
 
-  app-base:
+  app-base: &app-base
+    build: '.'
     image: 'ktachiv/russ'
     environment:
       DATABASE_URL: 'postgres://postgres@database/postgres'
-      SECRET_KEY_BASE: $SECRET_KEY_BASE
+    env_file: docker-app.env
     command: /bin/true
 
   webapp:
-    extends:
-      service: app-base
+    <<: *app-base
     links:
       - database
     command: ['rails', 'app:server']
     ports:
-      - '8080:3000'
+      - '3000:3000'
     restart: always
 
   crawler:
-    extends:
-      service: app-base
+    <<: *app-base
     links:
       - database
     command: ['rails', 'app:crawler']
-    mem_limit: 512m
     restart: always
 
   database:
@@ -55,11 +46,11 @@ services:
     restart: always
 
   app-oneoff:
-    extends:
-      service: app-base
+    <<: *app-base
     links:
       - database
     command: /bin/true
+    restart: 'no'
 
   db-oneoff:
     image: 'postgres:9.5'
@@ -69,7 +60,4 @@ services:
       PGHOST: database
       PGUSER: postgres
     command: /bin/true
-
-networks:
-  front:
-    external: true
+    restart: 'no'

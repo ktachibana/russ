@@ -1,11 +1,13 @@
+FROM node:10-alpine AS build-env
+
+COPY . /work
+WORKDIR /work
+RUN yarn install
+
+
 FROM nginx:1.10
 
-RUN apt-get update -qq && apt-get -y install \
-  gettext \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
-
-COPY ./public /public
+COPY --from=build-env /work/public /public
 COPY ./containers/rproxy/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 443 80
