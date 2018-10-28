@@ -16,12 +16,15 @@ services:
     restart: always
 
   app-base: &app-base
-    build: '.'
     image: 'ktachiv/russ'
     environment:
       DATABASE_URL: 'postgres://postgres@database/postgres'
     env_file: docker-app.env
     command: /bin/true
+
+  app-build:
+    <<: *app-base
+    build: '.'
 
   webapp:
     <<: *app-base
