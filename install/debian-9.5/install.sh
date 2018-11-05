@@ -2,6 +2,7 @@
 
 SECRET_KEY_BASE=$1
 
+RAILS_ENV=production
 DEBIAN_FRONTEND=noninteractive
 curl -sL https://deb.nodesource.com/setup_11.x | bash -
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
@@ -22,7 +23,7 @@ gem install bundler --version=1.16.1
 cd /russ/
 
 yarn install
-bundle install
+bundle install --with=production
 
 pushd install/debian-9.5
 install -m 644 russ.service russ-crawler.service /etc/systemd/system
