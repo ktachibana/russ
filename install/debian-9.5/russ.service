@@ -1,0 +1,14 @@
+[Unit]
+Description=RuSS Web Application
+
+[Service]
+WorkingDirectory=/russ
+EnvironmentFile=/russ/russ.env
+ExecStart=/russ/bin/bundle exec rails app:server
+ExecReload=/bin/kill -SIGUSR2 $MAINPID
+KillMode=process
+Restart=on-failure
+RestartSec=42s
+
+[Install]
+WantedBy=multi-user.target
