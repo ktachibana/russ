@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import classNames from 'classnames';
 
-class ItemPanel extends React.Component {
+export default class ItemPanel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {shorten: true};
@@ -66,5 +66,3 @@ class ItemPanel extends React.Component {
     );
   }
 }
-
-module.exports = ItemPanel;
