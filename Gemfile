@@ -7,9 +7,9 @@ gem 'rails', '~> 5.0'
 gem 'bundler', '~> 2.0.1'
 gem 'puma'
 
-gem 'pg', '~> 0.18'
+gem 'pg'
 
-gem 'mail', '~> 2.6.6'
+gem 'mail'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder'
