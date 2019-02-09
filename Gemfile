@@ -4,7 +4,7 @@ ruby File.read(__dir__ + '/.ruby-version').strip
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0'
-gem 'bundler'
+gem 'bundler', '~> 2.0.1'
 gem 'puma'
 
 gem 'pg', '~> 0.18'

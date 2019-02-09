@@ -8,7 +8,7 @@ FactoryBot.define do
     sequence(:description) { |n| "description#{n}" }
 
     transient do
-      item_count 0
+      item_count { 0 }
     end
 
     after :create do |feed, evaluator|

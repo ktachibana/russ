@@ -4,10 +4,10 @@ FactoryBot.define do
   factory :subscription do
     user
     feed
-    title nil
+    title { nil }
 
     transient do
-      item_count 0
+      item_count { 0 }
     end
 
     after :create do |subscription, evaluator|
