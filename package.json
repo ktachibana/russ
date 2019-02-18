@@ -21,7 +21,7 @@
     "@babel/preset-env": "*",
     "@babel/preset-react": "*",
     "babel-loader": "*",
-    "bootstrap": "^3",
+    "bootstrap": "^3.4.1",
     "classnames": "*",
     "clean-css": "*",
     "clean-css-cli": "*",
