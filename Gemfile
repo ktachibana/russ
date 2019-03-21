@@ -9,8 +9,6 @@ gem 'puma'
 
 gem 'pg'
 
-gem 'mail'
-
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder'
 
@@ -58,7 +56,6 @@ end
 
 gem 'devise'
 gem 'kaminari'
-gem 'unicorn'
 gem 'acts-as-taggable-on'
 gem 'oj'
 gem 'oj_mimic_json'
