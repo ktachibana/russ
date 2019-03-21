@@ -14,11 +14,6 @@ gem 'mail'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder'
 
-group :doc do
-  # bundle exec rake doc:rails generates the API under doc/api.
-  gem 'sdoc', require: false
-end
-
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
@@ -26,7 +21,6 @@ end
 # gem 'debugger', group: [:development, :test]
 
 group :development, :test do
-  gem 'powder'
   gem 'rspec'
   gem 'rspec-rails'
   gem 'factory_bot'
@@ -34,7 +28,6 @@ group :development, :test do
   gem 'guard'
   gem 'guard-rspec'
   gem 'rb-fsevent'
-  gem 'ruby-growl'
   gem 'spring'
   gem 'spring-commands-rspec'
   gem 'pry'
@@ -47,8 +40,6 @@ group :development, :test do
 end
 
 group :development do
-  gem 'rails-erd'
-  gem 'i18n-generators'
   gem 'bullet'
 end
 
