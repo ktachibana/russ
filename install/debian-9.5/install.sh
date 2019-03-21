@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SECRET_KEY_BASE=$1
+RAILS_MASTER_KEY=$1
 
 RAILS_ENV=production
 DEBIAN_FRONTEND=noninteractive
@@ -31,7 +31,7 @@ install -m 644 nginx.conf /etc/nginx/site-available/default
 install -m 600 russ.env /russ/russ.env
 popd
 
-echo "SECRET_KEY_BASE=$SECRET_KEY_BASE" >> /russ/russ.env
+echo $RAILS_MASTER_KEY >> /russ/config/master.key
 bundle exec rails db:create
 
 systemctl enable russ
