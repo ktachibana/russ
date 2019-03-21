@@ -12,7 +12,9 @@ WORKDIR /russ
 RUN apk upgrade --no-cache && \
     apk add --update --no-cache \
       postgresql-client \
-      tzdata && \
+      tzdata \
+      bash \
+      nginx && \
     apk add --update --no-cache --virtual=build-dependencies \
       build-base \
       curl-dev \
@@ -28,6 +30,12 @@ RUN apk upgrade --no-cache && \
     bundle install && \
     apk del build-dependencies
 
+COPY containers/rproxy/nginx.conf /etc/nginx/
+COPY containers/rproxy/conf.d/default.conf /etc/nginx/conf.d/
+RUN mkdir /run/nginx
+
+
 ENV RAILS_ENV=production
-CMD ["/russ/bin/rails", "app:server"]
+ENTRYPOINT ["bundle", "exec"]
+CMD ["rails", "app:server"]
 EXPOSE 3000

@@ -1,6 +1,6 @@
-namespace :deploy do
+namespace :docker do
   desc 'メインとなるappのDockerイメージをビルドする'
-  task :build_app do
+  task :build do
     sh 'docker build -t ktachiv/russ .'
   end
 

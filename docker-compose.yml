@@ -4,23 +4,20 @@ volumes:
   data: {}
 
 services:
-  rproxy:
-    build:
-      context: '.'
-      dockerfile: './containers/rproxy/Dockerfile'
-    image: 'ktachiv/russ-rproxy'
-    links:
-      - webapp
-    ports:
-      - '80:80'
-    restart: always
-
   app-base: &app-base
     image: 'ktachiv/russ'
     environment:
       DATABASE_URL: 'postgres://postgres@database/postgres'
     env_file: docker-app.env
     command: /bin/true
+
+  rproxy:
+    <<: *app-base
+    links:
+      - webapp
+    ports:
+      - '80:80'
+    command: ["nginx", "-g", "daemon off;"]
 
   app-build:
     <<: *app-base
@@ -30,23 +27,20 @@ services:
     <<: *app-base
     links:
       - database
-    command: ['rails', 'app:server']
+    command: ['/russ/bin/rails', 'app:server']
     ports:
       - '3000:3000'
-    restart: always
 
   crawler:
     <<: *app-base
     links:
       - database
     command: ['rails', 'app:crawler']
-    restart: always
 
   database:
     image: 'postgres:9.5'
     volumes:
       - data:/var/lib/postgresql/data
-    restart: always
     ports:
       - '5432:5432'
 
@@ -55,7 +49,6 @@ services:
     links:
       - database
     command: /bin/true
-    restart: 'no'
 
   db-oneoff:
     image: 'postgres:9.5'
@@ -65,4 +58,3 @@ services:
       PGHOST: database
       PGUSER: postgres
     command: /bin/true
-    restart: 'no'

@@ -2,39 +2,22 @@
 
 RAILS_MASTER_KEY=$1
 
-RAILS_ENV=production
-DEBIAN_FRONTEND=noninteractive
-curl -sL https://deb.nodesource.com/setup_11.x | bash -
-curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+# @see https://docs.docker.com/install/linux/docker-ce/debian/
 
-apt update --yes
-apt upgrade --yes
-apt dist-upgrade --yes
-
-apt install --yes git postgresql libpq-dev build-essential libssl-dev libreadline-dev zlib1g-dev libxml2-dev libxslt-dev nodejs yarn nginx
-git clone --depth=1 https://github.com/ktachibana/russ.git /russ
-
-git clone https://github.com/rbenv/ruby-build.git /ruby-build
-PREFIX=/usr/local /ruby-build/install.sh
-/usr/local/bin/ruby-build `cat /russ/.ruby-version` /usr/local
-gem install bundler --version=1.16.1
-
-cd /russ/
-
-yarn install
-bundle install --with=production
-
-pushd install/debian-9.5
-install -m 644 russ.service russ-crawler.service /etc/systemd/system
-install -m 644 nginx.conf /etc/nginx/site-available/default
-install -m 600 russ.env /russ/russ.env
-popd
-
-echo $RAILS_MASTER_KEY >> /russ/config/master.key
-bundle exec rails db:create
-
-systemctl enable russ
-systemctl enable russ-crawler
-
-reboot
+sudo apt-get update
+sudo apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg2 \
+    software-properties-common
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/debian \
+   $(lsb_release -cs) \
+   stable"
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+sudo usermod -aG docker $USER
+sudo curl -s -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
