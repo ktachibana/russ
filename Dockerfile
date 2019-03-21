@@ -1,18 +1,33 @@
-FROM ruby:2.4.1
-MAINTAINER Kenichi Tachibana
-
-RUN apt-get update -qq && apt-get -y install \
-  libpq-dev \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
-
+FROM node:8-alpine AS build-js
 COPY . /russ
 WORKDIR /russ
-RUN gem install bundler --version=1.16.1 && bundle install --without test development
+RUN yarn install && rm -rf node_modules
+
+
+FROM ruby:2.6.1-alpine AS runtime
+MAINTAINER Kenichi Tachibana
+
+COPY --from=build-js /russ /russ
+WORKDIR /russ
+RUN apk upgrade --no-cache && \
+    apk add --update --no-cache \
+      postgresql-client \
+      tzdata && \
+    apk add --update --no-cache --virtual=build-dependencies \
+      build-base \
+      curl-dev \
+      linux-headers \
+      libxml2-dev \
+      libxslt-dev \
+      postgresql-dev \
+      ruby-dev \
+      yaml-dev \
+      zlib-dev && \
+    gem uninstall bundler && \
+    gem install bundler --version=2.0.1 && \
+    bundle install && \
+    apk del build-dependencies
 
 ENV RAILS_ENV=production
-
-ENTRYPOINT ["bundle", "exec"]
-CMD ["rails", "app:server"]
-
+CMD ["/russ/bin/rails", "app:server"]
 EXPOSE 3000
