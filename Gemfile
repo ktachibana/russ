@@ -6,6 +6,7 @@ ruby File.read(__dir__ + '/.ruby-version').strip
 gem 'rails', '~> 5.0'
 gem 'bundler', '~> 2.0.1'
 gem 'puma'
+gem 'bootsnap', require: false
 
 gem 'pg'
 
