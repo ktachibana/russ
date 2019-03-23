@@ -22,6 +22,7 @@ sudo usermod -aG docker admin
 sudo curl -s -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
+cd /home/admin
 wget https://raw.githubusercontent.com/ktachibana/russ/master/docker-compose.yml
 echo "RAILS_MASTER_KEY=$RAILS_MASTER_KEY" > docker-app.env
 
