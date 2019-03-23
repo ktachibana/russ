@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-RAILS_MASTER_KEY=$1
+RAILS_MASTER_KEY='$1'
+DB_DUMP_URL="$2"
 
 # @see https://docs.docker.com/install/linux/docker-ce/debian/
 
@@ -25,5 +26,6 @@ sudo chmod +x /usr/local/bin/docker-compose
 cd /home/admin
 wget https://raw.githubusercontent.com/ktachibana/russ/master/docker-compose.yml
 echo "RAILS_MASTER_KEY=$RAILS_MASTER_KEY" > docker-app.env
+wget --quiet --output-document initial.dump $DB_DUMP_URL
 
-docker-compose up --no-build --detach
+docker-compose up --quiet-pull --no-build --detach
