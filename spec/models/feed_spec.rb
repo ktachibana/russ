@@ -182,16 +182,28 @@ RSpec.describe Feed, type: :model do
 
   describe '.load_all!' do
     before { allow(Feed).to receive(:sleep) }
-    let!(:feed) do
-      WebMock.stub_request(:get, mock_rss_url).to_return(body: rss_data_one_item)
-      Feed.new(url: mock_rss_url).tap(&:load!).tap(&:save!)
-    end
 
     it 'すべてのFeedを更新する' do
+      WebMock.stub_request(:get, mock_rss_url).to_return(body: rss_data_one_item)
+      Feed.new(url: mock_rss_url).tap(&:load!).tap(&:save!)
+
       WebMock.stub_request(:get, mock_rss_url).to_return(body: rss_data_two_items)
       expect do
         Feed.load_all!
       end.to change(Item, :count).from(1).to(2)
+    end
+
+    it '更新対象をloaded_atが古い順でcount:の数だけに限定する' do
+      Timecop.freeze Time.current.change(msec: 0)
+      feeds = [3, 1, 2].map { |n| create(:feed, item_count: 1, loaded_at: n.days.ago).reload }
+      feeds.each do |feed|
+        WebMock.stub_request(:get, feed.url).to_return(body: rss_data_one_item)
+      end
+      Feed.load_all!(count: 2)
+      feeds.each(&:reload)
+      expect(feeds[0].loaded_at).to eq(Time.current)
+      expect(feeds[1].loaded_at).to eq(1.days.ago)
+      expect(feeds[2].loaded_at).to eq(Time.current)
     end
   end
 

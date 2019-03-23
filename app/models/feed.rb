@@ -61,9 +61,10 @@ class Feed < ActiveRecord::Base
           end
           self.items_attributes = attributes
         end
+        self.loaded_at = Time.current
         resolve_relative_url!
       end
-    rescue => e
+    rescue StandardError => e
       Rails.logger.error(url: url, message: e.message)
       nil # TODO: エラーハンドリング
     end
@@ -102,11 +103,13 @@ class Feed < ActiveRecord::Base
     end
 
     module ClassMethods
-      def load_all!
+      def load_all!(count: 75)
         logger.info('start load_all!')
-        find_each do |feed|
-          sleep(1)
+
+        order(loaded_at: :asc).limit(count).each do |feed|
           logger.info "Feed#load! url: #{feed.url}"
+
+          sleep(1)
           feed.load!
           feed.save
         end

@@ -11,7 +11,7 @@ namespace :app do
     require 'rufus-scheduler'
 
     scheduler = Rufus::Scheduler.new
-    scheduler.every '30m' do
+    scheduler.every '15m' do
       sh 'rails app:crawl'
     end
     scheduler.join
