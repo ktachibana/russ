@@ -18,6 +18,7 @@ services:
     ports:
       - '80:80'
     command: ["nginx", "-g", "daemon off;"]
+    restart: always
 
   app-build:
     <<: *app-base
@@ -27,15 +28,15 @@ services:
     <<: *app-base
     links:
       - database
-    command: ['/russ/bin/rails', 'app:server']
-    ports:
-      - '3000:3000'
+    command: ['rails', 'app:server']
+    restart: always
 
   crawler:
     <<: *app-base
     links:
       - database
     command: ['rails', 'app:crawler']
+    restart: always
 
   database:
     image: 'postgres:9.5'
@@ -43,6 +44,7 @@ services:
       - data:/var/lib/postgresql/data
     ports:
       - '5432:5432'
+    restart: always
 
   app-oneoff:
     <<: *app-base
