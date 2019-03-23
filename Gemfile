@@ -51,10 +51,6 @@ group :test do
   gem 'rails-controller-testing'
 end
 
-group :production do
-  gem 'rails_12factor'
-end
-
 gem 'devise'
 gem 'kaminari'
 gem 'acts-as-taggable-on'
