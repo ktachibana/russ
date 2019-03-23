@@ -12,7 +12,7 @@ namespace :app do
 
     scheduler = Rufus::Scheduler.new
     scheduler.every '30m' do
-      sh 'rails crawl'
+      sh 'rails app:crawl'
     end
     scheduler.join
   end
