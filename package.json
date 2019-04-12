@@ -30,7 +30,7 @@
     "eventemitter2": "*",
     "expose-loader": "*",
     "hoek": "*",
-    "jquery": "*",
+    "jquery": "3.4.0",
     "moment": "*",
     "pathjs": "*",
     "react": "*",
