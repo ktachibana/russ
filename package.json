@@ -12,7 +12,9 @@
     "build-css": "NODE_ENV=production stylus -I node_modules --include-css < frontend/application.styl | cleancss > public/assets/application.css",
     "watch": "concurrently 'yarn run watch-js' 'yarn run watch-css'",
     "watch-js": "cd frontend && webpack-cli -w --mode development --devtool=source-map",
-    "watch-css": "stylus --watch -I node_modules --include-css frontend/application.styl -o public/assets/application.css"
+    "watch-css": "stylus --watch -I node_modules --include-css frontend/application.styl -o public/assets/application.css",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "author": "",
   "license": "ISC",
@@ -40,6 +42,8 @@
     "stylus": "*",
     "underscore": "*",
     "webpack": "*",
-    "webpack-cli": "*"
-  }
+    "webpack-cli": "*",
+    "snyk": "^1.189.0"
+  },
+  "snyk": true
 }
