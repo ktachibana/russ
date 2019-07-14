@@ -20,7 +20,9 @@ class Subscription < ActiveRecord::Base
     scope
   }
 
-  scope :url, -> (url) { joins(:feed).merge(Feed.where(url: url)) }
+  scope :url, ->(url) { joins(:feed).merge(Feed.where(url: url)) }
+
+  scope :default, -> { where(hide_default: false) }
 
   # XXX: もっとスマートにしたい
   def subscribe!

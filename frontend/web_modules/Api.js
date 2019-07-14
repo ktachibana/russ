@@ -57,8 +57,8 @@ class Api extends EventEmitter2 {
     return $.ajax('/users/sign_out', {method: 'delete'});
   }
 
-  loadItems({tag, page, subscriptionId}) {
-    return $.getJSON('/items', {tag, page, subscription_id: subscriptionId});
+  loadItems({tag, page, hideDefault, subscriptionId}) {
+    return $.getJSON('/items', {tag, page, hide_default: hideDefault, subscription_id: subscriptionId});
   }
 
   loadFeeds({tag, page}) {
@@ -67,7 +67,7 @@ class Api extends EventEmitter2 {
 
   subscribeFeed(subscriptionId, subscription) {
     const url = subscriptionId ? `/subscriptions/${subscriptionId}` : '/subscriptions';
-    const method = subscriptionId ? 'put' : 'post';
+    const method = subscriptionId ? 'patch' : 'post';
 
     return $.ajax(url, {
       type: method,

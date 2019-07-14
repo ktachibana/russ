@@ -57,6 +57,16 @@ RSpec.describe Item, type: :model do
       end
     end
 
+    describe ':hide_default' do
+      it 'hide_defaultパラメータを渡されたらhide_defaultなFeedは返さない' do
+        subscriptions = [
+          create(:subscription, user: user, hide_default: false, item_count: 1),
+          create(:subscription, user: user, hide_default: true, item_count: 1),
+        ]
+        expect(Item.search(user, hide_default: true)).to eq(subscriptions[0].feed.items)
+      end
+    end
+
     describe ':page' do
       let(:per_page) { Kaminari.config.default_per_page }
 

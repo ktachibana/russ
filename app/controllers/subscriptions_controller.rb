@@ -31,14 +31,14 @@ class SubscriptionsController < ApplicationController
   private :render_if_already_registed
 
   def create
-    @subscription = owned_subscriptions.build(subscription_params.permit(:title, :tag_list, feed_attributes: [:url]))
+    @subscription = owned_subscriptions.build(subscription_params.permit(:title, :tag_list, :hide_default, feed_attributes: [:url]))
     @subscription.subscribe!
     render json: { id: @subscription.id }
   end
 
   def update
     @subscription = owned_subscriptions.find(params[:id])
-    @subscription.update_attributes!(subscription_params.permit(:title, :tag_list))
+    @subscription.update_attributes!(subscription_params.permit(:title, :tag_list, :hide_default))
     render json: { id: @subscription.id }
   end
 

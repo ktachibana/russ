@@ -16,6 +16,10 @@ class Item < ActiveRecord::Base
       scope = scope.joins(feed: :subscriptions).merge(Subscription.where(id: subscription_id))
     end
 
+    if conditions[:hide_default].presence.present?
+      scope = scope.joins(feed: :subscriptions).merge(Subscription.default)
+    end
+
     scope = scope.page(conditions[:page])
     scope = scope.preload(:feed)
     scope.each do |item|

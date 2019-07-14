@@ -27,7 +27,8 @@ class ItemsPage extends React.Component {
   updateItems(props) {
     const query = {
       page: props.page,
-      tag: props.currentTagNames
+      tag: props.currentTagNames,
+      hideDefault: true
     };
     api.loadItems(query).then(({items, pagination}) => {
       this.setState({
