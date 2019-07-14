@@ -19,6 +19,7 @@ db/schema.rb
 erd.pdf
 bundle_bin
 public/assets
+public/VERSION
 vendor/bundle
 spec/examples.txt
 
