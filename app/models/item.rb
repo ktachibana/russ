@@ -16,7 +16,7 @@ class Item < ActiveRecord::Base
       scope = scope.joins(feed: :subscriptions).merge(Subscription.where(id: subscription_id))
     end
 
-    if conditions[:hide_default].presence.present?
+    if conditions[:hide_default].present? && conditions.values_at(:tag, :subscription_id).all?(&:blank?)
       scope = scope.joins(feed: :subscriptions).merge(Subscription.default)
     end
 

@@ -6,6 +6,6 @@ class ItemsController < ApplicationController
   private
 
   def search_params
-    params.permit(:tag, :subscription_id, :page, :hide_default)
+    params.permit(:subscription_id, :page, :hide_default, tag: [])
   end
 end
