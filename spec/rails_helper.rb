@@ -76,13 +76,4 @@ RSpec.configure do |config|
   config.after do
     Timecop.return
   end
-
-  config.before :suite do
-    DatabaseRewinder.strategy = :deletion
-    DatabaseRewinder.clean_all
-  end
-
-  config.after :each do
-    DatabaseRewinder.clean
-  end
 end
