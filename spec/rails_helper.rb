@@ -77,7 +77,7 @@ RSpec.configure do |config|
     Timecop.return
   end
 
-  config.before(:each) do |example|
+  config.before do |example|
     if example.metadata[:type] == :system
       driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400]
     end
