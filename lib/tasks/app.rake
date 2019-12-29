@@ -1,6 +1,7 @@
 namespace :app do
   desc 'Webアプリケーションを起動する'
   task :server do
+    sh 'rm -f tmp/pids/server.pid'
     sh 'rails server'
   end
 
