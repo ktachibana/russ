@@ -25,7 +25,7 @@
     "classnames": "*",
     "clean-css": "*",
     "clean-css-cli": "*",
-    "concurrently": "*",
+    "concurrently": "5.0.1",
     "eventemitter2": "*",
     "expose-loader": "*",
     "jquery": "*",
