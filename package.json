@@ -28,7 +28,7 @@
     "concurrently": "*",
     "eventemitter2": "*",
     "expose-loader": "*",
-    "jquery": "*",
+    "jquery": "3.5.0",
     "moment": "*",
     "pathjs": "*",
     "react": "*",
