@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 ruby File.read(__dir__ + '/.ruby-version').strip
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0'
+gem 'rails', '~> 5.2', '>= 5.2.3'
 gem 'bundler', '~> 2.0.1'
 gem 'puma'
 gem 'bootsnap', require: false
@@ -21,9 +21,9 @@ gem 'jbuilder'
 
 group :development, :test do
   gem 'rspec'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '>= 3.8.2'
   gem 'factory_bot'
-  gem 'factory_bot_rails'
+  gem 'factory_bot_rails', '>= 5.0.2'
   gem 'guard'
   gem 'guard-rspec'
   gem 'rb-fsevent'
@@ -44,13 +44,13 @@ end
 
 group :test do
   gem 'webmock', require: 'webmock/rspec'
-  gem 'capybara', require: 'capybara/rspec'
+  gem 'capybara', '>= 3.29.0', require: 'capybara/rspec'
   gem 'launchy'
   gem 'selenium-webdriver'
-  gem 'rails-controller-testing'
+  gem 'rails-controller-testing', '>= 1.0.4'
 end
 
-gem 'devise'
+gem 'devise', '>= 4.7.1'
 gem 'kaminari'
 gem 'acts-as-taggable-on'
 gem 'oj'
