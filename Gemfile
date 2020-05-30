@@ -51,7 +51,7 @@ group :test do
 end
 
 gem 'devise'
-gem 'kaminari'
+gem 'kaminari', '>= 1.2.1'
 gem 'acts-as-taggable-on'
 gem 'oj'
 gem 'oj_mimic_json'
