@@ -37,7 +37,7 @@
     "react-router-dom": "*",
     "stylus": "*",
     "underscore": "*",
-    "webpack": "*",
-    "webpack-cli": "*"
+    "webpack": "5.1.1",
+    "webpack-cli": "4.0.0"
   }
 }
