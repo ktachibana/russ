@@ -35,6 +35,8 @@ group :development, :test do
   gem 'shoulda-matchers'
   gem 'timecop'
   gem 'rubocop'
+  gem 'rubocop-rails'
+  gem 'rubocop-rspec'
   gem 'guard-rubocop'
 end
 

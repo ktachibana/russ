@@ -69,30 +69,28 @@ RSpec.describe Feed, type: :model do
       end
 
       it 'guidが無い時はlinkで重複を判断する' do
-        mock_rss!(url: feed.url, body: <<-EOS)
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0">
-  <channel>
-    <title>RSS Title</title>
-    <link>http://test.com/content</link>
-    <description>My description</description>
-
-    <item>
-      <title>New Title</title>
-      <link>http://test.com/content/2</link>
-      <pubDate>Wed, 22 Feb 2012 18:24:29 +0900</pubDate>
-      <description><![CDATA[New item description]]></description>
-    </item>
-
-    <item>
-      <title>Item Title</title>
-      <link>http://test.com/content/1</link>
-      <pubDate>Mon, 20 Feb 2012 16:04:19 +0900</pubDate>
-      <description><![CDATA[Item description UPDATED]]></description>
-    </item>
-  </channel>
-</rss>
-        EOS
+        mock_rss!(url: feed.url, body: <<~XML)
+          <?xml version="1.0" encoding="utf-8"?>
+          <rss version="2.0">
+            <channel>
+              <title>RSS Title</title>
+              <link>http://test.com/content</link>
+              <description>My description</description>
+              <item>
+                <title>New Title</title>
+                <link>http://test.com/content/2</link>
+                <pubDate>Wed, 22 Feb 2012 18:24:29 +0900</pubDate>
+                <description><![CDATA[New item description]]></description>
+              </item>
+              <item>
+                <title>Item Title</title>
+                <link>http://test.com/content/1</link>
+                <pubDate>Mon, 20 Feb 2012 16:04:19 +0900</pubDate>
+                <description><![CDATA[Item description UPDATED]]></description>
+              </item>
+            </channel>
+          </rss>
+        XML
 
         feed.load!
         feed.save!

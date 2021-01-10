@@ -5,21 +5,21 @@ RSpec.describe OPML, type: :model do
 
   describe '.import' do
     it 'OPML形式のファイルからRSSをインポートできる' do
-      opml = <<-'EOS'
-<?xml version="1.0" encoding="UTF-8"?>
-<opml version="1.0">
-    <head>
-        <title>My Feed</title>
-    </head>
-    <body>
-        <outline text="MyText" title="MyTitle" type="rss" xmlUrl="http://test.com/rss.xml" htmlUrl="http://test.com/content"/>
-        <outline title="category title" text="category">
-            <outline title="Title" type="rss" xmlUrl="http://category.com/rss.xml" htmlUrl="http://category.com/"/>
-        </outline>
-    </body>
-</opml>
-      EOS
-      result = OPML.import!(opml, user)
+      opml = <<~'XML'
+        <?xml version="1.0" encoding="UTF-8"?>
+        <opml version="1.0">
+            <head>
+                <title>My Feed</title>
+            </head>
+            <body>
+                <outline text="MyText" title="MyTitle" type="rss" xmlUrl="http://test.com/rss.xml" htmlUrl="http://test.com/content"/>
+                <outline title="category title" text="category">
+                    <outline title="Title" type="rss" xmlUrl="http://category.com/rss.xml" htmlUrl="http://category.com/"/>
+                </outline>
+            </body>
+        </opml>
+      XML
+      result = described_class.import!(opml, user)
       expect(Feed.count).to eq(2)
 
       result[0].tap do |subscription|

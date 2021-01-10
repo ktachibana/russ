@@ -1,6 +1,15 @@
+require:
+  - rubocop-rails
+  - rubocop-rspec
 AllCops:
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: '3.0'
+  NewCops: enable
+  Include:
+    - 'app/**/*.rb'
+    - 'spec/**/*.rb'
+    - 'lib/**/*.rb'
   Exclude:
+    - 'spec/example.txt'
     - 'db/**/*'
     - 'vendor/**/*'
     - 'bin/**/*'
@@ -18,5 +27,24 @@ Documentation:
 LineLength:
   Enabled: false
 
+# シリアライズに使うときはtrue/falseでないと困る
 DoubleNegation:
+  Enabled: false
+
+# 日本語なのでwhenとかの単語では始められない
+RSpec/ContextWording:
+  Enabled: false
+
+# beforeは目的ごとにグループ分けして書きたい
+RSpec/ScatteredSetup:
+  Enabled: false
+
+# shoulda-matchersのcontrollerで使う
+RSpec/ImplicitSubject:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+RSpec/MultipleExpectations:
   Enabled: false
