@@ -5,7 +5,7 @@ RSpec.describe 'application/_items.json', type: :view do
   let!(:item) { create(:item, feed: subscription.feed) }
 
   it 'render json' do
-    render 'application/items.json.jbuilder', items: Item.search(subscription.user)
+    render 'application/items', items: Item.search(subscription.user)
 
     data = JSON.parse(rendered, symbolize_names: true)
     data[:items].tap do |items|
