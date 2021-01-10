@@ -18,17 +18,17 @@ AllCops:
     - 'Guardfile'
     - 'node_modules/**/*'
 
-AsciiComments:
+Style/AsciiComments:
   Enabled: false
 
-Documentation:
+Style/Documentation:
   Enabled: false
 
-LineLength:
+Layout/LineLength:
   Enabled: false
 
 # シリアライズに使うときはtrue/falseでないと困る
-DoubleNegation:
+Style/DoubleNegation:
   Enabled: false
 
 # 日本語なのでwhenとかの単語では始められない
