@@ -339,6 +339,7 @@ DEPENDENCIES
   jbuilder
   kaminari
   launchy
+  listen
   oj
   oj_mimic_json
   pg

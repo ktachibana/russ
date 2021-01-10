@@ -26,6 +26,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'guard'
   gem 'guard-rspec'
+  gem 'guard-rubocop'
   gem 'rb-fsevent'
   gem 'spring'
   gem 'spring-commands-rspec'
@@ -37,7 +38,7 @@ group :development, :test do
   gem 'rubocop'
   gem 'rubocop-rails'
   gem 'rubocop-rspec'
-  gem 'guard-rubocop'
+  gem 'listen' # ActiveSupport::EventedFileUpdateChecker
 end
 
 group :development do
