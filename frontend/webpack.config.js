@@ -8,7 +8,7 @@ module.exports = {
   },
   module: {
     rules: [
-      { loader: 'babel-loader', test: /\.jsx?$/, exclude: /node_modules/, query: { compact: false } }
+      { loader: 'babel-loader', test: /\.jsx?$/, exclude: /node_modules/ }
     ]
   },
   resolve: {

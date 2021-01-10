@@ -1,4 +1,4 @@
-require('expose-loader?jQuery!jquery'); // bootstrapが要求する
+require('expose-loader?exposes[]=jQuery!jquery'); // bootstrapが要求する
 require('bootstrap/dist/js/bootstrap');
 
 import React from 'react';
