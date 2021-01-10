@@ -6,10 +6,12 @@ export default class SubscriptionForm extends React.Component {
     super(props);
     this.state = props.subscription.id ? {
       title: props.subscription.title,
-      tags: props.subscription.tags.map(tag => tag.name).join(', ')
+      tags: props.subscription.tags.map(tag => tag.name).join(', '),
+      hideDefault: props.subscription.hideDefault
     } : {
       title: '',
-      tags: ''
+      tags: '',
+      hideDefault: false
     };
   }
 
@@ -25,12 +27,17 @@ export default class SubscriptionForm extends React.Component {
     this.setState({title: e.target.value});
   }
 
+  hideDefaultChanged(e) {
+    this.setState({hideDefault: e.target.checked})
+  }
+
   submit(e) {
     e.preventDefault();
 
     const subscriptionData = {
       title: this.state.title,
-      tag_list: this.state.tags
+      tag_list: this.state.tags,
+      hide_default: (this.state.hideDefault ? 'true' : 'false')
     };
     if (this.isNewRecord) {
       Object.assign(subscriptionData, {
@@ -76,6 +83,12 @@ export default class SubscriptionForm extends React.Component {
               )}
             </div>
           </div>
+        </div>
+        <div className="form-group">
+          <label>
+            <input type="checkbox" checked={this.state.hideDefault} onChange={this.hideDefaultChanged.bind(this)} />
+            トップページに表示しない
+          </label>
         </div>
         <div className='form-group pull-right'>
           <button className='btn btn-primary' type='submit'>

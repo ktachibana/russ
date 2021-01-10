@@ -20,6 +20,7 @@ RSpec.describe SubscriptionsController, type: :controller do
       data = JSON.parse(response.body, symbolize_names: true)
       expect(data).to be_a(Hash)
       expect(data[:title]).to eq(subscription.title)
+      expect(data[:hideDefault]).to eq(subscription.hide_default?)
     end
 
     context 'itemsが大量にあるとき' do
@@ -128,14 +129,16 @@ RSpec.describe SubscriptionsController, type: :controller do
     def action
       post :create, params: { subscription: subscription_params, format: :json }
     end
-    let(:subscription_params) { { title: '', tag_list: '', feed_attributes: { url: mock_rss_url } } }
-
+    let(:subscription_params) { { title: '', tag_list: '', hide_default: 'true', feed_attributes: { url: mock_rss_url } } }
     before { mock_rss! }
 
     it 'Subscriptionを登録できる' do
       expect { action }.to change(Subscription, :count).by(1)
       is_expected.to respond_with(:ok)
-      expect(JSON.parse(response.body)).to eq('id' => Subscription.last.id)
+
+      parsed = JSON.parse(response.body)
+      expect(parsed).to eq('id' => Subscription.last.id)
+      expect(Subscription.find(parsed['id']).hide_default?).to be_truthy
     end
 
     context 'パラメータが不正なとき' do
@@ -167,14 +170,15 @@ RSpec.describe SubscriptionsController, type: :controller do
     def action
       put :update, params: { id: subscription.id, subscription: subscription_params, format: :json }
     end
-    let(:subscription_params) { { title: 'NewTitle', tag_list: 'tag1, tag2' } }
-    let(:subscription) { create(:subscription, user: user) }
+    let(:subscription_params) { { title: 'NewTitle', tag_list: 'tag1, tag2', hide_default: 'true' } }
+    let(:subscription) { create(:subscription, user: user, hide_default: false) }
 
     it 'Subscriptionを更新できる' do
       action
       subscription.reload
       expect(subscription.title).to eq('NewTitle')
       expect(subscription.tag_list).to match_array(%w[tag1 tag2])
+      expect(subscription.hide_default).to be_truthy
     end
 
     context 'tag_listの値を削除したとき' do

@@ -23,6 +23,7 @@ class Subscription < ApplicationRecord
   }
 
   scope :url, ->(url) { joins(:feed).merge(Feed.where(url: url)) }
+  scope :default, -> { where(hide_default: false) }
 
   # XXX: もっとスマートにしたい
   def subscribe!

@@ -50,7 +50,6 @@ group :test do
   gem 'capybara', require: 'capybara/rspec'
   gem 'launchy'
   gem 'selenium-webdriver'
-  gem 'database_rewinder'
   gem 'rails-controller-testing'
 end
 

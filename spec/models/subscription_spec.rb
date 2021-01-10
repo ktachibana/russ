@@ -26,6 +26,16 @@ RSpec.describe Subscription, type: :model do
     end
   end
 
+  describe '.default' do
+    it 'hide_defaultフラグが付いたsubscriptionは取得しない' do
+      subscriptions = [
+        create(:subscription),
+        create(:subscription, hide_default: true)
+      ]
+      expect(Subscription.default).to eq(subscriptions.values_at(0))
+    end
+  end
+
   describe '#user_title' do
     subject { subscription.user_title }
 
