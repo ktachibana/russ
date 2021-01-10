@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Feed, type: :model do
@@ -20,6 +22,7 @@ RSpec.describe Feed, type: :model do
 
   describe '#load!' do
     before { mock_rss!(url: feed.url, body: rss_data) }
+
     let(:feed) { build(:feed_only_url) }
     let(:rss_data) { rss_data_one_item }
 
@@ -34,7 +37,7 @@ RSpec.describe Feed, type: :model do
       expect(item.title).to eq('Item Title')
       expect(item.link).to eq('http://test.com/content/1')
       expect(item.guid).to eq('1')
-      expect(item.published_at).to eq(Time.new(2012, 2, 20, 16, 4, 19))
+      expect(item.published_at).to eq(Time.find_zone!(9).local(2012, 2, 20, 16, 4, 19))
       expect(item.description).to eq('Item description')
     end
 
@@ -57,13 +60,13 @@ RSpec.describe Feed, type: :model do
         feed.items[0].tap do |item|
           expect(item.title).to eq('New Title')
           expect(item.link).to eq('http://test.com/content/2')
-          expect(item.published_at).to eq(Time.new(2012, 2, 22, 18, 24, 29))
+          expect(item.published_at).to eq(Time.find_zone!(9).local(2012, 2, 22, 18, 24, 29))
           item.description == 'New item description'
         end
         feed.items[1].tap do |item|
           expect(item.title).to eq('Item Title')
           expect(item.link).to eq('http://test.com/content/3')
-          expect(item.published_at).to eq(Time.new(2012, 2, 20, 16, 4, 19))
+          expect(item.published_at).to eq(Time.find_zone!(9).local(2012, 2, 20, 16, 4, 19))
           item.description == 'Item description'
         end
       end
@@ -120,6 +123,7 @@ RSpec.describe Feed, type: :model do
 
     context 'Atom形式のとき' do
       let(:rss_data) { rss_data_atom }
+
       before { feed.load! }
 
       it 'Atomも読み込める' do
@@ -157,7 +161,7 @@ RSpec.describe Feed, type: :model do
             expect(item.title).to eq('[ANN] Rails 4.2.0.beta4 has been released!')
             expect(item.link).to eq('http://weblog.rubyonrails.org/2014/10/30/Rails-4-2-0-beta4-has-been-released/')
             expect(item.guid).to eq('http://weblog.rubyonrails.org/2014/10/30/Rails-4-2-0-beta4-has-been-released/')
-            expect(item.published_at).to eq(Time.utc(2014, 10, 30, 22, 00, 00))
+            expect(item.published_at).to eq(Time.utc(2014, 10, 30, 22, 0o0, 0o0))
             expect(item.description).to eq('Content 2')
           end
           items[1].tap do |item|
@@ -172,22 +176,22 @@ RSpec.describe Feed, type: :model do
     end
 
     it 'エラーが起きたときはログを出力する', :stub_logging do
-      allow(Feed).to receive(:load_rss).and_raise('error!')
+      allow(described_class).to receive(:load_rss).and_raise('error!')
       feed.load!
       expect(log_string).to include('error!', feed.url)
     end
   end
 
   describe '.load_all!' do
-    before { allow(Feed).to receive(:sleep) }
+    before { allow(described_class).to receive(:sleep) }
 
     it 'すべてのFeedを更新する' do
       WebMock.stub_request(:get, mock_rss_url).to_return(body: rss_data_one_item)
-      Feed.new(url: mock_rss_url).tap(&:load!).tap(&:save!)
+      described_class.new(url: mock_rss_url).tap(&:load!).tap(&:save!)
 
       WebMock.stub_request(:get, mock_rss_url).to_return(body: rss_data_two_items)
       expect do
-        Feed.load_all!
+        described_class.load_all!
       end.to change(Item, :count).from(1).to(2)
     end
 
@@ -197,16 +201,17 @@ RSpec.describe Feed, type: :model do
       feeds.each do |feed|
         WebMock.stub_request(:get, feed.url).to_return(body: rss_data_one_item)
       end
-      Feed.load_all!(count: 2)
+      described_class.load_all!(count: 2)
       feeds.each(&:reload)
       expect(feeds[0].loaded_at).to eq(Time.current)
-      expect(feeds[1].loaded_at).to eq(1.days.ago)
+      expect(feeds[1].loaded_at).to eq(1.day.ago)
       expect(feeds[2].loaded_at).to eq(Time.current)
     end
   end
 
   describe '#to_item_attributes' do
     subject { feed.to_item_attributes(item) }
+
     let(:feed) { build(:feed) }
     let(:item) { build(:parsed_item) }
 

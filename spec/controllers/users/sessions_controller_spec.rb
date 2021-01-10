@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Users::SessionsController, type: :controller do
@@ -5,7 +7,7 @@ RSpec.describe Users::SessionsController, type: :controller do
 
   describe '#create' do
     let(:user) { create(:user) }
-    let!(:subscription) { create(:subscription, user: user, tag_list: %w(foo)) }
+    let!(:subscription) { create(:subscription, user: user, tag_list: %w[foo]) }
 
     it '認証が通ったら200 OKで初期化情報を返す' do
       post :create, params: { user: { email: user.email, password: user.password }, format: :json }

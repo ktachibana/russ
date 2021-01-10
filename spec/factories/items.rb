@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryBot.define do
@@ -5,7 +7,7 @@ FactoryBot.define do
     feed
     sequence(:title) { |n| "item title#{n}" }
     sequence(:link) { |n| "http://test.com/content/#{n}" }
-    published_at { Time.now }
+    published_at { Time.zone.now }
     sequence(:description) { |n| "item description#{n}" }
   end
 end

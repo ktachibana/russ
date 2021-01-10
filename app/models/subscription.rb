@@ -1,4 +1,6 @@
-class Subscription < ActiveRecord::Base
+# frozen_string_literal: true
+
+class Subscription < ApplicationRecord
   belongs_to :user
   belongs_to :feed
   acts_as_taggable
@@ -20,7 +22,7 @@ class Subscription < ActiveRecord::Base
     scope
   }
 
-  scope :url, -> (url) { joins(:feed).merge(Feed.where(url: url)) }
+  scope :url, ->(url) { joins(:feed).merge(Feed.where(url: url)) }
 
   # XXX: もっとスマートにしたい
   def subscribe!

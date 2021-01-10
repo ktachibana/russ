@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FeedsController < ApplicationController
   def index
     @subscriptions = owned_subscriptions.preload(:tags, feed: :latest_item).order(:id).search(params)

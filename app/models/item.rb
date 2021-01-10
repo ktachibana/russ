@@ -1,4 +1,6 @@
-class Item < ActiveRecord::Base
+# frozen_string_literal: true
+
+class Item < ApplicationRecord
   belongs_to :feed
 
   default_scope { order(published_at: :desc) }
@@ -9,7 +11,7 @@ class Item < ActiveRecord::Base
     scope = self
     scope = scope.where(feed_id: feed_subscriptions.keys)
     conditions[:tag].presence.try do |tags|
-      scope = scope.where(feed_id: Subscription.tagged_with(tags).pluck(:feed_id))
+      scope = scope.where(feed_id: Subscription.tagged_with(tags).select(:feed_id))
     end
 
     conditions[:subscription_id].presence.try do |subscription_id|

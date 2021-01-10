@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe SubscriptionsController, type: :controller do
   let!(:user) { create(:user) }
+
   before { sign_in(user) }
 
   describe 'GET :show' do
@@ -9,7 +12,7 @@ RSpec.describe SubscriptionsController, type: :controller do
     def action
       get :show, params: { id: subscription.id, format: :json }
     end
-    let(:subscription) { create(:subscription, :with_title, user: user, tag_list: %w(foo bar)) }
+    let(:subscription) { create(:subscription, :with_title, user: user, tag_list: %w[foo bar]) }
 
     it 'Subscriptionの情報を取得できる' do
       action
@@ -60,7 +63,7 @@ RSpec.describe SubscriptionsController, type: :controller do
       expect(item[:title]).to eq('Item Title')
       expect(item[:link]).to eq('http://test.com/content/1')
       expect(item[:guid]).to eq('1')
-      expect(Time.parse(item[:publishedAt])).to eq(Time.parse('Mon, 20 Feb 2012 16:04:19 +0900').utc)
+      expect(Time.zone.parse(item[:publishedAt])).to eq(Time.parse('Mon, 20 Feb 2012 16:04:19 +0900').utc)
       expect(item[:description]).to eq('Item description')
     end
 
@@ -126,6 +129,7 @@ RSpec.describe SubscriptionsController, type: :controller do
       post :create, params: { subscription: subscription_params, format: :json }
     end
     let(:subscription_params) { { title: '', tag_list: '', feed_attributes: { url: mock_rss_url } } }
+
     before { mock_rss! }
 
     it 'Subscriptionを登録できる' do
@@ -139,7 +143,7 @@ RSpec.describe SubscriptionsController, type: :controller do
       let(:subscription_params) { super().merge(title: 'a' * 256) }
 
       it '登録されない' do
-        expect { action }.to_not change(Subscription, :count)
+        expect { action }.not_to change(Subscription, :count)
       end
 
       it 'バリデーションエラーを返す' do
@@ -154,7 +158,7 @@ RSpec.describe SubscriptionsController, type: :controller do
 
       it 'タグを登録できる' do
         action
-        expect(assigns(:subscription).reload.tag_list).to match_array(%w(tag1 tag2))
+        expect(assigns(:subscription).reload.tag_list).to match_array(%w[tag1 tag2])
       end
     end
   end
@@ -170,17 +174,17 @@ RSpec.describe SubscriptionsController, type: :controller do
       action
       subscription.reload
       expect(subscription.title).to eq('NewTitle')
-      expect(subscription.tag_list).to match_array(%w(tag1 tag2))
+      expect(subscription.tag_list).to match_array(%w[tag1 tag2])
     end
 
     context 'tag_listの値を削除したとき' do
-      let(:subscription) { create(:subscription, user: user, tag_list: %w(tag1 tag2)) }
+      let(:subscription) { create(:subscription, user: user, tag_list: %w[tag1 tag2]) }
       let(:subscription_params) { { tag_list: 'tag1' } }
 
       it 'タグを削除できる' do
         action
         subscription.reload
-        expect(subscription.tag_list).to eq(%w(tag1))
+        expect(subscription.tag_list).to eq(%w[tag1])
         expect(ActsAsTaggableOn::Tagging.count).to eq(1)
       end
     end
@@ -199,14 +203,15 @@ RSpec.describe SubscriptionsController, type: :controller do
       post :import, params: params
     end
     let(:params) { { file: upload_file } }
+    let(:upload_file) { Rack::Test::UploadedFile.new(opml_file.path, 'application/xml') }
     let!(:opml_file) do
       file = Tempfile.new('opml')
       file.write(opml_data)
       file.rewind
       file
     end
+
     after { opml_file.close! }
-    let(:upload_file) { Rack::Test::UploadedFile.new(opml_file.path, 'application/xml') }
 
     it 'OPMLをアップロードしてインポートできる' do
       expect do

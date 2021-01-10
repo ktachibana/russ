@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe FeedsController, type: :controller do
   render_views
   let!(:user) { create(:user) }
+
   before { sign_in(user) }
 
   describe 'GET :index' do
@@ -13,7 +16,7 @@ RSpec.describe FeedsController, type: :controller do
     let!(:subscriptions) { [subscription] }
     let(:subscription) { create(:subscription, feed: feed, user: user, tag_list: tags) }
     let(:feed) { create(:feed, item_count: 1) }
-    let(:tags) { %w(tag1 tag2) }
+    let(:tags) { %w[tag1 tag2] }
     let!(:others_subscription) { create(:subscription, user: create(:user)) }
 
     it 'フィード一覧を表示する' do
@@ -51,8 +54,8 @@ RSpec.describe FeedsController, type: :controller do
       end
 
       context 'タグが与えられたとき' do
-        let(:params) { super().merge(tag: %w(tag1)) }
-        let!(:subscriptions) { %w(tag1 tag2).map { |tag| create(:subscription, user: user, tag_list: tag) } }
+        let(:params) { super().merge(tag: %w[tag1]) }
+        let!(:subscriptions) { %w[tag1 tag2].map { |tag| create(:subscription, user: user, tag_list: tag) } }
 
         it '特定のタグがついたSubscriptionだけに絞り込める' do
           action

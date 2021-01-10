@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   before_action :authenticate_user!
 
@@ -17,7 +19,7 @@ class ApplicationController < ActionController::Base
         render(json: { type: 'validation', errors: error.record.errors },
                status: :unprocessable_entity) # Railsのデフォルトに従う。Roy Fieldingも言っている。
       end
-      f.any { fail error }
+      f.any { raise error }
     end
   end
 

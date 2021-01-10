@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe InitialsController, type: :controller do
@@ -7,7 +9,7 @@ RSpec.describe InitialsController, type: :controller do
     end
 
     let!(:user) { create(:user) }
-    let!(:subscription) { create(:subscription, user: user, tag_list: %w(foo bar)) }
+    let!(:subscription) { create(:subscription, user: user, tag_list: %w[foo bar]) }
 
     context 'ログインしているとき' do
       before { sign_in(user) }

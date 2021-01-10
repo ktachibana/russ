@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe TagsController, type: :controller do
   render_views
 
   let(:user) { create(:user) }
+
   before { sign_in(user) }
 
   describe 'GET :index' do
@@ -24,7 +27,7 @@ RSpec.describe TagsController, type: :controller do
 
     it 'JSONを返す' do
       subscription = create(:subscription, user: user, feed: create(:feed, item_count: 1))
-      subscription.update!(tag_list: %w(tag1))
+      subscription.update!(tag_list: %w[tag1])
 
       action
 

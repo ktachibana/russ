@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryBot.define do
@@ -16,7 +18,7 @@ FactoryBot.define do
     end
   end
 
-  factory :feed_only_url, class: Feed do
+  factory :feed_only_url, class: 'Feed' do
     sequence(:url) { |n| "http://test.com/rss#{n}.xml" }
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RssMockHelpers
   def mock_url!(url: mock_rss_url, body: rss_data, content_type: nil)
     WebMock.stub_request(:get, url).to_return(body: body, headers: { content_type: content_type })

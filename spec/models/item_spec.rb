@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Item, type: :model do
@@ -30,30 +32,30 @@ RSpec.describe Item, type: :model do
         users_subscription = create(:subscription, feed: feed, user: user)
         others_subscription = create(:subscription, feed: feed, user: other_user)
 
-        expect(Item.search(user)[0].feed.users_subscription).to eq(users_subscription)
-        expect(Item.search(other_user)[0].feed.users_subscription).to eq(others_subscription)
+        expect(described_class.search(user)[0].feed.users_subscription).to eq(users_subscription)
+        expect(described_class.search(other_user)[0].feed.users_subscription).to eq(others_subscription)
       end
     end
 
     describe ':tag' do
       it 'tagパラメータでタグ検索できる' do
-        items = [%w(a), %w(a b), nil].map do |tag|
+        items = [%w[a], %w[a b], nil].map do |tag|
           create(:item) do |item|
             create(:subscription, feed: item.feed, tag_list: tag, user: user)
           end
         end
-        expect(Item.search(user, tag: %w(a b))).to match_array(items.values_at(1))
-        expect(Item.search(user, tag: %w(a))).to match_array(items.values_at(0, 1))
-        expect(Item.search(user, tag: %w(b))).to match_array(items.values_at(1))
-        expect(Item.search(user, tag: %w())).to match_array(items)
+        expect(described_class.search(user, tag: %w[a b])).to match_array(items.values_at(1))
+        expect(described_class.search(user, tag: %w[a])).to match_array(items.values_at(0, 1))
+        expect(described_class.search(user, tag: %w[b])).to match_array(items.values_at(1))
+        expect(described_class.search(user, tag: %w[])).to match_array(items)
       end
     end
 
     describe ':subscription_id' do
       it 'subscription_idで絞り込める' do
         subscriptions = create_list(:subscription, 2, user: user, item_count: 1)
-        expect(Item.search(user, subscription_id: subscriptions[0].id)).to eq(subscriptions[0].feed.items)
-        expect(Item.search(user, subscription_id: subscriptions[1].id)).to eq(subscriptions[1].feed.items)
+        expect(described_class.search(user, subscription_id: subscriptions[0].id)).to eq(subscriptions[0].feed.items)
+        expect(described_class.search(user, subscription_id: subscriptions[1].id)).to eq(subscriptions[1].feed.items)
       end
     end
 
@@ -64,9 +66,9 @@ RSpec.describe Item, type: :model do
         feed = create(:feed)
         create_list(:item, per_page + 1, feed: feed)
         user.feeds = [feed]
-        expect(Item.search(user, page: 1).count).to eq(per_page)
-        expect(Item.search(user, page: 2).count).to eq(1)
-        expect(Item.search(user, page: nil).count).to eq(per_page)
+        expect(described_class.search(user, page: 1).count).to eq(per_page)
+        expect(described_class.search(user, page: 2).count).to eq(1)
+        expect(described_class.search(user, page: nil).count).to eq(per_page)
       end
     end
   end
@@ -76,7 +78,7 @@ RSpec.describe Item, type: :model do
       items = [3, 1, 2].map do |n|
         create(:item, published_at: n.days.ago)
       end
-      expect(Item.all).to eq(items.values_at(1, 2, 0))
+      expect(described_class.all).to eq(items.values_at(1, 2, 0))
     end
   end
 
@@ -85,8 +87,8 @@ RSpec.describe Item, type: :model do
 
     describe '#correct_published_at' do
       it '未来の日付が設定されていたら現在時刻に置き換える' do
-        expect(create(:item, published_at: 1.days.from_now).published_at).to eq(Time.current)
-        expect(create(:item, published_at: 1.days.from_now.to_date).published_at).to eq(Time.current)
+        expect(create(:item, published_at: 1.day.from_now).published_at).to eq(Time.current)
+        expect(create(:item, published_at: 1.day.from_now.to_date).published_at).to eq(Time.current)
       end
 
       it 'nilの時は現在時刻を設定する' do
@@ -95,7 +97,7 @@ RSpec.describe Item, type: :model do
 
       it 'すでに設定された時刻をnilにしようとしたら元に戻す' do
         item = create(:item, published_at: 1.day.ago)
-        expect { item.update!(published_at: nil) }.to_not change { item.published_at }
+        expect { item.update!(published_at: nil) }.not_to change { item.published_at }
       end
 
       it '直接新しい日付を設定することはできる' do

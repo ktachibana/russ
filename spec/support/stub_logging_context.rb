@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'stringio'
 
 RSpec.shared_context 'Rails.loggerの出力内容がlog_stringとして参照できる' do

@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'open-uri'
 require 'rss'
 
-class Feed < ActiveRecord::Base
+class Feed < ApplicationRecord
   has_many :items, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
   has_one :latest_item, class_name: 'Item'

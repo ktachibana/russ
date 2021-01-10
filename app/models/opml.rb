@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rexml/document'
 require 'nokogiri'
 
@@ -19,7 +21,8 @@ class OPML
 
   class Outline
     def initialize(opml, node)
-      fail(InvalidFormat) unless node
+      raise(InvalidFormat) unless node
+
       @opml = opml
       @node = node
 

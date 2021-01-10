@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :parsed_item, class: 'OpenStruct' do
     sequence(:link) { |n| "http://parsed-item.com/link/#{n}" }

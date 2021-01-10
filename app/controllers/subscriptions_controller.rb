@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SubscriptionsController < ApplicationController
   def show
     @subscription = owned_subscriptions.preload(:feed).find(params[:id])
@@ -44,9 +46,7 @@ class SubscriptionsController < ApplicationController
 
   def import
     opml_file = params[:file]
-    if opml_file.blank?
-      return render json: { error: 'Select OPML file.' }, status: :unprocessable_entity
-    end
+    return render json: { error: 'Select OPML file.' }, status: :unprocessable_entity if opml_file.blank?
 
     OPML.import!(opml_file.tempfile, current_user)
 

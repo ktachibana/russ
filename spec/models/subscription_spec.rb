@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Subscription, type: :model do
@@ -9,6 +11,7 @@ RSpec.describe Subscription, type: :model do
 
   describe 'validations' do
     subject { build(:subscription) }
+
     it { is_expected.to validate_presence_of(:user_id) }
     it { is_expected.to validate_uniqueness_of(:feed_id).scoped_to(:user_id) }
     it { is_expected.to validate_length_of(:title).is_at_most(255) }
@@ -19,12 +22,13 @@ RSpec.describe Subscription, type: :model do
       subscriptions = [3, 1, 2].map do |n|
         create(:subscription, created_at: n.days.ago)
       end
-      expect(Subscription.all).to eq(subscriptions.values_at(1, 2, 0))
+      expect(described_class.all).to eq(subscriptions.values_at(1, 2, 0))
     end
   end
 
   describe '#user_title' do
     subject { subscription.user_title }
+
     let(:subscription) { create(:subscription, title: title) }
 
     context 'titleが未設定のとき' do

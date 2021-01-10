@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe OPML, type: :model do
@@ -35,12 +37,12 @@ RSpec.describe OPML, type: :model do
         expect(subscription.feed.link_url).to eq('http://category.com/')
         expect(subscription.feed.description).to be_nil
         expect(subscription.tags.size).to eq(1)
-        expect(subscription.tag_list).to eq(%w(category))
+        expect(subscription.tag_list).to eq(%w[category])
       end
     end
 
     it 'OPML形式でないファイルを与えたらエラー' do
-      expect { OPML.import!('Hello ! this is text.', user) }.to raise_error(OPML::InvalidFormat)
+      expect { described_class.import!('Hello ! this is text.', user) }.to raise_error(OPML::InvalidFormat)
     end
   end
 end
