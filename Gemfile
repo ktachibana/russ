@@ -3,8 +3,8 @@ source 'https://rubygems.org'
 ruby File.read(__dir__ + '/.ruby-version').strip
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0'
-gem 'bundler', '~> 2.0.1'
+gem 'rails', '~> 6.1.1'
+gem 'bundler'
 gem 'puma'
 gem 'bootsnap', require: false
 
@@ -51,6 +51,7 @@ group :test do
   gem 'rails-controller-testing'
 end
 
+gem 'rss'
 gem 'devise'
 gem 'kaminari'
 gem 'acts-as-taggable-on'

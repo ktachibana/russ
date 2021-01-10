@@ -11,7 +11,7 @@ class MigrateFeedToSubscription < ActiveRecord::Migration[4.2]
       Tagging.find_each do |tagging|
         feed = Feed.find(tagging.taggable_id)
         subscription = Subscription.find_or_create_by(user_id: feed.user_id, feed_id: feed.id)
-        tagging.update_attributes(taggable_id: subscription.id, taggable_type: 'Subscription')
+        tagging.update!(taggable_id: subscription.id, taggable_type: 'Subscription')
       end
     end
   end

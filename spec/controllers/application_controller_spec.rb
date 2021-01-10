@@ -2,12 +2,14 @@ require 'rails_helper'
 
 RSpec.describe ApplicationController, type: :controller do
   describe '.rescue_from' do
+    let!(:bypass_rescue!) {}
+
     describe 'ActiveRecord::RecordInvalid' do
       controller do
         skip_before_action :authenticate_user!
 
         def index
-          FactoryBot.create(:user, email: '', password: '')
+          User.create!(email: '', password: '')
         end
       end
 
@@ -17,14 +19,14 @@ RSpec.describe ApplicationController, type: :controller do
 
       it 'HTMLをリクエストしたときはHTMLでエラーを返す' do
         expect { action }.to raise_error(ActiveRecord::RecordInvalid)
-        expect(response.content_type).to start_with('text/html')
+        expect(response.media_type).to eq('text/html')
       end
 
       it 'JSONをリクエストしたときはJSONでエラーを返す' do
         request.accept = 'application/json'
         action
         is_expected.to respond_with(:unprocessable_entity)
-        expect(response.content_type).to start_with('application/json')
+        expect(response.media_type).to eq('application/json')
         parsed = JSON.parse(response.body)
         expect(parsed).to eq('type' => 'validation',
                              'errors' => { 'email' => ['入力してください'], 'password' => ['入力してください'] })

@@ -38,7 +38,7 @@ class SubscriptionsController < ApplicationController
 
   def update
     @subscription = owned_subscriptions.find(params[:id])
-    @subscription.update_attributes!(subscription_params.permit(:title, :tag_list))
+    @subscription.update!(subscription_params.permit(:title, :tag_list))
     render json: { id: @subscription.id }
   end
 

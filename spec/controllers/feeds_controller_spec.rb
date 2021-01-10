@@ -29,7 +29,7 @@ RSpec.describe FeedsController, type: :controller do
         action
         is_expected.to respond_with(:ok)
 
-        expect(response.content_type).to eq('application/json')
+        expect(response.media_type).to eq('application/json')
 
         data = JSON.parse(response.body, symbolize_names: true)
 

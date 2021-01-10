@@ -117,7 +117,7 @@ class Feed < ActiveRecord::Base
       end
 
       def load_rss(url)
-        open(url) do |rss_body|
+        URI.open(url) do |rss_body|
           return yield RSS::Parser.parse(rss_body)
         end
       end

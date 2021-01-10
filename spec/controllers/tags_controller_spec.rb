@@ -25,11 +25,11 @@ RSpec.describe TagsController, type: :controller do
 
     it 'JSONを返す' do
       subscription = create(:subscription, user: user, feed: create(:feed, item_count: 1))
-      subscription.update_attributes(tag_list: %w(tag1))
+      subscription.update!(tag_list: %w(tag1))
 
       action
 
-      expect(response.content_type).to eq('application/json')
+      expect(response.media_type).to eq('application/json')
       tags = JSON.parse(response.body, symbolize_names: true)
 
       expect(tags).to be_a(Array)
