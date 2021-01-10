@@ -135,7 +135,7 @@ RSpec.describe SubscriptionsController, type: :controller do
     end
 
     context 'パラメータが不正なとき' do
-      let!(:bypass_rescue!) {}
+      let(:bypass_rescue?) { false }
       let(:subscription_params) { super().merge(title: 'a' * 256) }
 
       it '登録されない' do

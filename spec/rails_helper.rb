@@ -68,7 +68,7 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include RssMockHelpers
   config.include_context 'Rails.loggerの出力内容がlog_stringとして参照できる', :stub_logging
-  config.include_context 'デフォルトでbypass_rescueする', type: :controller
+  config.include_context 'bypass_rescue?がfalseでない限り、デフォルトでbypass_rescueする', type: :controller
 
   config.before do
     FactoryBot.reload

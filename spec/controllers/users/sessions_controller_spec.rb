@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Users::SessionsController, type: :controller do
-  before { bypass_rescue }
   before { @request.env['devise.mapping'] = Devise.mappings[:user] }
 
   describe '#create' do

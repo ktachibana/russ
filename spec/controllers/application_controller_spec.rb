@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe ApplicationController, type: :controller do
   describe '.rescue_from' do
-    let!(:bypass_rescue!) {}
+    let(:bypass_rescue?) { false }
 
     describe 'ActiveRecord::RecordInvalid' do
       controller do

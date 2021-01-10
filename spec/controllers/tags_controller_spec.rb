@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe TagsController, type: :controller do
-  before { bypass_rescue }
   render_views
 
   let(:user) { create(:user) }
