@@ -2,7 +2,7 @@ namespace :app do
   desc 'Webアプリケーションを起動する'
   task :server do
     sh 'rm -f tmp/pids/server.pid'
-    sh 'rails server'
+    sh 'rails server --port $PORT'
   end
 
   desc 'クローラーを定期実行する'

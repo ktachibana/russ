@@ -37,6 +37,7 @@ RUN mkdir /run/nginx
 
 
 ENV RAILS_ENV=production
+ENV PORT 3000
+EXPOSE $PORT
 ENTRYPOINT ["bundle", "exec"]
 CMD ["rails", "app:server"]
-EXPOSE 3000
