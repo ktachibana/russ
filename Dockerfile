@@ -1,10 +1,10 @@
-FROM node:8-alpine AS build-js
+FROM node:14-alpine AS build-js
 COPY . /russ
 WORKDIR /russ
 RUN yarn install && rm -rf node_modules
 
 
-FROM ruby:2.6.1-alpine AS runtime
+FROM ruby:3.0.0-alpine AS runtime
 MAINTAINER Kenichi Tachibana
 
 COPY --from=build-js /russ /russ
@@ -26,7 +26,7 @@ RUN apk upgrade --no-cache && \
       yaml-dev \
       zlib-dev && \
     gem uninstall bundler && \
-    gem install bundler --version=2.0.1 && \
+    gem install bundler --version=2.2.3 && \
     bundle install && \
     apk del build-dependencies
 
