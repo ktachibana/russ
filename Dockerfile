@@ -14,7 +14,8 @@ RUN apk upgrade --no-cache && \
       postgresql-client \
       tzdata \
       bash \
-      nginx && \
+      nginx \
+      xz-dev && \
     apk add --update --no-cache --virtual=build-dependencies \
       build-base \
       curl-dev \
