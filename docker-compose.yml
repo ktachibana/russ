@@ -8,7 +8,7 @@ services:
     image: 'ktachiv/russ'
     environment:
       DATABASE_URL: 'postgres://postgres@database/postgres'
-    env_file: docker-app.env
+    env_file: containers/env/docker-app.env
     command: /bin/true
 
   rproxy:
@@ -44,6 +44,7 @@ services:
       - data:/var/lib/postgresql/data
     ports:
       - '5432:5432'
+    env_file: containers/env/docker-database.env
     restart: always
 
   app-oneoff:
@@ -56,6 +57,7 @@ services:
     image: 'postgres:9.5'
     links:
       - database
+    env_file: containers/env/docker-database.env
     environment:
       PGHOST: database
       PGUSER: postgres

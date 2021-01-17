@@ -11,3 +11,4 @@ docker-compose.yml
 spec
 public/assets
 docker-app.env
+containers/env/*.env
