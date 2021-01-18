@@ -111,7 +111,7 @@ class Feed < ApplicationRecord
         logger.info('start load_all!')
 
         with_time_limit(timeout) do |throw_if_timed_out|
-          order(loaded_at: :asc).each do |feed|
+          order(loaded_at: :asc).limit(1000).each do |feed|
             before_feed.call(feed)
 
             throw_if_timed_out.call
