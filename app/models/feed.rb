@@ -121,9 +121,11 @@ class Feed < ApplicationRecord
       end
 
       def load_rss(url)
-        response = Faraday.get(url) do |req|
-          req.options.timeout = 5
+        connection = Faraday.new do |c|
+          c.use FaradayMiddleware::FollowRedirects
+          c.options.timeout = 5
         end
+        response = connection.get(url)
         yield RSS::Parser.parse(response.body)
       end
     end

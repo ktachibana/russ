@@ -62,3 +62,4 @@ gem 'feedbag'
 gem 'activerecord-import'
 gem 'rufus-scheduler', require: false
 gem 'faraday'
+gem 'faraday_middleware'

@@ -21,7 +21,7 @@ RSpec.describe Feed, type: :model do
   end
 
   describe '#load!' do
-    before { mock_rss!(url: feed.url, body: rss_data) }
+    let!(:mock_request) { mock_rss!(url: feed.url, body: rss_data) }
 
     let(:feed) { build(:feed_only_url) }
     let(:rss_data) { rss_data_one_item }
@@ -186,6 +186,17 @@ RSpec.describe Feed, type: :model do
       it 'ログを出力する', :stub_logging do
         feed.load!
         expect(log_string).to include('error!', feed.url)
+      end
+    end
+
+    context 'リダイレクトが返ってきたとき' do
+      let!(:mock_request) do
+        WebMock.stub_request(:get, feed.url).to_return(status: 302, headers: { location: mock_url! })
+      end
+
+      it 'リダイレクト先からロードする' do
+        feed.load!
+        expect(feed.title).to eq('RSS Title')
       end
     end
   end
