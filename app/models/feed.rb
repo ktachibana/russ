@@ -107,17 +107,34 @@ class Feed < ApplicationRecord
     end
 
     module ClassMethods
-      def load_all!(count: 75)
+      def load_all!(timeout: 10.minutes, interval_seconds: 1, before_feed: ->(_) {}, after_feed: ->(_) {})
         logger.info('start load_all!')
 
-        order(loaded_at: :asc).limit(count).each do |feed|
-          logger.info "Feed#load! url: #{feed.url}"
+        with_time_limit(timeout) do |throw_if_timed_out|
+          order(loaded_at: :asc).each do |feed|
+            before_feed.call(feed)
 
-          sleep(1)
-          feed.load!
-          feed.save
+            throw_if_timed_out.call
+
+            logger.info "Feed#load! url: #{feed.url}"
+
+            sleep(interval_seconds)
+            feed.load!
+            feed.save
+
+            after_feed.call(feed)
+          end
         end
         logger.info('load_all! completed.')
+      end
+
+      def with_time_limit(duration)
+        ends_at = Time.current + duration
+        throw_if_timeout = -> { throw :timeout if ends_at.past? }
+
+        catch :timeout do
+          yield throw_if_timeout
+        end
       end
 
       def load_rss(url)

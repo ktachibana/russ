@@ -214,17 +214,25 @@ RSpec.describe Feed, type: :model do
       end.to change(Item, :count).from(1).to(2)
     end
 
-    it '更新対象をloaded_atが古い順でcount:の数だけに限定する' do
-      travel_to Time.current.change(msec: 0)
-      feeds = [3, 1, 2].map { |n| create(:feed, item_count: 1, loaded_at: n.days.ago).reload }
+    it 'loaded_atが古い順に更新し、timeout:の時間を過ぎたら中断する' do
+      now = Time.current.change(nsec: 0)
+      travel_to now
+
+      feeds = [3, 1, 2].map { |n| create(:feed, item_count: 1, loaded_at: now - n.days).reload }
       feeds.each do |feed|
         WebMock.stub_request(:get, feed.url).to_return(body: rss_data_one_item)
       end
-      described_class.load_all!(count: 2)
+
+      described_class.load_all!(
+        interval_seconds: 0,
+        timeout: 5.seconds,
+        before_feed: ->(_) { travel(2.seconds) }
+      )
+
       feeds.each(&:reload)
-      expect(feeds[0].loaded_at).to eq(Time.current)
-      expect(feeds[1].loaded_at).to eq(1.day.ago)
-      expect(feeds[2].loaded_at).to eq(Time.current)
+      expect(feeds[0].loaded_at).to eq(now + 2.seconds)
+      expect(feeds[1].loaded_at).to eq(now - 1.day)
+      expect(feeds[2].loaded_at).to eq(now + 4.seconds)
     end
   end
 
