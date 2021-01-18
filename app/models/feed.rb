@@ -119,7 +119,7 @@ class Feed < ApplicationRecord
       end
 
       def load_rss(url)
-        URI.open(url) do |rss_body|
+        URI.parse(url).open do |rss_body|
           return yield RSS::Parser.parse(rss_body)
         end
       end
