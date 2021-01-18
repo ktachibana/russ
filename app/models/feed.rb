@@ -24,6 +24,11 @@ class Feed < ApplicationRecord
       self.title = rss.channel.title
       self.description = rss.channel.description
       self.link_url = rss.channel.link
+
+      attributes = rss.items.map do |loaded_item|
+        to_item_attributes(loaded_item)
+      end
+      self.items_attributes = attributes
     end
 
     def update_by_atom!(atom)
@@ -57,11 +62,6 @@ class Feed < ApplicationRecord
           update_by_atom!(rss)
         else
           update_by_rss!(rss)
-
-          attributes = rss.items.map do |loaded_item|
-            to_item_attributes(loaded_item)
-          end
-          self.items_attributes = attributes
         end
         self.loaded_at = Time.current
         resolve_relative_url!
