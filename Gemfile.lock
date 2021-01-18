@@ -103,6 +103,11 @@ GEM
     factory_bot_rails (6.1.0)
       factory_bot (~> 6.1.0)
       railties (>= 5.0.0)
+    faraday (1.3.0)
+      faraday-net_http (~> 1.0)
+      multipart-post (>= 1.2, < 3)
+      ruby2_keywords
+    faraday-net_http (1.0.1)
     feedbag (0.10.1)
       nokogiri (~> 1.8, >= 1.8.2)
       open_uri_redirections (~> 0.2)
@@ -166,6 +171,7 @@ GEM
     mini_portile2 (2.5.0)
     minitest (5.14.3)
     msgpack (1.3.3)
+    multipart-post (2.1.1)
     nenv (0.3.0)
     nio4r (2.5.4)
     nokogiri (1.11.1)
@@ -277,6 +283,7 @@ GEM
       rubocop (~> 1.0)
       rubocop-ast (>= 1.1.0)
     ruby-progressbar (1.11.0)
+    ruby2_keywords (0.0.2)
     rubyzip (2.3.0)
     rufus-scheduler (3.7.0)
       fugit (~> 1.1, >= 1.1.6)
@@ -330,6 +337,7 @@ DEPENDENCIES
   devise
   factory_bot
   factory_bot_rails
+  faraday
   feedbag
   guard
   guard-rspec

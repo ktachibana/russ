@@ -62,3 +62,4 @@ gem 'oj_mimic_json'
 gem 'feedbag'
 gem 'activerecord-import'
 gem 'rufus-scheduler', require: false
+gem 'faraday'

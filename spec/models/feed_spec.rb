@@ -175,10 +175,18 @@ RSpec.describe Feed, type: :model do
       end
     end
 
-    it 'エラーが起きたときはログを出力する', :stub_logging do
-      allow(described_class).to receive(:load_rss).and_raise('error!')
-      feed.load!
-      expect(log_string).to include('error!', feed.url)
+    context 'RSSをロードしようとしてエラーになるとき' do
+      before { allow(described_class).to receive(:load_rss).and_raise('error!') }
+
+      it 'エラーになるFeedばかり最初に更新されないようloaded_atだけは設定する' do
+        feed.load!
+        expect(feed.loaded_at).to be_present
+      end
+
+      it 'ログを出力する', :stub_logging do
+        feed.load!
+        expect(log_string).to include('error!', feed.url)
+      end
     end
   end
 

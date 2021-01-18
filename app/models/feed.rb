@@ -56,6 +56,9 @@ class Feed < ApplicationRecord
     end
 
     def load!
+      # エラーで更新できなくてもloaded_atは更新しないと、.load_all!で常に最初の処理対象になってしまう
+      self.loaded_at = Time.current
+
       self.class.load_rss(url) do |rss|
         case rss.feed_type
         when 'atom'
@@ -63,7 +66,6 @@ class Feed < ApplicationRecord
         else
           update_by_rss!(rss)
         end
-        self.loaded_at = Time.current
         resolve_relative_url!
       end
     rescue StandardError => e
@@ -119,9 +121,10 @@ class Feed < ApplicationRecord
       end
 
       def load_rss(url)
-        URI.parse(url).open do |rss_body|
-          return yield RSS::Parser.parse(rss_body)
+        response = Faraday.get(url) do |req|
+          req.options.timeout = 5
         end
+        yield RSS::Parser.parse(response.body)
       end
     end
   end
