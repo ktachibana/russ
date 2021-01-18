@@ -101,7 +101,7 @@ RSpec.describe Item, type: :model do
   end
 
   describe '.before_save' do
-    before { Timecop.freeze }
+    before { freeze_time }
 
     describe '#correct_published_at' do
       it '未来の日付が設定されていたら現在時刻に置き換える' do

@@ -67,6 +67,7 @@ RSpec.configure do |config|
   WebMock.disable_net_connect!(allow_localhost: true)
 
   config.include FactoryBot::Syntax::Methods
+  config.include ActiveSupport::Testing::TimeHelpers
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include RssMockHelpers
   config.include_context 'Rails.loggerの出力内容がlog_stringとして参照できる', :stub_logging
@@ -77,7 +78,7 @@ RSpec.configure do |config|
   end
 
   config.after do
-    Timecop.return
+    travel_back
   end
 
   config.before do |example|

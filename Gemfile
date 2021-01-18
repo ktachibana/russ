@@ -34,7 +34,6 @@ group :development, :test do
   gem 'pry-rails'
   gem 'tapp'
   gem 'shoulda-matchers'
-  gem 'timecop'
   gem 'rubocop'
   gem 'rubocop-rails'
   gem 'rubocop-rspec'

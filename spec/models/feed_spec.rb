@@ -204,7 +204,7 @@ RSpec.describe Feed, type: :model do
     end
 
     it '更新対象をloaded_atが古い順でcount:の数だけに限定する' do
-      Timecop.freeze Time.current.change(msec: 0)
+      travel_to Time.current.change(msec: 0)
       feeds = [3, 1, 2].map { |n| create(:feed, item_count: 1, loaded_at: n.days.ago).reload }
       feeds.each do |feed|
         WebMock.stub_request(:get, feed.url).to_return(body: rss_data_one_item)
