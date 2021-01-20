@@ -7,7 +7,7 @@ FactoryBot.define do
     feed
     sequence(:title) { |n| "item title#{n}" }
     sequence(:link) { |n| "http://test.com/content/#{n}" }
-    published_at { Time.zone.now }
+    published_at { Time.current }
     sequence(:description) { |n| "item description#{n}" }
   end
 end

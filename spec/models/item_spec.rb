@@ -100,28 +100,26 @@ RSpec.describe Item, type: :model do
     end
   end
 
-  describe '.before_save' do
+  describe '#correct_published_at' do
     before { freeze_time }
 
-    describe '#correct_published_at' do
-      it '未来の日付が設定されていたら現在時刻に置き換える' do
-        expect(create(:item, published_at: 1.day.from_now).published_at).to eq(Time.current)
-        expect(create(:item, published_at: 1.day.from_now.to_date).published_at).to eq(Time.current)
-      end
+    it '未来の日付が設定されていたら現在時刻に置き換える' do
+      expect(create(:item, published_at: 1.day.from_now).published_at).to eq(Time.current)
+      expect(create(:item, published_at: 1.day.from_now.to_date).published_at).to eq(Time.current)
+    end
 
-      it 'nilの時は現在時刻を設定する' do
-        expect(create(:item, published_at: nil).published_at).to eq(Time.current)
-      end
+    it 'nilの時は現在時刻を設定する' do
+      expect(create(:item, published_at: nil).published_at).to eq(Time.current)
+    end
 
-      it 'すでに設定された時刻をnilにしようとしたら元に戻す' do
-        item = create(:item, published_at: 1.day.ago)
-        expect { item.update!(published_at: nil) }.not_to change { item.published_at }
-      end
+    it 'すでに設定された時刻をnilにしようとしたら元に戻す' do
+      item = create(:item, published_at: 1.day.ago)
+      expect { item.update!(published_at: nil) }.not_to change { item.published_at }
+    end
 
-      it '直接新しい日付を設定することはできる' do
-        item = create(:item, published_at: 2.days.ago)
-        expect { item.update!(published_at: 1.day.ago) }.to change { item.published_at }.to(1.day.ago)
-      end
+    it '直接新しい日付を設定することはできる' do
+      item = create(:item, published_at: 2.days.ago)
+      expect { item.update!(published_at: 1.day.ago) }.to change { item.published_at }.to(1.day.ago)
     end
   end
 end

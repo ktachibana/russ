@@ -28,6 +28,7 @@ class Feed < ApplicationRecord
       attributes = rss.items.map do |loaded_item|
         to_item_attributes(loaded_item)
       end
+
       self.items_attributes = attributes
     end
 
@@ -37,7 +38,7 @@ class Feed < ApplicationRecord
       self.link_url = atom.links.find { |link| link.rel == 'alternate' }.try(:href)
       self.link_url ||= atom.links[0].try(:href) || url
 
-      guid_id_map = items.each_with_object({}) do |item, hash|
+      guid_id_map = items.find_each.with_object({}) do |item, hash|
         hash[item.guid] = item.id
       end
       attributes = atom.items.map do |item|
@@ -46,7 +47,7 @@ class Feed < ApplicationRecord
           result[:guid] = guid
           guid_id_map[guid].try { |id| result[:id] = id }
           result[:title] = item.title.content
-          result[:link] = item.link.href
+          result[:link] = resolve_relative_url(item.link.href)
           result[:published_at] = item.updated.content
           result[:description] = item.content.content
         end
@@ -66,20 +67,17 @@ class Feed < ApplicationRecord
         else
           update_by_rss!(rss)
         end
-        resolve_relative_url!
+        self.link_url = resolve_relative_url(link_url)
       end
     rescue StandardError => e
       Rails.logger.error(url: url, message: e.message)
       nil # TODO: エラーハンドリング
     end
 
-    def resolve_relative_url!
-      return if url.blank?
+    def resolve_relative_url(other_url)
+      return other_url if url.blank? || other_url.blank?
 
-      self.link_url = URI.join(url, link_url).to_s if link_url.present?
-      items.each do |item|
-        item.link = URI.join(url, item.link) if item.link.present?
-      end
+      URI.join(url, other_url).to_s
     end
 
     def to_item_attributes(parsed_item)
@@ -94,7 +92,7 @@ class Feed < ApplicationRecord
 
     def parsed_item_attributes(guid, parsed_item)
       {
-        link: parsed_item.link,
+        link: resolve_relative_url(parsed_item.link),
         title: parsed_item.title,
         guid: guid,
         published_at: parsed_item.date,
