@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'open-uri'
-require 'rss'
 
 class Feed < ApplicationRecord
   has_many :items, dependent: :destroy
@@ -21,9 +20,9 @@ class Feed < ApplicationRecord
     extend ActiveSupport::Concern
 
     def update_by_rss!(rss)
-      self.title = rss.channel.title
-      self.description = rss.channel.description
-      self.link_url = rss.channel.link
+      self.title = rss.title
+      self.description = rss.description
+      self.link_url = rss.link
 
       attributes = rss.items.map do |loaded_item|
         to_item_attributes(loaded_item)
@@ -33,23 +32,22 @@ class Feed < ApplicationRecord
     end
 
     def update_by_atom!(atom)
-      self.title = atom.title.content
-      self.description = atom.subtitle.try(:content)
-      self.link_url = atom.links.find { |link| link.rel == 'alternate' }.try(:href)
-      self.link_url ||= atom.links[0].try(:href) || url
+      self.title = atom.title
+      self.description = atom.description
+      self.link_url = atom.link || url
 
-      guid_id_map = items.find_each.with_object({}) do |item, hash|
+      guid_id_map = items.select(:guid, :id).find_each.with_object({}) do |item, hash|
         hash[item.guid] = item.id
       end
+
       attributes = atom.items.map do |item|
         {}.tap do |result|
-          guid = item.id.try(:content) || result[:link]
-          result[:guid] = guid
-          guid_id_map[guid].try { |id| result[:id] = id }
-          result[:title] = item.title.content
-          result[:link] = resolve_relative_url(item.link.href)
-          result[:published_at] = item.updated.content
-          result[:description] = item.content.content
+          guid_id_map[item.guid].try! { |id| result[:id] = id }
+          result[:guid] = item.guid
+          result[:title] = item.title
+          result[:link] = resolve_relative_url(item.link)
+          result[:published_at] = item.date
+          result[:description] = item.description
         end
       end
 
@@ -63,9 +61,9 @@ class Feed < ApplicationRecord
       self.class.load_rss(url) do |rss|
         case rss.feed_type
         when 'atom'
-          update_by_atom!(rss)
+          update_by_atom!(Feeds::Atom.new(rss))
         else
-          update_by_rss!(rss)
+          update_by_rss!(Feeds::Rss.new(rss))
         end
         self.link_url = resolve_relative_url(link_url)
       end
@@ -81,27 +79,25 @@ class Feed < ApplicationRecord
     end
 
     def to_item_attributes(parsed_item)
-      guid = parsed_item.try(:guid).try(:content)
-
-      result = parsed_item_attributes(guid, parsed_item)
-      find_existing_item(guid, parsed_item).try do |item|
+      result = parsed_item_attributes(parsed_item)
+      find_existing_item(parsed_item).try! do |item|
         result[:id] = item.id
       end
       result
     end
 
-    def parsed_item_attributes(guid, parsed_item)
+    def parsed_item_attributes(parsed_item)
       {
         link: resolve_relative_url(parsed_item.link),
         title: parsed_item.title,
-        guid: guid,
+        guid: parsed_item.guid,
         published_at: parsed_item.date,
         description: parsed_item.description
       }
     end
 
-    def find_existing_item(guid, parsed_item)
-      (guid && items.find_by(guid: guid)) || items.find_by(link: parsed_item.link)
+    def find_existing_item(parsed_item)
+      (parsed_item.guid && items.find_by(guid: parsed_item.guid)) || items.find_by(link: parsed_item.link)
     end
 
     module ClassMethods

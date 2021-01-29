@@ -61,13 +61,13 @@ RSpec.describe Feed, type: :model do
           expect(item.title).to eq('New Title')
           expect(item.link).to eq('http://test.com/content/2')
           expect(item.published_at).to eq(Time.find_zone!(9).local(2012, 2, 22, 18, 24, 29))
-          item.description == 'New item description'
+          expect(item.description).to eq('New item description')
         end
         feed.items[1].tap do |item|
           expect(item.title).to eq('Item Title')
           expect(item.link).to eq('http://test.com/content/3')
           expect(item.published_at).to eq(Time.find_zone!(9).local(2012, 2, 20, 16, 4, 19))
-          item.description == 'Item description'
+          expect(item.description).to eq('Item description')
         end
       end
 
@@ -101,11 +101,11 @@ RSpec.describe Feed, type: :model do
         expect(feed.items.size).to eq(2)
         feed.items[0].tap do |item|
           expect(item.link).to eq('http://test.com/content/2')
-          item.description == 'New item description'
+          expect(item.description).to eq('New item description')
         end
         feed.items[1].tap do |item|
           expect(item.link).to eq('http://test.com/content/1')
-          item.description == 'Item description UPDATED'
+          expect(item.description).to eq('Item description UPDATED')
         end
       end
     end

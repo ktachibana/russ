@@ -17,6 +17,7 @@ AllCops:
     - 'bundle_bin/**/*'
     - 'Guardfile'
     - 'node_modules/**/*'
+  DisplayCopNames: true
 
 Style/AsciiComments:
   Enabled: false
@@ -47,4 +48,8 @@ Metrics/BlockLength:
   Enabled: false
 
 RSpec/MultipleExpectations:
+  Enabled: false
+
+# 実行速度の方を優先してしまう
+RSpec/ExampleLength:
   Enabled: false
