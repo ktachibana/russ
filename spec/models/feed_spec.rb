@@ -176,7 +176,7 @@ RSpec.describe Feed, type: :model do
     end
 
     context 'RSSをロードしようとしてエラーになるとき' do
-      before { allow(described_class).to receive(:load_rss).and_raise('error!') }
+      before { allow(described_class).to receive(:load_source).and_raise('error!') }
 
       it 'エラーになるFeedばかり最初に更新されないようloaded_atだけは設定する' do
         feed.load!

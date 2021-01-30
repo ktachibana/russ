@@ -19,7 +19,7 @@ class Feed < ApplicationRecord
   module FileLoadable
     extend ActiveSupport::Concern
 
-    def update_by_rss!(rss)
+    def assign_by_rss!(rss)
       self.title = rss.title
       self.description = rss.description
       self.link_url = rss.link
@@ -31,7 +31,7 @@ class Feed < ApplicationRecord
       self.items_attributes = attributes
     end
 
-    def update_by_atom!(atom)
+    def assign_by_atom!(atom)
       self.title = atom.title
       self.description = atom.description
       self.link_url = atom.link || url
@@ -58,18 +58,23 @@ class Feed < ApplicationRecord
       # エラーで更新できなくてもloaded_atは更新しないと、.load_all!で常に最初の処理対象になってしまう
       self.loaded_at = Time.current
 
-      self.class.load_rss(url) do |rss|
-        case rss.feed_type
-        when 'atom'
-          update_by_atom!(Feeds::Atom.new(rss))
-        else
-          update_by_rss!(Feeds::Rss.new(rss))
-        end
-        self.link_url = resolve_relative_url(link_url)
-      end
+      source = self.class.load_source(self)
+      assign_by_feed_source!(source)
+
+      self.link_url = resolve_relative_url(link_url)
     rescue StandardError => e
       Rails.logger.error(url: url, message: e.message)
       nil # TODO: エラーハンドリング
+    end
+
+    def assign_by_feed_source!(body)
+      rss = RSS::Parser.parse(body)
+      case rss.feed_type
+      when 'atom'
+        assign_by_atom!(Feeds::Atom.new(rss))
+      else
+        assign_by_rss!(Feeds::Rss.new(rss))
+      end
     end
 
     def resolve_relative_url(other_url)
@@ -131,13 +136,12 @@ class Feed < ApplicationRecord
         end
       end
 
-      def load_rss(url)
+      def load_source(feed)
         connection = Faraday.new do |c|
           c.use FaradayMiddleware::FollowRedirects
           c.options.timeout = 5
         end
-        response = connection.get(url)
-        yield RSS::Parser.parse(response.body)
+        connection.get(feed.url).body
       end
     end
   end
