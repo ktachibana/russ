@@ -20,6 +20,18 @@ RSpec.describe Feed, type: :model do
     it { is_expected.to have_many(:subscriptions).dependent(:destroy) }
   end
 
+  describe '.loaded_before' do
+    it '最終ロード時刻が指定時刻より前のもの' do
+      time = Time.current
+      feeds = [
+        create(:feed, loaded_at: time - 1.second),
+        create(:feed, loaded_at: time),
+        create(:feed, loaded_at: time + 1.second)
+      ]
+      expect(Feed.loaded_before(time)).to match_array(feeds.values_at(0))
+    end
+  end
+
   describe '#load!' do
     let!(:mock_request) { mock_rss!(url: feed.url, body: rss_data) }
 
@@ -178,11 +190,6 @@ RSpec.describe Feed, type: :model do
     context 'RSSをロードしようとしてエラーになるとき' do
       before { allow(described_class).to receive(:load_source).and_raise('error!') }
 
-      it 'エラーになるFeedばかり最初に更新されないようloaded_atだけは設定する' do
-        feed.load!
-        expect(feed.loaded_at).to be_present
-      end
-
       it 'ログを出力する', :stub_logging do
         feed.load!
         expect(log_string).to include('error!', feed.url)
@@ -206,7 +213,7 @@ RSpec.describe Feed, type: :model do
 
     it 'すべてのFeedを更新する' do
       WebMock.stub_request(:get, mock_rss_url).to_return(body: rss_data_one_item)
-      described_class.new(url: mock_rss_url).tap(&:load!).tap(&:save!)
+      described_class.new(url: mock_rss_url).tap(&:load!).update!(loaded_at: 1.day.ago)
 
       WebMock.stub_request(:get, mock_rss_url).to_return(body: rss_data_two_items)
       expect do
@@ -214,7 +221,7 @@ RSpec.describe Feed, type: :model do
       end.to change(Item, :count).from(1).to(2)
     end
 
-    it 'loaded_atが古い順に更新し、timeout:の時間を過ぎたら中断する' do
+    it 'loaded_atが古い順に更新していき、途中でtimeout:の時間を過ぎたら中断する' do
       now = Time.current.change(nsec: 0)
       travel_to now
 
@@ -224,8 +231,8 @@ RSpec.describe Feed, type: :model do
       end
 
       described_class.load_all!(
-        interval_seconds: 0,
-        timeout: 5.seconds,
+        interval: 0,
+        timeout: 3.seconds,
         before_feed: ->(_) { travel(2.seconds) }
       )
 
@@ -233,6 +240,38 @@ RSpec.describe Feed, type: :model do
       expect(feeds[0].loaded_at).to eq(now + 2.seconds)
       expect(feeds[1].loaded_at).to eq(now - 1.day)
       expect(feeds[2].loaded_at).to eq(now + 4.seconds)
+    end
+  end
+
+  describe '.each_load!' do
+    it '#loaded_atを古い順にchunk_size個ずつ読み込んで、更新しながら処理する' do
+      now = Time.current
+      feeds = [2, 1, 3].map do |n|
+        create(:feed, loaded_at: now - n.seconds)
+      end
+      feeds << create(:feed, loaded_at: nil)
+
+      processed = []
+      Feed.each_load!(chunk_size: 2) do |feed|
+        processed << feed
+      end
+
+      expect(processed)
+      expect(processed.map(&:id)).to eq(feeds.values_at(2, 0, 1).map(&:id))
+      feeds.each do |feed|
+        expect(feed.reload.loaded_at).to be >= now
+      end
+    end
+
+    context 'ブロック内でエラーが起きたとき' do
+      it '#loaded_atは更新する' do
+        now = Time.current
+        feed = create(:feed, loaded_at: 10.seconds.ago)
+        expect {
+          Feed.each_load! { |_| raise 'test!!!' }
+        }.to raise_error('test!!!')
+        expect(feed.reload.loaded_at).to be >= now
+      end
     end
   end
 

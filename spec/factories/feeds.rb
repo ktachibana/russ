@@ -8,6 +8,7 @@ FactoryBot.define do
     sequence(:title) { |n| "Feed id:#{n}" }
     sequence(:link_url) { |n| "http://test.com/content#{n}" }
     sequence(:description) { |n| "description#{n}" }
+    loaded_at { 1.day.ago }
 
     transient do
       item_count { 0 }

@@ -16,6 +16,8 @@ class Feed < ApplicationRecord
 
   attr_accessor :users_subscription
 
+  scope :loaded_before, ->(time) { where("#{table_name}.loaded_at < ?", time) }
+
   module FileLoadable
     extend ActiveSupport::Concern
 
@@ -55,7 +57,6 @@ class Feed < ApplicationRecord
     end
 
     def load!
-      # エラーで更新できなくてもloaded_atは更新しないと、.load_all!で常に最初の処理対象になってしまう
       self.loaded_at = Time.current
 
       source = self.class.load_source(self)
@@ -106,25 +107,40 @@ class Feed < ApplicationRecord
     end
 
     module ClassMethods
-      def load_all!(timeout: 10.minutes, interval_seconds: 1, before_feed: ->(_) {}, after_feed: ->(_) {})
+      def load_all!(timeout: 10.minutes, interval: 1.second, before_feed: ->(_) {})
         logger.info('start load_all!')
 
+        each_load!(timeout: timeout) do |feed|
+          before_feed.call(feed)
+
+          sleep(interval.to_f)
+
+          logger.info "Feed#load! url: #{feed.url}"
+          feed.load!
+        end
+
+        logger.info('load_all! completed.')
+      end
+
+      def each_load!(timeout: 10.minutes, chunk_size: 20)
+        started_at = Time.current
         with_time_limit(timeout) do |throw_if_timed_out|
-          order(loaded_at: :asc).limit(1000).each do |feed|
-            before_feed.call(feed)
+          loop do
+            feeds_chunk = loaded_before(started_at).order(loaded_at: :asc).limit(chunk_size)
+            return if feeds_chunk.empty?
 
-            throw_if_timed_out.call
+            feeds_chunk.each do |feed|
+              throw_if_timed_out.call
 
-            logger.info "Feed#load! url: #{feed.url}"
-
-            sleep(interval_seconds)
-            feed.load!
-            feed.save
-
-            after_feed.call(feed)
+              begin
+                yield(feed)
+              ensure
+                # エラーで更新できなくてもloaded_atは更新しないと、次のループで常に最初の処理対象になってしまう
+                feed.update(loaded_at: Time.current)
+              end
+            end
           end
         end
-        logger.info('load_all! completed.')
       end
 
       def with_time_limit(duration)
