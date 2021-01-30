@@ -26,7 +26,8 @@ module Feeds
       delegate :title, :link, :date, :description, to: :item
 
       def guid
-        item&.guid&.content
+        # RDF形式だと #guid が無いので #try を使う
+        item.try(:guid)&.content
       end
     end
   end
