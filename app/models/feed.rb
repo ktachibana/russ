@@ -59,13 +59,17 @@ class Feed < ApplicationRecord
     def load!
       self.loaded_at = Time.current
 
-      source = self.class.load_source(self)
+      source = load_source
       assign_by_feed_source!(source)
 
       self.link_url = resolve_relative_url(link_url)
     rescue StandardError => e
       Rails.logger.error(url: url, message: e.message)
       nil # TODO: エラーハンドリング
+    end
+
+    def load_source
+      self.class.load_source(self)
     end
 
     def assign_by_feed_source!(body)
