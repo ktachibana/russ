@@ -1,6 +1,7 @@
 namespace :app do
   desc 'Webアプリケーションを起動する'
-  task :server do
+  task server: %w[db:create db:migrate] do
+    ENV['PORT'] ||= '3000'
     sh 'rm -f tmp/pids/server.pid'
     sh 'rails server --port $PORT'
   end
