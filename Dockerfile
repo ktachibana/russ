@@ -14,7 +14,6 @@ RUN apk upgrade --no-cache && \
       postgresql-client \
       tzdata \
       bash \
-      nginx \
       xz-dev && \
     apk add --update --no-cache --virtual=build-dependencies \
       build-base \
@@ -30,11 +29,6 @@ RUN apk upgrade --no-cache && \
     gem install bundler --version=2.2.3 && \
     bundle install && \
     apk del build-dependencies
-
-COPY containers/rproxy/nginx.conf /etc/nginx/
-COPY containers/rproxy/conf.d/default.conf /etc/nginx/conf.d/
-RUN mkdir /run/nginx
-
 
 ENV RAILS_ENV=production
 ENV PORT 3000

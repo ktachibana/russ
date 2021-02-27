@@ -11,15 +11,6 @@ services:
     env_file: containers/env/docker-app.env
     command: /bin/true
 
-  rproxy:
-    <<: *app-base
-    links:
-      - webapp
-    ports:
-      - '80:80'
-    command: ["nginx", "-g", "daemon off;"]
-    restart: always
-
   app-build:
     <<: *app-base
     build: '.'
