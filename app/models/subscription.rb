@@ -7,8 +7,6 @@ class Subscription < ApplicationRecord
 
   accepts_nested_attributes_for :feed
 
-  enum hide_default: { invisible: true, visible: false, unknown: nil }
-
   validates :user_id, presence: true
   validates :title, length: { maximum: 255 }
   validates :feed_id, uniqueness: { scope: :user_id }
