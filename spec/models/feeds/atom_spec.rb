@@ -23,6 +23,12 @@ RSpec.describe Feeds::Atom, type: :model do
       expect(item.description).to eq('Content 1')
     end
 
+    it 'item.dateの値がto_s(:db)できる' do
+      # rss gemの中で定義している Time#w3cdtf が #to_s のaliasになっており、
+      # ActiveSupportのto_s(:db)を受け入れなくなっている
+      feed.items.first.date.to_s(:db)
+    end
+
     context 'alternate linkがない' do
       context 'かつ、他のタイプのlinkもない'
     end

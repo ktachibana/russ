@@ -52,7 +52,7 @@ module Feeds
       end
 
       def date
-        item.updated.content
+        Time.zone.parse(item.updated.content.to_s)
       end
 
       def description
