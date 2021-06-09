@@ -4,7 +4,7 @@ WORKDIR /russ
 RUN yarn install && rm -rf node_modules
 
 
-FROM ruby:3.0.0-alpine AS runtime
+FROM ruby:3.0.1-alpine AS runtime
 MAINTAINER Kenichi Tachibana
 
 COPY --from=build-js /russ /russ
