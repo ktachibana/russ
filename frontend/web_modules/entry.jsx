@@ -1,6 +1,6 @@
-require('expose-loader?exposes[]=jQuery!jquery'); // bootstrapが要求する
 require('bootstrap/dist/js/bootstrap');
 
+import $ from 'expose-loader?exposes=$,jQuery!jquery'; // bootstrapが要求する
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {HashRouter, Route, Redirect, Switch} from 'react-router-dom';
