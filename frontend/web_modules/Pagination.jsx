@@ -1,5 +1,6 @@
 import React from 'react';
 
+// TODO: componentWillReceivePropsのところをなんとかしてfunctional componentに置き換える
 export default class Pagination extends React.Component {
   constructor(props) {
     super(props);
