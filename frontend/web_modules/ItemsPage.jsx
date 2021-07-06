@@ -1,85 +1,82 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {withRouter} from 'react-router-dom';
 import ItemPanel from 'ItemPanel';
 import TagButtons from 'TagButtons';
 import WithPagination from 'WithPagination';
 import api from 'Api';
 
-class ItemsPage extends React.Component {
-  constructor(props) {
-    super(props);
+function itemsUrl(page, tags) {
+  const tagParam = tags.map(tag => encodeURIComponent(tag.name)).join(',');
+  return `/items/${page}/${tagParam}`
+}
 
-    this.state = {
-      tags: [],
-      items: [],
-      pagination: null
-    };
+function ItemsPage({currentPage, currentTagNames, history}) {
+  const [allTags, setAllTags] = useState([]);
+  const [items, setItems] = useState([]);
+  const [pagination, setPagination] = useState(null);
+
+  const currentTags = selectTags(currentTagNames);
+
+
+  function selectTags(tagNames) {
+    return allTags.filter(tag => tagNames.includes(tag.name));
   }
 
-  get currentTags() {
-    return this.selectTags(this.props.currentTagNames);
-  }
-
-  selectTags(tagNames) {
-    return this.state.tags.filter(tag => tagNames.includes(tag.name));
-  }
-
-  updateItems(props) {
+  function updateItems() {
     const query = {
-      page: props.page,
-      tag: props.currentTagNames,
+      page: currentPage,
+      tag: currentTagNames,
       hideDefault: true
     };
     api.loadItems(query).then(({items, pagination}) => {
-      this.setState({
-        items: items,
-        pagination: pagination
-      });
+      setItems(items);
+      setPagination(pagination);
     });
   }
 
-  componentDidMount() {
-    api.loadInitial().then((data) => {
-      this.setState({tags: data.tags});
+  useEffect(() => {
+    api.loadTags().then((tags) => {
+      setAllTags(tags);
     });
-    this.updateItems(this.props);
+  }, []);
+
+  useEffect(() => {
+    updateItems();
+  }, [currentTagNames, currentTagNames]);
+
+  function pushHistory({newPage = currentPage, newTags = currentTags}) {
+    history.push(itemsUrl(newPage, newTags));
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.updateItems(nextProps);
+  function changePage(newPage) {
+    pushHistory({newPage})
   }
 
-  changeUrl({page = this.props.page, currentTagNames = this.props.currentTagNames}) {
-    const tagParam = currentTagNames.map(tag => encodeURIComponent(tag)).join(',');
-    this.props.history.push(`/items/${page}/${tagParam}`);
+  function changeCurrentTags(newTags) {
+    pushHistory({newTags});
   }
 
-  pagenationChanged(newPage) {
-    this.changeUrl({page: newPage});
-  }
+  return (
+    <div>
+      <TagButtons tags={allTags} currentTags={currentTags} onChange={(newTags) => {
+        changeCurrentTags(newTags)
+      }}/>
+      <hr/>
 
-  tagButtonsChanged(newTags) {
-    this.changeUrl({currentTagNames: newTags.map(tag => tag.name)});
-  }
-
-  render() {
-    return (
-      <div>
-        <TagButtons tags={this.state.tags} currentTags={this.currentTags} onChange={this.tagButtonsChanged.bind(this)}/>
-        <hr/>
-
-        <WithPagination pagination={this.state.pagination}
-                        currentPage={this.props.page}
-                        onPageChange={this.pagenationChanged.bind(this)}>
-          <div className='items'>
-            {this.state.items.map(item =>
-              <ItemPanel key={item.id} item={item}/>
-            )}
-          </div>
-        </WithPagination>
-      </div>
-    );
-  }
+      <WithPagination
+        pagination={pagination}
+        currentPage={currentPage}
+        onPageChange={(newPage) => {
+          changePage(newPage)
+        }}>
+        <div className='items'>
+          {items.map(item =>
+            <ItemPanel key={item.id} item={item}/>
+          )}
+        </div>
+      </WithPagination>
+    </div>
+  );
 }
 
 export default withRouter(ItemsPage);

@@ -65,6 +65,10 @@ class Api extends EventEmitter2 {
     return $.getJSON('/feeds', {tag, page});
   }
 
+  loadTags() {
+    return $.getJSON('/tags')
+  }
+
   subscribeFeed(subscriptionId, subscription) {
     const url = subscriptionId ? `/subscriptions/${subscriptionId}` : '/subscriptions';
     const method = subscriptionId ? 'patch' : 'post';

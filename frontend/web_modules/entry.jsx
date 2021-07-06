@@ -22,7 +22,7 @@ const paramParser = {
 const ItemsPageRoute = ({match}) => {
   const pageProps = {
     currentTagNames: paramParser.names(match.params.tags),
-    page: paramParser.integer(match.params.page)
+    currentPage: paramParser.integer(match.params.page)
   };
   return <ItemsPage {...pageProps} />
 };

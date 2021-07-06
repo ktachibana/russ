@@ -1,114 +1,97 @@
-import React from 'react';
+import React, {useState} from 'react';
 
-// TODO: componentWillReceivePropsのところをなんとかしてfunctional componentに置き換える
-export default class Pagination extends React.Component {
-  constructor(props) {
-    super(props);
+export default function Pagination({currentPage, pagination, onPageChange}) {
+  const [inputValue, setInputValue] = useState(currentPage);
 
-    this.state = {
-      inputValue: props.currentPage
-    };
+  const lastPage = Math.ceil(pagination.totalCount / pagination.perPage);
+  const hasPrevPage = 1 < currentPage;
+  const hasNextPage = currentPage < lastPage;
+
+  function changePage(newPage) {
+    setInputValue(newPage);
+    requirePageChange(newPage);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.currentPage != this.props.currentPage) {
-      this.setState({inputValue: nextProps.currentPage});
-    }
+  function firstPageClicked() {
+    changePage(1);
   }
 
-  get lastPage() {
-    return Math.ceil(this.props.pagination.totalCount / this.props.pagination.perPage);
+  function prevPageClicked() {
+    changePage(currentPage - 1);
   }
 
-  firstPageClicked() {
-    this.props.onPageChange(1);
+  function nextPageClicked() {
+    changePage(currentPage + 1);
   }
 
-  prevPageClicked() {
-    this.props.onPageChange(this.props.currentPage - 1);
+  function lastPageClicked() {
+    changePage(lastPage);
   }
 
-  get hasPrevPage() {
-    return 1 < this.props.currentPage;
+  function inputValueChanged(e) {
+    setInputValue(parseInt(e.target.value));
   }
 
-  nextPageClicked() {
-    this.props.onPageChange(this.props.currentPage + 1);
+  function inputBlurred() {
+    requirePageChange(inputValue);
   }
 
-  lastPageClicked() {
-    this.props.onPageChange(this.lastPage);
-  }
-
-  get hasNextPage() {
-    return this.props.currentPage < this.lastPage;
-  }
-
-  inputValueChanged(e) {
-    this.setState({inputValue: parseInt(e.target.value)});
-  }
-
-  inputBlurred() {
-    this.requirePageChange();
-  }
-
-  inputKeyPressed(e) {
+  function inputKeyPressed(e) {
     if(e.key === 'Enter') {
       e.target.blur();
     }
   }
 
-  requirePageChange() {
-    if (this.state.inputValue === this.props.currentPage) {
+  function requirePageChange(newPage) {
+    if (newPage === currentPage) {
       return;
     }
 
-    if (!this.isInputValueValid()) {
-      this.setState({inputValue: this.props.currentPage});
+    if (!isInputValueValid(newPage)) {
+      setInputValue(currentPage);
       return;
     }
 
-    this.props.onPageChange(this.state.inputValue);
+    onPageChange(newPage);
   }
 
-  isInputValueValid() {
-    const value = this.state.inputValue;
-    return typeof(value) === 'number' && 1 <= value && value <= this.lastPage;
+  function isInputValueValid(newPage) {
+    return typeof(newPage) === 'number' && 1 <= newPage && newPage <= lastPage;
   }
 
-  render() {
-    return (
-      <div className='text-center form-inline'>
-        <div className="form-group">
-          <div className="input-group">
-            <span className="input-group-btn">
-              <button className="btn btn-default" onClick={this.firstPageClicked.bind(this)} disabled={!this.hasPrevPage}>
-                <span className="glyphicon glyphicon-fast-backward"/>
-              </button>
-              <button className="btn btn-default" onClick={this.prevPageClicked.bind(this)} disabled={!this.hasPrevPage}>
-                <span className="glyphicon glyphicon-chevron-left"/>
-              </button>
-            </span>
-            <input type="number"
-                   className="form-control"
-                   value={this.state.inputValue}
-                   onChange={this.inputValueChanged.bind(this)}
-                   onBlur={this.inputBlurred.bind(this)}
-                   onKeyPress={this.inputKeyPressed.bind(this)}
-                   min="1"
-                   max={this.lastPage}/>
-            <div className="input-group-addon">/ {this.lastPage}</div>
-            <span className="input-group-btn">
-              <button className="btn btn-default" onClick={this.nextPageClicked.bind(this)} disabled={!this.hasNextPage}>
-                <span className="glyphicon glyphicon-chevron-right"/>
-              </button>
-              <button className="btn btn-default" onClick={this.lastPageClicked.bind(this)} disabled={!this.hasNextPage}>
-                <span className="glyphicon glyphicon-fast-forward"/>
-              </button>
-            </span>
-          </div>
+  return (
+    <div className='text-center form-inline'>
+      <div className="form-group">
+        <div className="input-group">
+          <span className="input-group-btn">
+            <button className="btn btn-default" onClick={() => firstPageClicked} disabled={!hasPrevPage}>
+              <span className="glyphicon glyphicon-fast-backward"/>
+            </button>
+            <button className="btn btn-default" onClick={() => prevPageClicked()} disabled={!hasPrevPage}>
+              <span className="glyphicon glyphicon-chevron-left"/>
+            </button>
+          </span>
+          <input
+            type="number"
+            className="form-control"
+            value={inputValue || ''}
+            onChange={(e) => inputValueChanged(e)}
+            onBlur={() => inputBlurred()}
+            onKeyPress={(e) => inputKeyPressed(e)}
+            min="1"
+            max={lastPage}
+          />
+          <div className="input-group-addon">/ {lastPage}</div>
+          <span className="input-group-btn">
+            <button className="btn btn-default" onClick={() => nextPageClicked()} disabled={!hasNextPage}>
+              <span className="glyphicon glyphicon-chevron-right"/>
+            </button>
+            <button className="btn btn-default" onClick={() => lastPageClicked()} disabled={!hasNextPage}>
+              <span className="glyphicon glyphicon-fast-forward"/>
+            </button>
+          </span>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
