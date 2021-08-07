@@ -1,27 +1,22 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
+import React, {useRef} from 'react';
+import {withRouter} from 'react-router-dom';
 import api from 'Api';
 
-class ImportPage extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+function ImportPage({history}) {
+  const fileRef = useRef(null);
 
-  get file() {
-    return this.refs.file.files[0];
-  }
-
-  submitted(e) {
+  const submitForm = e => {
     e.preventDefault();
 
-    if (!this.file) {
+    const file = fileRef.current ? fileRef.current.files[0] : null;
+
+    if (!file) {
       return;
     }
 
-    this.setState({processing: true});
-    api.importOPML(this.file).then(
+    api.importOPML(file).then(
       () => {
-        this.props.history.push('/feeds/1/');
+        history.push('/feeds/1/');
       },
       (errorMessage) => {
         alert(errorMessage);
@@ -29,17 +24,15 @@ class ImportPage extends React.Component {
     );
   }
 
-  render() {
-    return (
-      <div className='well'>
-        <form className="form" onSubmit={this.submitted.bind(this)}>
-          <p className='lead'>OPMLファイルからフィードを一括登録します。</p>
-          <input type="file" name="file" ref="file" />
-          <input type="submit" name="commit" value="Upload OPML" className="btn btn-primary" />
-        </form>
-      </div>
-    );
-  }
+  return (
+    <div className='well'>
+      <form className="form" onSubmit={submitForm}>
+        <p className='lead'>OPMLファイルからフィードを一括登録します。</p>
+        <input type="file" name="file" ref={fileRef}/>
+        <input type="submit" name="commit" value="Upload OPML" className="btn btn-primary"/>
+      </form>
+    </div>
+  );
 }
 
 export default withRouter(ImportPage);
