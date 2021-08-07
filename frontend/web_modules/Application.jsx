@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import _ from 'underscore';
 import LoginFilter from 'LoginFilter';
 import NowLoadingFilter from 'NowLoadingFilter';
@@ -6,25 +6,23 @@ import FlashMessages from 'FlashMessages';
 import Layout from 'Layout';
 import api from 'Api';
 
-export default class Application extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      initialized: false,
-      flashMessages: [],
-      user: null
-    };
-  }
+export default function Application({children}) {
+  const [initialized, setInitialized] = useState(false);
+  const [flashMessages, setFlashMessages] = useState([]);
+  const [user, setUser] = useState(null);
 
-  componentDidMount() {
+  useEffect(() => {
     api.on('flashMessages', (rawMessages) => {
-      const messages = rawMessages.map(message => this.createFlashMessage(message[0], message[1]));
-      this.addFlashMessages(messages);
+      const messages = rawMessages.map(message => createFlashMessage(message[0], message[1]));
+      addFlashMessages(messages);
     });
-    this.fetchInitialState();
-  }
+  }, []);
 
-  createFlashMessage(type, text) {
+  useEffect(() => {
+    fetchInitialState();
+  }, []);
+
+  function createFlashMessage(type, text) {
     return {
       id: _.uniqueId(),
       type: type,
@@ -32,64 +30,66 @@ export default class Application extends React.Component {
     };
   }
 
-  addFlashMessages(newFlashMessages) {
-    this.setState({flashMessages: [...this.state.flashMessages, ...newFlashMessages]});
+  function addFlashMessages(newFlashMessages) {
+    setFlashMessages([...flashMessages, ...newFlashMessages]);
+
     const addedIds = newFlashMessages.map(message => message.id);
 
+    // TODO
     window.setTimeout(() => {
-      var restMessages = this.state.flashMessages.filter(message => !addedIds.includes(message.id));
-      this.setState({flashMessages: restMessages});
+      const restMessages = flashMessages.filter(message => !addedIds.includes(message.id));
+      setFlashMessages(restMessages);
     }, 3000);
   }
 
-  fetchInitialState() {
+  function fetchInitialState() {
     return api.loadInitial().then((data) => {
-      this.setState({initialized: true, user: data.user});
+      setInitialized(true);
+      setUser(data.user);
     }, (xhr, type, statusText) => {
       // TODO: show error message.
-      this.setState({initialized: true, user: null});
+      setInitialized(true);
+      setUser(null);
     });
   }
 
-  loggedIn(initialState) {
-    this.setState({user: initialState.user});
+  function loggedIn(initialState) {
+    setUser(initialState.user);
   }
 
-  loginFailed(message) {
-    this.addFlashMessages([this.createFlashMessage('alert', message)]);
+  function loginFailed(message) {
+    addFlashMessages([createFlashMessage('alert', message)]);
   }
 
-  logout() {
+  function logout() {
     const clearUser = () => {
-      this.setState({user: null});
+      setUser(null);
     };
 
     api.logout().then(clearUser, clearUser);
   }
 
-  flashMessageClosed(id) {
-    var newFlashMessages = this.state.flashMessages.filter(message => message.id != id);
-    this.setState({flashMessages: newFlashMessages});
+  function flashMessageClosed(id) {
+    const newFlashMessages = flashMessages.filter(message => message.id !== id);
+    setFlashMessages(newFlashMessages);
   }
 
-  render() {
-    let content = null;
-    if (!this.state.initialized) {
-      content = <NowLoadingFilter/>;
-    } else if (!this.state.user) {
-      content = <LoginFilter onLogin={this.loggedIn.bind(this)} onLoginFailure={this.loginFailed.bind(this)}/>;
-    } else {
-      content =
-        <Layout user={this.state.user} onLogoutClick={this.logout.bind(this)}>
-          {this.props.children}
-        </Layout>;
-    }
-
-    return (
-      <div>
-        {content}
-        <FlashMessages messages={this.state.flashMessages} onClose={this.flashMessageClosed.bind(this)}/>
-      </div>
-    );
+  let content = null;
+  if (!initialized) {
+    content = <NowLoadingFilter/>;
+  } else if (!user) {
+    content = <LoginFilter onLogin={(initialState) => { loggedIn(initialState) }} onLoginFailure={(message) => { loginFailed(message)}}/>;
+  } else {
+    content =
+      <Layout user={user} onLogoutClick={() => { logout() }}>
+        {children}
+      </Layout>;
   }
+
+  return (
+    <div>
+      {content}
+      <FlashMessages messages={flashMessages} onClose={(id) => { flashMessageClosed(id) }}/>
+    </div>
+  );
 }
