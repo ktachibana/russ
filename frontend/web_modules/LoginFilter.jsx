@@ -40,7 +40,7 @@ export default function LoginFilter({onLogin, onLoginFailure}) {
               id="user_email"
               type="email"
               className="form-control"
-              autofocus="autofocus"
+              autoFocus="autofocus"
               onChange={(e) => updateForm("email", e.target.value)}
             />
           </div>

@@ -6,7 +6,6 @@ import classNames from 'classnames';
 export default function ItemPanel({hideFeed, item}) {
   const [shorten, setShorten] = useState(true);
 
-  const subscriptionPath = `/subscriptions/1/${item.feed.usersSubscription.id}`;
   const publishedAtString = item.publishedAt ? moment(item.publishedAt).format('YYYY/M/D(ddd) HH:mm') : '-';
 
   return (
@@ -17,6 +16,8 @@ export default function ItemPanel({hideFeed, item}) {
         </a>
         {(() => {
           if (!hideFeed) {
+            const subscriptionPath = `/subscriptions/1/${item.feed.usersSubscription.id}`;
+
             return (
               <div className='pull-right'>
                 <small>

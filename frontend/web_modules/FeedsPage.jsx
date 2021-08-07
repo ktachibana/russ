@@ -1,43 +1,9 @@
 import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import TagButtons from 'TagButtons';
 import WithPagination from 'WithPagination';
 import api from 'Api';
-
-class SubscriptionRow extends React.Component {
-  get href() {
-    return `/subscriptions/1/${this.props.subscription.id}`;
-  }
-
-  render() {
-    return (
-      <ul className='list-group'>
-        <li className='list-group-item'>
-          <div className='list-group-item-heading'>
-            <Link to={this.href}>
-              <b>{this.props.subscription.userTitle}</b>
-            </Link>
-
-            {this.props.subscription.tags.map(tag =>
-              <span key={tag.id} className='label label-default' style={{margin: '2px'}}>
-                {tag.name}
-              </span>
-            )}
-          </div>
-
-          <div className='list-group-item-text'>
-            {this.props.subscription.feed.latestItem ?
-              <Link to={this.href}>
-                <i>{this.props.subscription.feed.latestItem.title}</i>
-              </Link>
-              : 'No Item'
-            }
-          </div>
-        </li>
-      </ul>
-    )
-  }
-}
+import {SubscriptionRow} from './SubscriptionRow'
 
 class FeedsPage extends React.Component {
   constructor(props) {
