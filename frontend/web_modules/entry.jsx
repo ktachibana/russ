@@ -36,8 +36,8 @@ const FeedsPageRoute = ({match}) => {
 };
 
 const SubscriptionPageRoute = ({match}) => {
-  const pageProps = (match.params.url) ? {
-    url: match.params.url
+  const pageProps = (match.params.encodedUrl) ? {
+    encodedUrl: match.params.encodedUrl
   } : {
     id: match.params.id,
     page: paramParser.integer(match.params.page)
@@ -52,7 +52,7 @@ const ApplicationRoute = () => {
         <Route path="/items/:page/:tags*" component={ItemsPageRoute}/>
         <Route path="/feeds/:page/:tags*" component={FeedsPageRoute}/>
         <Route path="/subscriptions/import/" component={ImportPage}/>
-        <Route path="/subscriptions/new/:url" component={SubscriptionPageRoute}/>
+        <Route path="/subscriptions/new/:encodedUrl" component={SubscriptionPageRoute}/>
         <Route path="/subscriptions/:page/:id" component={SubscriptionPageRoute}/>
       </Switch>
     </Application>
