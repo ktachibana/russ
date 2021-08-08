@@ -1,16 +1,24 @@
 import React, {useEffect, useState} from 'react';
 import {withRouter} from 'react-router-dom';
-import TagButtons from './TagButtons.tsx';
-import WithPagination from './WithPagination.tsx';
+import TagButtons from './TagButtons';
+import WithPagination from './WithPagination';
 import {SubscriptionRow} from './SubscriptionRow'
 import api from './Api';
+import {History} from "history";
+import {PaginationValue, Subscription, Tag} from "./types";
 
 export default withRouter(FeedsPage);
 
-function FeedsPage({page, currentTagNames, history}) {
-  const [tags, setTags] = useState([]);
-  const [subscriptions, setSubscriptions] = useState([]);
-  const [pagination, setPagination] = useState(null)
+interface Props {
+  page: number
+  currentTagNames: string[],
+  history: History
+}
+
+function FeedsPage({page, currentTagNames, history}: Props) {
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [pagination, setPagination] = useState<PaginationValue>()
 
   const currentTags = tags.filter(tag => currentTagNames.includes(tag.name));
 
@@ -18,14 +26,14 @@ function FeedsPage({page, currentTagNames, history}) {
     api.loadFeeds({
       page: page,
       tag: currentTagNames
-    }).then(({subscriptions, pagination}) => {
+    }).then(({subscriptions, pagination}: { subscriptions: Subscription[], pagination: PaginationValue }) => {
       setSubscriptions(subscriptions);
       setPagination(pagination);
     });
   }
 
   useEffect(() => {
-    api.loadInitial().then(({tags}) => {
+    api.loadInitial().then(({tags}: { tags: Tag[] }) => {
       setTags(tags);
     });
   }, []);
@@ -34,16 +42,16 @@ function FeedsPage({page, currentTagNames, history}) {
     updateFeeds();
   }, [page, currentTagNames]);
 
-  const changeUrl = ({newPage = page, newTagNames = currentTagNames}) => {
+  const changeUrl = ({newPage = page, newTagNames = currentTagNames}: { newPage: number, newTagNames?: string[] }) => {
     const tagParam = newTagNames.map(tag => encodeURIComponent(tag)).join(',');
     history.push(`/feeds/${newPage}/${tagParam}`);
   }
 
-  const pagenationChanged = newPage => {
+  const pagenationChanged = (newPage: number) => {
     changeUrl({newPage: newPage});
   }
 
-  const tagButtonsChanged = newTags => {
+  const tagButtonsChanged = (newTags: Tag[]) => {
     changeUrl({newPage: 1, newTagNames: newTags.map(tag => tag.name)});
   }
 

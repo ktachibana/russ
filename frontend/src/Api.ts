@@ -67,8 +67,8 @@ class Api extends EventEmitter2 {
     return $.getJSON('/items', parameter);
   }
 
-  loadFeeds({tag, page}) {
-    return $.getJSON('/feeds', {tag, page});
+  loadFeeds(parameter: Parameter) {
+    return $.getJSON('/feeds', parameter);
   }
 
   loadTags() {

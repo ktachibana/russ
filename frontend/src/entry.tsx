@@ -27,7 +27,7 @@ const ItemsPageRoute = ({match}: RouteComponentProps<{tags: string, page: string
   return <ItemsPage {...pageProps} />
 };
 
-const FeedsPageRoute = ({match}) => {
+const FeedsPageRoute = ({match}: RouteComponentProps<{tags: string, page: string}>) => {
   const pageProps = {
     currentTagNames: paramParser.names(match.params.tags),
     page: paramParser.integer(match.params.page)
