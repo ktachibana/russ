@@ -13,14 +13,14 @@ class Api extends EventEmitter2 {
 
     $.ajaxSetup({
       complete: (xhr) => {
-        var token = xhr.getResponseHeader('X-CSRF-Token');
+        const token = xhr.getResponseHeader('X-CSRF-Token');
         if (token) {
           this.token = token;
         }
 
-        var flash = xhr.getResponseHeader('X-Flash-Messages');
+        const flash = xhr.getResponseHeader('X-Flash-Messages');
         if (flash) {
-          var flashMessages = JSON.parse(decodeURIComponent(flash));
+          const flashMessages = JSON.parse(decodeURIComponent(flash));
           if (flashMessages && flashMessages.length) {
             this.emit('flashMessages', flashMessages);
           }
@@ -97,7 +97,7 @@ class Api extends EventEmitter2 {
 
   importOPML(file) {
     return new Promise((resolve, reject) => {
-      let data = new FormData();
+      const data = new FormData();
       data.append('file', file);
       $.ajax('/subscriptions/import', {
         type: 'post',
