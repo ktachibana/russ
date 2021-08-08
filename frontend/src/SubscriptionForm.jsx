@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import api from 'Api';
+import api from './Api';
 
 export default function SubscriptionForm({subscription, existingTags, onSave, onClose}) {
   const isNewRecord = !subscription.id;

@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {withRouter} from 'react-router-dom';
-import ItemPanel from 'ItemPanel';
-import TagButtons from 'TagButtons';
-import WithPagination from 'WithPagination';
-import api from 'Api';
+import ItemPanel from './ItemPanel';
+import TagButtons from './TagButtons';
+import WithPagination from './WithPagination';
+import api from './Api';
 
 function itemsUrl(page, tags) {
   const tagParam = tags.map(tag => encodeURIComponent(tag.name)).join(',');

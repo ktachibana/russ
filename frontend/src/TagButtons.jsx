@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'underscore';
-import TagButton from 'TagButton';
+import TagButton from './TagButton';
 
 export default function TagButtons({tags, currentTags, onChange}) {
   function isActive(tag) {

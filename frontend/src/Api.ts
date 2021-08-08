@@ -2,6 +2,8 @@ import $ from 'jquery';
 import {EventEmitter2} from 'eventemitter2';
 
 class Api extends EventEmitter2 {
+  private token?: string;
+
   constructor() {
     super();
 

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { withRouter } from 'react-router-dom';
-import SubscriptionForm from 'SubscriptionForm';
-import api from 'Api';
+import SubscriptionForm from './SubscriptionForm';
+import api from './Api';
 
 function SubscriptionPanel({subscription, tags, history, onSave}) {
   const [isEdit, setIsEdit] = useState(false);

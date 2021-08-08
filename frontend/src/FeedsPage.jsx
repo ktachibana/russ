@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {withRouter} from 'react-router-dom';
-import TagButtons from 'TagButtons';
-import WithPagination from 'WithPagination';
+import TagButtons from './TagButtons';
+import WithPagination from './WithPagination';
 import {SubscriptionRow} from './SubscriptionRow'
-import api from 'Api';
+import api from './Api';
 
 export default withRouter(FeedsPage);
 

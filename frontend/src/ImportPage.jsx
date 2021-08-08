@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import {withRouter} from 'react-router-dom';
-import api from 'Api';
+import api from './Api';
 
 function ImportPage({history}) {
   const fileRef = useRef(null);

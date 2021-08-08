@@ -4,11 +4,11 @@ import $ from 'expose-loader?exposes=$,jQuery!jquery'; // bootstrapが要求す�
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {HashRouter, Route, Redirect, Switch} from 'react-router-dom';
-import Application from 'Application';
-import ItemsPage from 'ItemsPage';
-import FeedsPage from 'FeedsPage';
-import SubscriptionPage from 'SubscriptionPage';
-import ImportPage from 'ImportPage';
+import Application from './Application';
+import ItemsPage from './ItemsPage';
+import FeedsPage from './FeedsPage';
+import SubscriptionPage from './SubscriptionPage';
+import ImportPage from './ImportPage';
 
 const paramParser = {
   names: function (param) {

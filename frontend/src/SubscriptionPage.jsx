@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {withRouter} from 'react-router-dom';
-import ItemPanel from 'ItemPanel';
-import SubscriptionPanel from 'SubscriptionPanel';
-import WithPagination from 'WithPagination';
-import api from 'Api';
+import ItemPanel from './ItemPanel';
+import SubscriptionPanel from './SubscriptionPanel';
+import WithPagination from './WithPagination';
+import api from './Api';
 
 function SubscriptionPage({id, page, encodedUrl, history}) {
   const [tags, setTags] = useState([]);
