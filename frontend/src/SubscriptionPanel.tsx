@@ -1,18 +1,18 @@
 import React, {useState, MouseEvent} from 'react';
-import { withRouter } from 'react-router-dom';
+import {RouteComponentProps, withRouter} from 'react-router-dom';
 import SubscriptionForm from './SubscriptionForm';
 import api from './Api';
 import {Subscription, Tag} from "./types";
-import {History} from "history";
+
+export default withRouter(SubscriptionPanel);
 
 interface Props {
   subscription: Subscription
   tags: Tag[]
   onSave: (savedId: number) => void
-  history: History
 }
 
-function SubscriptionPanel({subscription, tags, onSave, history}: Props) {
+function SubscriptionPanel({subscription, tags, onSave, history}: Props & RouteComponentProps) {
   const [isEdit, setIsEdit] = useState(false);
 
   const isNewRecord = !subscription.id;
@@ -92,5 +92,3 @@ function SubscriptionPanel({subscription, tags, onSave, history}: Props) {
     </div>
   );
 }
-
-export default withRouter(SubscriptionPanel);

@@ -1,13 +1,10 @@
 import React, {useRef} from 'react';
-import {withRouter} from 'react-router-dom';
+import {RouteComponentProps, withRouter} from 'react-router-dom';
 import api from './Api';
-import {History} from "history";
 
-interface Props {
-  history: History
-}
+export default withRouter(ImportPage);
 
-function ImportPage({history}: Props) {
+function ImportPage({history}: RouteComponentProps) {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
@@ -39,5 +36,3 @@ function ImportPage({history}: Props) {
     </div>
   );
 }
-
-export default withRouter(ImportPage);

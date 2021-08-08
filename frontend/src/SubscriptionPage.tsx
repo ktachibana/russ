@@ -1,20 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import {withRouter} from 'react-router-dom';
+import {RouteComponentProps, withRouter} from 'react-router-dom';
 import ItemPanel from './ItemPanel';
 import SubscriptionPanel from './SubscriptionPanel';
 import WithPagination from './WithPagination';
 import api from './Api';
-import {History} from "history";
 import {Feed, Subscription, Item, PaginationValue, Tag} from "./types";
+
+export default withRouter(SubscriptionPage);
 
 interface Props {
   id?: number,
   page?: number
   encodedUrl?: string
-  history: History
 }
 
-function SubscriptionPage({id, page, encodedUrl, history}: Props) {
+function SubscriptionPage({id, page, encodedUrl, history}: Props & RouteComponentProps) {
   const [tags, setTags] = useState<Tag[]>([]);
   const [subscription, setSubscription] = useState<Subscription>();
   const [items, setItems] = useState<Item[]>([]);
@@ -81,5 +81,3 @@ function SubscriptionPage({id, page, encodedUrl, history}: Props) {
     </div>
   );
 }
-
-export default withRouter(SubscriptionPage);

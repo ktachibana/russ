@@ -37,7 +37,7 @@ const FeedsPageRoute = ({match}: RouteComponentProps<{ tags: string, page: strin
 
 const SubscriptionPageRoute = ({match}: RouteComponentProps<{ page: string, id: string }>) => {
   const pageProps = {
-    id: match.params.id,
+    id: paramParser.integer(match.params.id),
     page: paramParser.integer(match.params.page)
   };
   return <SubscriptionPage {...pageProps}/>;

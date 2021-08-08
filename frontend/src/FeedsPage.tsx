@@ -1,21 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {withRouter} from 'react-router-dom';
+import {RouteComponentProps, withRouter} from 'react-router-dom';
 import TagButtons from './TagButtons';
 import WithPagination from './WithPagination';
 import {SubscriptionRow} from './SubscriptionRow'
 import api from './Api';
-import {History} from "history";
 import {PaginationValue, Subscription, Tag} from "./types";
 
 export default withRouter(FeedsPage);
 
 interface Props {
   page: number
-  currentTagNames: string[],
-  history: History
+  currentTagNames: string[]
 }
 
-function FeedsPage({page, currentTagNames, history}: Props) {
+function FeedsPage({page, currentTagNames, history}: Props & RouteComponentProps) {
   const [tags, setTags] = useState<Tag[]>([]);
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [pagination, setPagination] = useState<PaginationValue>()

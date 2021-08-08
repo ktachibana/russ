@@ -1,24 +1,24 @@
 import React, {useEffect, useState} from 'react';
-import {withRouter} from 'react-router-dom';
-import {History} from 'history';
+import {RouteComponentProps, withRouter} from 'react-router-dom';
 import ItemPanel from './ItemPanel';
 import TagButtons from './TagButtons';
 import WithPagination from './WithPagination';
 import api from './Api';
 import {PaginationValue, Tag, Item} from "./types";
 
+export default withRouter(ItemsPage);
+
+interface Props {
+  currentTagNames: string[]
+  currentPage: number
+}
+
 function itemsUrl(page: number, tags: Tag[]) {
   const tagParam = tags.map(tag => encodeURIComponent(tag.name)).join(',');
   return `/items/${page}/${tagParam}`
 }
 
-interface Props {
-  currentTagNames: string[]
-  currentPage: number
-  history: History
-}
-
-function ItemsPage({currentPage, currentTagNames, history}: Props): JSX.Element {
+function ItemsPage({currentPage, currentTagNames, history}: Props & RouteComponentProps): JSX.Element {
   const [allTags, setAllTags] = useState<Tag[]>([]);
   const [items, setItems] = useState<Item[]>([]);
   const [pagination, setPagination] = useState<PaginationValue>();
@@ -85,5 +85,3 @@ function ItemsPage({currentPage, currentTagNames, history}: Props): JSX.Element 
     </div>
   );
 }
-
-export default withRouter(ItemsPage);
