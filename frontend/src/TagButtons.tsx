@@ -35,11 +35,14 @@ export default function TagButtons({tags, currentTags, onChange}: Props) {
   return (
     <div>
       {tags.map(tag =>
-        (<TagButton key={tag.id}
-                    tag={tag}
-                    active={isActive(tag)}
-                    onSelect={() => tagSelected(tag)}
-                    onToggle={() => tagToggled(tag)}/>)
+        (
+          <TagButton
+            key={tag.id}
+            tag={tag}
+            active={isActive(tag)}
+            onSelect={() => tagSelected(tag)}
+            onToggle={() => tagToggled(tag)}/>
+        )
       )}
     </div>
   );

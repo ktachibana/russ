@@ -1,3 +1,12 @@
+export interface User {
+
+}
+
+export interface InitialState {
+  user: User,
+  tags: Tag[]
+}
+
 export interface Tag {
   id: number
   name: string
@@ -21,6 +30,7 @@ export interface Feed {
   linkUrl: string
   description: string
   items: Item[]
+  latestItem?: Item
 }
 
 export interface UserFeed {
@@ -44,4 +54,10 @@ export interface Item {
 export interface PaginationValue {
   totalCount: number
   perPage: number
+}
+
+export interface Message {
+  id: string
+  type: string
+  text: string
 }

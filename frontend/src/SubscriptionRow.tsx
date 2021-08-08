@@ -1,7 +1,12 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
+import {Subscription} from "./types";
 
-export function SubscriptionRow({subscription}) {
+interface Props {
+  subscription: Subscription
+}
+
+export function SubscriptionRow({subscription}: Props) {
   const href = `/subscriptions/1/${subscription.id}`;
 
   return (

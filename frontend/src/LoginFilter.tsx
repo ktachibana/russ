@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import api from './Api';
+import {InitialState} from "./types";
 
 interface Props {
-  onLogin: (initialState: any) => void
+  onLogin: (initialState: InitialState) => void
   onLoginFailure: (errorMessage: string) => void
 }
 
@@ -28,7 +29,7 @@ export default function LoginFilter({onLogin, onLoginFailure}: Props): JSX.Eleme
       remember_me: form.rememberMe ? '1' : '0'
     };
 
-    api.login(params).then((initialState) => {
+    api.login(params).then((initialState: InitialState) => {
       onLogin(initialState);
     }, (errorMessage) => {
       onLoginFailure(errorMessage);

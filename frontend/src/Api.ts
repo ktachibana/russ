@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import {EventEmitter2} from 'eventemitter2';
+import {InitialState} from "./types";
 
 interface Parameter<T = any> {
   [key: string]: T;
@@ -40,13 +41,13 @@ class Api extends EventEmitter2 {
   }
 
   login(user: Parameter) {
-    return new Promise((resolve, reject) => {
+    return new Promise<InitialState>((resolve, reject) => {
       $.ajax('/users/sign_in', {
         method: 'post',
         dataType: 'json',
         data: {user}
       }).then(
-        (data) => {
+        (data: InitialState) => {
           resolve(data);
         },
         (xhr, type, errorThrown) => {

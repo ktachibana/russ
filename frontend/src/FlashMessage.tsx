@@ -1,13 +1,19 @@
 import React from 'react';
 import classNames from 'classnames';
+import {Message} from "./types";
 
-function FlashMessage({message, onClose}) {
-  function closeClicked(e) {
+interface Props {
+  message: Message
+  onClose: (messageId: string) => void
+}
+
+export default function FlashMessage({message, onClose}: Props) {
+  function closeClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
     onClose(message.id);
   }
 
-  const flashToAlertTypes = {notice: 'success', alert: 'danger'};
+  const flashToAlertTypes: { [key: string]: string } = {notice: 'success', alert: 'danger'};
   const alertType = flashToAlertTypes[message.type];
 
   return (
@@ -16,16 +22,6 @@ function FlashMessage({message, onClose}) {
         closeClicked(e)
       }}> &times;{' '}</button>
       {message.text}
-    </div>
-  );
-}
-
-export default function FlashMessages({messages, onClose}) {
-  return (
-    <div className="fixed-alerts">
-      {messages.map(message =>
-        <FlashMessage key={message.id} message={message} onClose={onClose}/>
-      )}
     </div>
   );
 }
