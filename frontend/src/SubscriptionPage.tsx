@@ -40,8 +40,8 @@ function SubscriptionPage({id, page, encodedUrl, history}: Props) {
           history.push('/items/1/');
         }
       });
-    } else {
-      api.loadSubscription({id, page}).then((subscription: Subscription) => {
+    } else if (id && page) {
+      api.loadSubscription(id, {page}).then((subscription: Subscription) => {
         setSubscription(subscription);
         setItems(subscription.feed.items);
         setPagination(subscription.pagination);

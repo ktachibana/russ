@@ -93,15 +93,15 @@ class Api extends EventEmitter2 {
     });
   }
 
-  loadSubscription({id, page}) {
-    return $.getJSON(`/subscriptions/${id}`, {page});
+  loadSubscription(id: number, parameter: Parameter) {
+    return $.getJSON(`/subscriptions/${id}`, parameter);
   }
 
   fetchFeed(feedUrl: string) {
     return $.getJSON('/subscriptions/new', {url: feedUrl});
   }
 
-  importOPML(file) {
+  importOPML(file: File) {
     return new Promise((resolve, reject) => {
       const data = new FormData();
       data.append('file', file);

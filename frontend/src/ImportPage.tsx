@@ -1,14 +1,19 @@
 import React, {useRef} from 'react';
 import {withRouter} from 'react-router-dom';
 import api from './Api';
+import {History} from "history";
 
-function ImportPage({history}) {
-  const fileRef = useRef(null);
+interface Props {
+  history: History
+}
 
-  const submitForm = e => {
+function ImportPage({history}: Props) {
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const file = fileRef.current ? fileRef.current.files[0] : null;
+    const file = fileRef.current?.files ? fileRef.current.files[0] : null;
 
     if (!file) {
       return;
