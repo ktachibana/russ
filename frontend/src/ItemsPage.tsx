@@ -1,34 +1,41 @@
 import React, {useEffect, useState} from 'react';
 import {withRouter} from 'react-router-dom';
+import {History} from 'history';
 import ItemPanel from './ItemPanel';
 import TagButtons from './TagButtons';
 import WithPagination from './WithPagination';
 import api from './Api';
+import {Item, PaginationValue, Tag} from "./types";
 
-function itemsUrl(page, tags) {
+function itemsUrl(page: number, tags: Tag[]) {
   const tagParam = tags.map(tag => encodeURIComponent(tag.name)).join(',');
   return `/items/${page}/${tagParam}`
 }
 
-function ItemsPage({currentPage, currentTagNames, history}) {
-  const [allTags, setAllTags] = useState([]);
-  const [items, setItems] = useState([]);
-  const [pagination, setPagination] = useState(null);
+interface Props {
+  currentTagNames: string[]
+  currentPage: number
+  history: History
+}
+
+function ItemsPage({currentPage, currentTagNames, history}: Props): JSX.Element {
+  const [allTags, setAllTags] = useState([] as Tag[]);
+  const [items, setItems] = useState([] as Item[]);
+  const [pagination, setPagination] = useState<PaginationValue>();
 
   const currentTags = selectTags(currentTagNames);
 
-
-  function selectTags(tagNames) {
+  function selectTags(tagNames: string[]) {
     return allTags.filter(tag => tagNames.includes(tag.name));
   }
 
   function updateItems() {
-    const query = {
-      page: currentPage,
+    const parameter = {
       tag: currentTagNames,
-      hideDefault: true
+      page: currentPage,
+      hide_default: true
     };
-    api.loadItems(query).then(({items, pagination}) => {
+    api.loadItems(parameter).then(({items, pagination}: {items: Item[], pagination: PaginationValue}) => {
       setItems(items);
       setPagination(pagination);
     });
@@ -42,23 +49,23 @@ function ItemsPage({currentPage, currentTagNames, history}) {
 
   useEffect(() => {
     updateItems();
-  }, [currentTagNames, currentTagNames]);
+  }, [currentPage, currentTagNames]);
 
   function pushHistory({newPage = currentPage, newTags = currentTags}) {
     history.push(itemsUrl(newPage, newTags));
   }
 
-  function changePage(newPage) {
+  function changePage(newPage: number) {
     pushHistory({newPage})
   }
 
-  function changeCurrentTags(newTags) {
+  function changeCurrentTags(newTags: Tag[]) {
     pushHistory({newTags});
   }
 
   return (
     <div>
-      <TagButtons tags={allTags} currentTags={currentTags} onChange={(newTags) => {
+      <TagButtons tags={allTags} currentTags={currentTags} onChange={newTags => {
         changeCurrentTags(newTags)
       }}/>
       <hr/>
@@ -71,7 +78,7 @@ function ItemsPage({currentPage, currentTagNames, history}) {
         }}>
         <div className='items'>
           {items.map(item =>
-            <ItemPanel key={item.id} item={item}/>
+            <ItemPanel key={item.id} item={item} hideFeed={false}/>
           )}
         </div>
       </WithPagination>

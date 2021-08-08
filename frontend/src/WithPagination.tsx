@@ -1,7 +1,15 @@
 import React from 'react';
 import Pagination from './Pagination';
+import {PaginationValue} from './types';
 
-export default function WithPagination({pagination, currentPage, onPageChange, children}) {
+interface Props {
+  pagination?: PaginationValue
+  currentPage: number
+  onPageChange: (newPage: number) => void
+  children: React.ReactNode
+}
+
+export default function WithPagination({pagination, currentPage, onPageChange, children}: Props) {
   return (
     pagination ?
       <div>

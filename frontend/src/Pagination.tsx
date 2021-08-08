@@ -1,13 +1,20 @@
 import React, {useState} from 'react';
+import {PaginationValue} from './types';
 
-export default function Pagination({currentPage, pagination, onPageChange}) {
+interface Props {
+  currentPage: number
+  pagination: PaginationValue
+  onPageChange: (newPage :number) => void
+}
+
+export default function Pagination({currentPage, pagination, onPageChange}: Props) {
   const [inputValue, setInputValue] = useState(currentPage);
 
   const lastPage = Math.ceil(pagination.totalCount / pagination.perPage);
   const hasPrevPage = 1 < currentPage;
   const hasNextPage = currentPage < lastPage;
 
-  function changePage(newPage) {
+  function changePage(newPage: number) {
     setInputValue(newPage);
     requirePageChange(newPage);
   }
@@ -28,7 +35,7 @@ export default function Pagination({currentPage, pagination, onPageChange}) {
     changePage(lastPage);
   }
 
-  function inputValueChanged(e) {
+  function inputValueChanged(e: React.ChangeEvent<HTMLInputElement>) {
     setInputValue(parseInt(e.target.value));
   }
 
@@ -36,13 +43,14 @@ export default function Pagination({currentPage, pagination, onPageChange}) {
     requirePageChange(inputValue);
   }
 
-  function inputKeyPressed(e) {
+  function inputKeyPressed(e: React.KeyboardEvent<HTMLInputElement>) {
     if(e.key === 'Enter') {
-      e.target.blur();
+      // TODO: ok?
+      (e.target as HTMLInputElement).blur();
     }
   }
 
-  function requirePageChange(newPage) {
+  function requirePageChange(newPage: number) {
     if (newPage === currentPage) {
       return;
     }
@@ -55,8 +63,8 @@ export default function Pagination({currentPage, pagination, onPageChange}) {
     onPageChange(newPage);
   }
 
-  function isInputValueValid(newPage) {
-    return typeof(newPage) === 'number' && 1 <= newPage && newPage <= lastPage;
+  function isInputValueValid(newPage: number): boolean {
+    return (!Number.isNaN(newPage)) && (1 <= newPage && newPage <= lastPage);
   }
 
   return (

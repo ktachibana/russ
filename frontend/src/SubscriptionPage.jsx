@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {withRouter} from 'react-router-dom';
-import ItemPanel from './ItemPanel';
+import ItemPanel from './ItemPanel.tsx';
 import SubscriptionPanel from './SubscriptionPanel';
-import WithPagination from './WithPagination';
+import WithPagination from './WithPagination.tsx';
 import api from './Api';
 
 function SubscriptionPage({id, page, encodedUrl, history}) {

@@ -1,23 +1,30 @@
 import React from 'react';
 import _ from 'underscore';
 import TagButton from './TagButton';
+import {Tag} from "./types";
 
-export default function TagButtons({tags, currentTags, onChange}) {
-  function isActive(tag) {
+interface Props {
+  tags: Tag[]
+  currentTags: Tag[]
+  onChange: (newTags: Tag[]) => void
+}
+
+export default function TagButtons({tags, currentTags, onChange}: Props) {
+  function isActive(tag: Tag): boolean {
     return _.contains(currentTags, tag);
   }
 
-  function tagSelected(tag) {
+  function tagSelected(tag: Tag): void {
     if (!_.isEqual(currentTags, [tag])) {
       onChange([tag]);
     }
   }
 
-  function tagToggled(tag) {
+  function tagToggled(tag: Tag): void {
     onChange(toggleCurrentTag(tag));
   }
 
-  function toggleCurrentTag(tag) {
+  function toggleCurrentTag(tag: Tag): Tag[] {
     if (isActive(tag)) {
       return _.without(currentTags, tag);
     } else {

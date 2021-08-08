@@ -2,8 +2,14 @@ import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 import moment from 'moment';
 import classNames from 'classnames';
+import {Item} from "./types";
 
-export default function ItemPanel({hideFeed, item}) {
+interface Props {
+  hideFeed: boolean
+  item: Item
+}
+
+export default function ItemPanel({hideFeed, item}: Props) {
   const [shorten, setShorten] = useState(true);
 
   const publishedAtString = item.publishedAt ? moment(item.publishedAt).format('YYYY/M/D(ddd) HH:mm') : '-';

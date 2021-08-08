@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {withRouter} from 'react-router-dom';
-import TagButtons from './TagButtons';
-import WithPagination from './WithPagination';
+import TagButtons from './TagButtons.tsx';
+import WithPagination from './WithPagination.tsx';
 import {SubscriptionRow} from './SubscriptionRow'
 import api from './Api';
 

@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import {EventEmitter2} from 'eventemitter2';
-import PlainObject = JQuery.PlainObject;
 
 interface Parameter<T = any> {
   [key: string]: T;
@@ -64,8 +63,8 @@ class Api extends EventEmitter2 {
     return $.ajax('/users/sign_out', {method: 'delete'});
   }
 
-  loadItems({tag, page, hideDefault, subscriptionId}) {
-    return $.getJSON('/items', {tag, page, hide_default: hideDefault, subscription_id: subscriptionId});
+  loadItems(parameter: Parameter) {
+    return $.getJSON('/items', parameter);
   }
 
   loadFeeds({tag, page}) {

@@ -1,9 +1,8 @@
 require('bootstrap/dist/js/bootstrap');
 
-import $ from 'expose-loader?exposes=$,jQuery!jquery'; // bootstrapが要求する
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {HashRouter, Route, Redirect, Switch} from 'react-router-dom';
+import {HashRouter, Route, Redirect, Switch, RouteComponentProps} from 'react-router-dom';
 import Application from './Application';
 import ItemsPage from './ItemsPage';
 import FeedsPage from './FeedsPage';
@@ -11,18 +10,19 @@ import SubscriptionPage from './SubscriptionPage';
 import ImportPage from './ImportPage';
 
 const paramParser = {
-  names: function (param) {
+  names: function (param: string): string[] {
     return param ? param.split(',') : []
   },
-  integer: function (param) {
+
+  integer: function (param: string): number {
     return parseInt(param) || 1
   }
 };
 
-const ItemsPageRoute = ({match}) => {
+const ItemsPageRoute = ({match}: RouteComponentProps<{tags: string, page: string}>) => {
   const pageProps = {
-    currentTagNames: paramParser.names(match.params.tags),
-    currentPage: paramParser.integer(match.params.page)
+    currentPage: paramParser.integer(match.params.page),
+    currentTagNames: paramParser.names(match.params.tags)
   };
   return <ItemsPage {...pageProps} />
 };
