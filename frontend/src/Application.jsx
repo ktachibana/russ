@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import _ from 'underscore';
-import LoginFilter from './LoginFilter';
+import LoginFilter from './LoginFilter.tsx';
 import NowLoadingFilter from './NowLoadingFilter';
 import FlashMessages from './FlashMessages';
 import Layout from './Layout';

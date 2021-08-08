@@ -1,14 +1,25 @@
 import React, {useState} from 'react';
 import api from './Api';
 
-export default function LoginFilter({onLogin, onLoginFailure}) {
+interface Props {
+  onLogin: (initialState: any) => void
+  onLoginFailure: (errorMessage: string) => void
+}
+
+interface FormValue {
+  email: string
+  password: string
+  rememberMe: boolean
+}
+
+export default function LoginFilter({onLogin, onLoginFailure}: Props): JSX.Element {
   const [form, setForm] = useState({
     email: '',
     password: '',
     rememberMe: true
-  })
+  } as FormValue)
 
-  function submit(e) {
+  function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const params = {
@@ -24,7 +35,7 @@ export default function LoginFilter({onLogin, onLoginFailure}) {
     });
   }
 
-  function updateForm(name, value) {
+  function updateForm(name: string, value: string | boolean) {
     setForm({...form, [name]: value});
   }
 
@@ -33,20 +44,20 @@ export default function LoginFilter({onLogin, onLoginFailure}) {
       <h2 className="page-header">Sign in</h2>
 
       <div className="jumbotron">
-        <form onSubmit={() => submit(event)} method="post">
+        <form onSubmit={(e) => submit(e)} method="post">
           <div className="form-group">
-            <label htmlFor="user_email">Email<br /></label>
+            <label htmlFor="user_email">Email<br/></label>
             <input
               id="user_email"
               type="email"
               className="form-control"
-              autoFocus="autofocus"
+              autoFocus={true}
               onChange={(e) => updateForm("email", e.target.value)}
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="user_password">Password<br /></label>
+            <label htmlFor="user_password">Password<br/></label>
             <input
               id="user_password"
               type="password"
@@ -67,7 +78,7 @@ export default function LoginFilter({onLogin, onLoginFailure}) {
             </label>
           </div>
 
-          <div><input type="submit" name="commit" value="Sign in" className="btn btn-default" /></div>
+          <div><input type="submit" name="commit" value="Sign in" className="btn btn-default"/></div>
         </form>
       </div>
     </div>

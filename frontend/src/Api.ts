@@ -1,5 +1,10 @@
 import $ from 'jquery';
 import {EventEmitter2} from 'eventemitter2';
+import PlainObject = JQuery.PlainObject;
+
+interface Parameter<T = any> {
+  [key: string]: T;
+}
 
 class Api extends EventEmitter2 {
   private token?: string;
@@ -35,7 +40,7 @@ class Api extends EventEmitter2 {
     return $.getJSON('/initial');
   }
 
-  login(user) {
+  login(user: Parameter) {
     return new Promise((resolve, reject) => {
       $.ajax('/users/sign_in', {
         method: 'post',
