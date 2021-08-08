@@ -19,7 +19,7 @@ const paramParser = {
   }
 };
 
-const ItemsPageRoute = ({match}: RouteComponentProps<{tags: string, page: string}>) => {
+const ItemsPageRoute = ({match}: RouteComponentProps<{ tags: string, page: string }>) => {
   const pageProps = {
     currentPage: paramParser.integer(match.params.page),
     currentTagNames: paramParser.names(match.params.tags)
@@ -27,7 +27,7 @@ const ItemsPageRoute = ({match}: RouteComponentProps<{tags: string, page: string
   return <ItemsPage {...pageProps} />
 };
 
-const FeedsPageRoute = ({match}: RouteComponentProps<{tags: string, page: string}>) => {
+const FeedsPageRoute = ({match}: RouteComponentProps<{ tags: string, page: string }>) => {
   const pageProps = {
     currentTagNames: paramParser.names(match.params.tags),
     page: paramParser.integer(match.params.page)
@@ -35,15 +35,20 @@ const FeedsPageRoute = ({match}: RouteComponentProps<{tags: string, page: string
   return <FeedsPage {...pageProps}/>;
 };
 
-const SubscriptionPageRoute = ({match}) => {
-  const pageProps = (match.params.encodedUrl) ? {
-    encodedUrl: match.params.encodedUrl
-  } : {
+const SubscriptionPageRoute = ({match}: RouteComponentProps<{ page: string, id: string }>) => {
+  const pageProps = {
     id: match.params.id,
     page: paramParser.integer(match.params.page)
   };
   return <SubscriptionPage {...pageProps}/>;
 };
+
+const NewSubscriptionPageRoute = ({match}: RouteComponentProps<{ encodedUrl: string }>) => {
+  const pageProps = {
+    encodedUrl: match.params.encodedUrl
+  };
+  return <SubscriptionPage {...pageProps}/>;
+}
 
 const ApplicationRoute = () => {
   return (
@@ -53,7 +58,7 @@ const ApplicationRoute = () => {
         <Route path="/feeds/:page/:tags*" component={FeedsPageRoute}/>
         <Route path="/subscriptions/import/" component={ImportPage}/>
         <Route path="/subscriptions/new/:encodedUrl" component={SubscriptionPageRoute}/>
-        <Route path="/subscriptions/:page/:id" component={SubscriptionPageRoute}/>
+        <Route path="/subscriptions/:page/:id" component={NewSubscriptionPageRoute}/>
       </Switch>
     </Application>
   );

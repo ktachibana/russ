@@ -1,15 +1,24 @@
 import React, {useEffect, useState} from 'react';
 import {withRouter} from 'react-router-dom';
-import ItemPanel from './ItemPanel.tsx';
+import ItemPanel from './ItemPanel';
 import SubscriptionPanel from './SubscriptionPanel';
-import WithPagination from './WithPagination.tsx';
+import WithPagination from './WithPagination';
 import api from './Api';
+import {History} from "history";
+import {Feed, Subscription, Item, PaginationValue, Tag} from "./types";
 
-function SubscriptionPage({id, page, encodedUrl, history}) {
-  const [tags, setTags] = useState([]);
-  const [subscription, setSubscription] = useState(null);
-  const [items, setItems] = useState([]);
-  const [pagination, setPagination] = useState(null);
+interface Props {
+  id?: number,
+  page?: number
+  encodedUrl?: string
+  history: History
+}
+
+function SubscriptionPage({id, page, encodedUrl, history}: Props) {
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [subscription, setSubscription] = useState<Subscription>();
+  const [items, setItems] = useState<Item[]>([]);
+  const [pagination, setPagination] = useState<PaginationValue>();
 
   useEffect(() => {
     api.loadInitial().then(({tags}) => {
@@ -18,13 +27,13 @@ function SubscriptionPage({id, page, encodedUrl, history}) {
 
     if (encodedUrl) {
       const url = decodeURIComponent(encodedUrl);
-      api.fetchFeed(url).then(feed => {
+      api.fetchFeed(url).then((feed: Feed) => {
         if (feed.id) {
           history.push(`/subscriptions/1/${feed.id}`);
         } else {
-          setSubscription({feed});
+          setSubscription({feed} as Subscription);
           setItems(feed.items);
-          setPagination(null);
+          setPagination(undefined);
         }
       }, (xhr) => {
         if (xhr.responseJSON.type === 'feedNotFound') {
@@ -32,7 +41,7 @@ function SubscriptionPage({id, page, encodedUrl, history}) {
         }
       });
     } else {
-      api.loadSubscription({id, page}).then(subscription => {
+      api.loadSubscription({id, page}).then((subscription: Subscription) => {
         setSubscription(subscription);
         setItems(subscription.feed.items);
         setPagination(subscription.pagination);
@@ -40,11 +49,11 @@ function SubscriptionPage({id, page, encodedUrl, history}) {
     }
   }, []);
 
-  const goToSavedSubScription = id => {
+  const goToSavedSubScription = (id: number) => {
     history.push(`/subscriptions/1/${id}`);
   }
 
-  const pagenationChanged = newPage => {
+  const pagenationChanged = (newPage: number) => {
     history.push(`/subscriptions/${newPage}/${id}`)
   }
 
@@ -60,7 +69,7 @@ function SubscriptionPage({id, page, encodedUrl, history}) {
 
       <WithPagination
         pagination={pagination}
-        currentPage={page}
+        currentPage={page || 1 /* TODO: || 1 の意味がないので別の書き方したい */ }
         onPageChange={pagenationChanged}
       >
         <div className='items'>

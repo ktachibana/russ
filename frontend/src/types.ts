@@ -1,12 +1,34 @@
+export interface Tag {
+  id: number
+  name: string
+  count: number
+}
+
 export interface Subscription {
   id: number
+  title: string
   userTitle: string
+  hideDefault: boolean
+  feed: Feed
+  tags: Tag[]
+  pagination: PaginationValue
 }
 
 export interface Feed {
+  id: number
+  url: string
+  title: string
+  linkUrl: string
+  description: string
+  items: Item[]
 }
 
-export interface UserFeed extends Feed{
+export interface UserFeed {
+  id: number
+  url: string
+  title: string
+  linkUrl: string
+  description: string
   usersSubscription: Subscription
 }
 
@@ -16,12 +38,11 @@ export interface Item {
   link: string
   title: string
   description: string
-  feed: UserFeed
 }
 
-export interface Tag {
-  id: number
-  name: string
+export interface UsersItem extends Item {
+  feed_id: number
+  feed: UserFeed
 }
 
 export interface PaginationValue {

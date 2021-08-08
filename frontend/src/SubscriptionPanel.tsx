@@ -1,15 +1,24 @@
-import React, {useState} from 'react';
+import React, {useState, MouseEvent} from 'react';
 import { withRouter } from 'react-router-dom';
 import SubscriptionForm from './SubscriptionForm';
 import api from './Api';
+import {Subscription, Tag} from "./types";
+import {History} from "history";
 
-function SubscriptionPanel({subscription, tags, history, onSave}) {
+interface Props {
+  subscription: Subscription
+  tags: Tag[]
+  onSave: (savedId: number) => void
+  history: History
+}
+
+function SubscriptionPanel({subscription, tags, onSave, history}: Props) {
   const [isEdit, setIsEdit] = useState(false);
 
   const isNewRecord = !subscription.id;
   const isEditing = isNewRecord || isEdit;
 
-  const unsubscribeClicked = e => {
+  const unsubscribeClicked = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
 
     if (!confirm('登録解除してよろしいですか？')) {
@@ -25,7 +34,7 @@ function SubscriptionPanel({subscription, tags, history, onSave}) {
     setIsEdit(false);
   };
 
-  const saved = id => {
+  const saved = (id: number) => {
     closeForm();
     onSave(id);
   };

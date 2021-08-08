@@ -1,19 +1,27 @@
-import React, {useState} from 'react';
+import React, {FormEvent, useState} from 'react';
 import api from './Api';
+import {Subscription, Tag} from "./types";
 
-export default function SubscriptionForm({subscription, existingTags, onSave, onClose}) {
+interface Props {
+  subscription: Subscription
+  existingTags: Tag[]
+  onSave: (savedId: number) => void
+  onClose: () => void
+}
+
+export default function SubscriptionForm({subscription, existingTags, onSave, onClose}: Props) {
   const isNewRecord = !subscription.id;
 
   const [title, setTitle] = useState(isNewRecord ? '' : subscription.title);
   const [tags, setTags] = useState(isNewRecord ? '' : subscription.tags.map(tag => tag.name).join(', '));
   const [hideDefault, setHideDefault] = useState(isNewRecord ? false : subscription.hideDefault);
 
-  const addTag = tag => {
+  const addTag = (tag: Tag) => {
     const currentTags = tags.split(',').map(s => s.trim()).filter(s => s);
     setTags([...currentTags, tag.name].join(', '));
   }
 
-  const submit = e => {
+  const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const subscriptionData = {

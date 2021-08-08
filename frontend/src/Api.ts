@@ -75,7 +75,7 @@ class Api extends EventEmitter2 {
     return $.getJSON('/tags')
   }
 
-  subscribeFeed(subscriptionId, subscription) {
+  subscribeFeed(subscriptionId: number | undefined, subscription: Parameter) {
     const url = subscriptionId ? `/subscriptions/${subscriptionId}` : '/subscriptions';
     const method = subscriptionId ? 'patch' : 'post';
 
@@ -86,7 +86,7 @@ class Api extends EventEmitter2 {
     });
   }
 
-  unsubscribeFeed(subscriptionId) {
+  unsubscribeFeed(subscriptionId: number) {
     return $.ajax(`/subscriptions/${subscriptionId}`, {
       type: 'delete',
       dataType: 'json'
@@ -97,7 +97,7 @@ class Api extends EventEmitter2 {
     return $.getJSON(`/subscriptions/${id}`, {page});
   }
 
-  fetchFeed(feedUrl) {
+  fetchFeed(feedUrl: string) {
     return $.getJSON('/subscriptions/new', {url: feedUrl});
   }
 

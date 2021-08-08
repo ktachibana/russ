@@ -33,7 +33,7 @@ class SubscriptionsController < ApplicationController
   private :render_if_already_registed
 
   def create
-    @subscription = owned_subscriptions.build(subscription_params.permit(:title, :tag_list, :hide_default, feed_attributes: [:url]))
+    @subscription = owned_sxubscriptions.build(subscription_params.permit(:title, :tag_list, :hide_default, feed_attributes: [:url]))
     @subscription.subscribe!
     render json: { id: @subscription.id }
   end
