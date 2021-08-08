@@ -38,11 +38,7 @@ export interface Item {
   link: string
   title: string
   description: string
-}
-
-export interface UsersItem extends Item {
-  feed_id: number
-  feed: UserFeed
+  feed?: UserFeed
 }
 
 export interface PaginationValue {

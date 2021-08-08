@@ -5,7 +5,7 @@ import ItemPanel from './ItemPanel';
 import TagButtons from './TagButtons';
 import WithPagination from './WithPagination';
 import api from './Api';
-import {Item, PaginationValue, Tag} from "./types";
+import {PaginationValue, Tag, Item} from "./types";
 
 function itemsUrl(page: number, tags: Tag[]) {
   const tagParam = tags.map(tag => encodeURIComponent(tag.name)).join(',');
@@ -19,8 +19,8 @@ interface Props {
 }
 
 function ItemsPage({currentPage, currentTagNames, history}: Props): JSX.Element {
-  const [allTags, setAllTags] = useState([] as Tag[]);
-  const [items, setItems] = useState([] as Item[]);
+  const [allTags, setAllTags] = useState<Tag[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
   const [pagination, setPagination] = useState<PaginationValue>();
 
   const currentTags = selectTags(currentTagNames);
@@ -35,7 +35,7 @@ function ItemsPage({currentPage, currentTagNames, history}: Props): JSX.Element 
       page: currentPage,
       hide_default: true
     };
-    api.loadItems(parameter).then(({items, pagination}: {items: Item[], pagination: PaginationValue}) => {
+    api.loadItems(parameter).then(({items, pagination}: { items: Item[], pagination: PaginationValue }) => {
       setItems(items);
       setPagination(pagination);
     });
@@ -78,7 +78,7 @@ function ItemsPage({currentPage, currentTagNames, history}: Props): JSX.Element 
         }}>
         <div className='items'>
           {items.map(item =>
-            <ItemPanel key={item.id} item={item} hideFeed={false}/>
+            <ItemPanel key={item.id} item={item}/>
           )}
         </div>
       </WithPagination>

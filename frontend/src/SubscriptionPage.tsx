@@ -74,7 +74,7 @@ function SubscriptionPage({id, page, encodedUrl, history}: Props) {
       >
         <div className='items'>
           {items.map(item =>
-            <ItemPanel key={item.id || item.link} item={item} hideFeed={true}/>
+            <ItemPanel key={item.id || item.link} item={item}/>
           )}
         </div>
       </WithPagination>
