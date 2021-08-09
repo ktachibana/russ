@@ -7,7 +7,6 @@
     "allowJs": true,
     "jsx": "react",
     "sourceMap": true,
-    "noEmit": true, // JSの出力はwebpack/babelでやる
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true, // node.jsのcommonJS系exportsをimportできるように？ trueでないとreactコンパイルがうまくいかないらしい
