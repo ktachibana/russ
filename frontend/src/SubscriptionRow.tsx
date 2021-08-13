@@ -10,29 +10,29 @@ export function SubscriptionRow({subscription}: Props) {
   const href = `/subscriptions/1/${subscription.id}`;
 
   return (
-    <ul className='list-group'>
-      <li className='list-group-item'>
-        <div className='list-group-item-heading'>
-          <Link to={href}>
-            <b>{subscription.userTitle}</b>
-          </Link>
+    <div className='card my-2'>
+      <div className='card-header'>
+        <Link to={href}>
+          <b>{subscription.userTitle}</b>
+        </Link>
 
-          {subscription.tags.map(tag =>
-            <span key={tag.id} className='label label-default' style={{margin: '2px'}}>
-              {tag.name}
-            </span>
-          )}
-        </div>
-
-        <div className='list-group-item-text'>
-          {subscription.feed.latestItem ?
-            <Link to={href}>
-              <i>{subscription.feed.latestItem.title}</i>
-            </Link>
-            : 'No Item'
+        {subscription.tags.map(tag => {
+            return (
+              <Link key={tag.id} to={`/items/1/${tag.name}`} className='badge bg-secondary mx-1'>
+                {tag.name}
+              </Link>)
           }
-        </div>
-      </li>
-    </ul>
+        )}
+      </div>
+
+      <div className='card-body'>
+        {subscription.feed.latestItem ?
+          <Link to={href}>
+            <i>{subscription.feed.latestItem.title}</i>
+          </Link>
+          : 'No Item'
+        }
+      </div>
+    </div>
   );
 }

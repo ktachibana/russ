@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function TagButton({tag, active, onSelect, onToggle}: Props) {
-  const classes = classNames('btn', `btn-${active ? 'info' : 'light'}`, {active: active});
+  const classes = classNames('btn', `btn-outline-secondary`, {active: active});
 
   return (
     <span className='btn-group btn-group-sm tag-button'>

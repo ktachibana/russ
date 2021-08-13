@@ -68,6 +68,7 @@ function ItemsPage({currentPage, currentTagNames, history}: Props & RouteCompone
       <TagButtons tags={allTags} currentTags={currentTags} onChange={newTags => {
         changeCurrentTags(newTags)
       }}/>
+
       <hr/>
 
       <WithPagination
@@ -76,7 +77,7 @@ function ItemsPage({currentPage, currentTagNames, history}: Props & RouteCompone
         onPageChange={(newPage) => {
           changePage(newPage)
         }}>
-        <div className='items'>
+        <div className='my-3'>
           {items.map(item =>
             <ItemPanel key={item.id} item={item}/>
           )}

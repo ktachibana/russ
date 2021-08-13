@@ -63,11 +63,9 @@ function FeedsPage({page, currentTagNames, history}: Props & RouteComponentProps
         currentPage={page}
         onPageChange={pagenationChanged}
       >
-        <div className='feeds'>
+        <div className='my-3'>
           {subscriptions.map(subscription =>
-            <div key={subscription.id}>
-              <SubscriptionRow subscription={subscription}/>
-            </div>
+            <SubscriptionRow key={subscription.id} subscription={subscription}/>
           )}
         </div>
       </WithPagination>

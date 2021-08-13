@@ -68,37 +68,33 @@ export default function Pagination({currentPage, pagination, onPageChange}: Prop
   }
 
   return (
-    <div className='text-center form-inline'>
-      <div className="form-group">
-        <div className="input-group">
-          <span className="input-group-btn">
-            <button className="btn btn-default" onClick={() => firstPageClicked} disabled={!hasPrevPage}>
-              <span className="glyphicon glyphicon-fast-backward"/>
-            </button>
-            <button className="btn btn-default" onClick={() => prevPageClicked()} disabled={!hasPrevPage}>
-              <span className="glyphicon glyphicon-chevron-left"/>
-            </button>
-          </span>
-          <input
-            type="number"
-            className="form-control"
-            value={inputValue || ''}
-            onChange={(e) => inputValueChanged(e)}
-            onBlur={() => inputBlurred()}
-            onKeyPress={(e) => inputKeyPressed(e)}
-            min="1"
-            max={lastPage}
-          />
-          <div className="input-group-addon">/ {lastPage}</div>
-          <span className="input-group-btn">
-            <button className="btn btn-default" onClick={() => nextPageClicked()} disabled={!hasNextPage}>
-              <span className="glyphicon glyphicon-chevron-right"/>
-            </button>
-            <button className="btn btn-default" onClick={() => lastPageClicked()} disabled={!hasNextPage}>
-              <span className="glyphicon glyphicon-fast-forward"/>
-            </button>
-          </span>
-        </div>
+    <div className='text-center'>
+      <div className="input-group">
+        <button className="btn btn-outline-secondary" onClick={() => firstPageClicked} disabled={!hasPrevPage}>
+          |&lt;
+        </button>
+        <button className="btn btn-outline-secondary" onClick={() => prevPageClicked()} disabled={!hasPrevPage}>
+          &lt;
+        </button>
+
+        <input
+          type="number"
+          className="form-control"
+          value={inputValue || ''}
+          onChange={(e) => inputValueChanged(e)}
+          onBlur={() => inputBlurred()}
+          onKeyPress={(e) => inputKeyPressed(e)}
+          min="1"
+          max={lastPage}
+        />
+        <div className="input-group-text">/ {lastPage}</div>
+
+        <button className="btn btn-outline-secondary" onClick={() => nextPageClicked()} disabled={!hasNextPage}>
+          &gt;
+        </button>
+        <button className="btn btn-outline-secondary" onClick={() => lastPageClicked()} disabled={!hasNextPage}>
+          &gt;|
+        </button>
       </div>
     </div>
   );
