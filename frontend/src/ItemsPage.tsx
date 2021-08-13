@@ -77,7 +77,7 @@ function ItemsPage({currentPage, currentTagNames, history}: Props & RouteCompone
         onPageChange={(newPage) => {
           changePage(newPage)
         }}>
-        <div className='my-3'>
+        <div className='items my-3'>
           {items.map(item =>
             <ItemPanel key={item.id} item={item}/>
           )}

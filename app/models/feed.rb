@@ -139,7 +139,8 @@ class Feed < ApplicationRecord
               begin
                 yield(feed)
               ensure
-                # エラーで更新できなくてもloaded_atは更新しないと、次のループで常に最初の処理対象になってしまう
+                # エラーで更新できなくてもloaded_atは更新しないと、次のループで常に最初の処理対象になり、
+                # いつもエラーになるFeedばかりが処理され続けることになってしまう
                 feed.update(loaded_at: Time.current)
               end
             end

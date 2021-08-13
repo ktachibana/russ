@@ -249,7 +249,7 @@ RSpec.describe Feed, type: :model do
       feeds = [2, 1, 3].map do |n|
         create(:feed, loaded_at: now - n.seconds)
       end
-      feeds << create(:feed, loaded_at: nil)
+      feeds << create(:feed, loaded_at: now + 1.minute)
 
       processed = []
       Feed.each_load!(chunk_size: 2) do |feed|
