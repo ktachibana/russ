@@ -69,9 +69,9 @@ export default function SubscriptionForm({subscription, existingTags, onSave, on
           />
           <div className='owned-tags my-1'>
             {existingTags.map(tag =>
-              <button key={tag.id} className='btn btn-secondary btn-sm m-1' type='button' onClick={() => { addTag(tag); }}>
+              <a key={tag.id} className='badge bg-secondary' type='button' onClick={() => { addTag(tag); }}>
                 {tag.name} ({tag.count})
-              </button>
+              </a>
             )}
           </div>
         </div>

@@ -27,11 +27,17 @@ function ImportPage({history}: RouteComponentProps) {
   }
 
   return (
-    <div className='well'>
-      <form className="form" onSubmit={submitForm}>
-        <p className='lead'>OPMLファイルからフィードを一括登録します。</p>
-        <input type="file" name="file" ref={fileRef}/>
-        <input type="submit" name="commit" value="Upload OPML" className="btn btn-primary"/>
+    <div className='card my-3'>
+      <form className="card-body" onSubmit={submitForm}>
+        <div className="my-2">
+          <p className='lead'>OPMLファイルからフィードを一括登録します。</p>
+        </div>
+        <div className="my-2">
+          <input type="file" className="form-control" name="file" ref={fileRef}/>
+        </div>
+        <div className="my-2">
+          <input type="submit" name="commit" value="Upload OPML" className="btn btn-primary"/>
+        </div>
       </form>
     </div>
   );
