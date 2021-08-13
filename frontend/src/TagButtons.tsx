@@ -9,7 +9,7 @@ interface Props {
   onChange: (newTags: Tag[]) => void
 }
 
-export default function TagButtons({tags, currentTags, onChange}: Props) {
+export default function TagButtons({tags, currentTags, onChange}: Props): JSX.Element {
   function isActive(tag: Tag): boolean {
     return _.contains(currentTags, tag);
   }

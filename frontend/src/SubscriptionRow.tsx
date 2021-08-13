@@ -6,7 +6,7 @@ interface Props {
   subscription: Subscription
 }
 
-export function SubscriptionRow({subscription}: Props) {
+export function SubscriptionRow({subscription}: Props): JSX.Element {
   const href = `/subscriptions/1/${subscription.id}`;
 
   return (

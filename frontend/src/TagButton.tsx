@@ -9,7 +9,7 @@ interface Props {
   onToggle: () => void
 }
 
-export default function TagButton({tag, active, onSelect, onToggle}: Props) {
+export default function TagButton({tag, active, onSelect, onToggle}: Props): JSX.Element {
   const classes = classNames('btn', `btn-outline-secondary`, {active: active});
 
   return (

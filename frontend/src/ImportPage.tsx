@@ -4,7 +4,7 @@ import api from './Api';
 
 export default withRouter(ImportPage);
 
-function ImportPage({history}: RouteComponentProps) {
+function ImportPage({history}: RouteComponentProps): JSX.Element {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const submitForm = (e: React.FormEvent<HTMLFormElement>) => {

@@ -1,18 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
-export default function HeaderNav({userId, onLogoutClick}) {
+interface Props {
+  userId: string
+  onLogoutClick: () => void
+}
+
+export default function HeaderNav({userId, onLogoutClick}: Props): JSX.Element {
   function subscriptionBookmarklet() {
     const {protocol, host} = window.location;
     const apiURLBase = `${protocol}//${host}/#/subscriptions/new/`;
     const js = `location.href="${apiURLBase}"+encodeURIComponent(location.href);`;
 
     return `javascript:${js}`;
-  }
-
-  function logOutClicked(e) {
-    e.preventDefault();
-    onLogoutClick();
   }
 
   // TODO: PC版でもちゃんとしたレイアウト
@@ -34,7 +34,8 @@ export default function HeaderNav({userId, onLogoutClick}) {
               </Link>
             </li>
             <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                 data-bs-toggle="dropdown"
                  aria-expanded="false">
                 {userId}
               </a>
@@ -54,7 +55,7 @@ export default function HeaderNav({userId, onLogoutClick}) {
                   <hr className="dropdown-divider"/>
                 </li>
                 <li>
-                  <a rel="nofollow" href="#" className="dropdown-item" onClick={(e) => { logOutClicked(e) }}>
+                  <a rel="nofollow" href="#" className="dropdown-item" onClick={() => { onLogoutClick() }}>
                     ログアウト
                   </a>
                 </li>

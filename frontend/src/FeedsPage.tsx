@@ -13,7 +13,7 @@ interface Props {
   currentTagNames: string[]
 }
 
-function FeedsPage({page, currentTagNames, history}: Props & RouteComponentProps) {
+function FeedsPage({page, currentTagNames, history}: Props & RouteComponentProps): JSX.Element {
   const [tags, setTags] = useState<Tag[]>([]);
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [pagination, setPagination] = useState<PaginationValue>()

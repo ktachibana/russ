@@ -7,7 +7,7 @@ interface Props {
   onPageChange: (newPage :number) => void
 }
 
-export default function Pagination({currentPage, pagination, onPageChange}: Props) {
+export default function Pagination({currentPage, pagination, onPageChange}: Props): JSX.Element {
   const [inputValue, setInputValue] = useState(currentPage);
 
   const lastPage = Math.ceil(pagination.totalCount / pagination.perPage);

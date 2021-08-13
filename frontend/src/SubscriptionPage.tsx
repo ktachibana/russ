@@ -14,7 +14,7 @@ interface Props {
   encodedUrl?: string
 }
 
-function SubscriptionPage({id, page, encodedUrl, history}: Props & RouteComponentProps) {
+function SubscriptionPage({id, page, encodedUrl, history}: Props & RouteComponentProps): JSX.Element {
   const [tags, setTags] = useState<Tag[]>([]);
   const [subscription, setSubscription] = useState<Subscription>();
   const [items, setItems] = useState<Item[]>([]);

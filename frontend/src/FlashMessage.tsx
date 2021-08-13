@@ -7,7 +7,7 @@ interface Props {
   onClose: (messageId: string) => void
 }
 
-export default function FlashMessage({message, onClose}: Props) {
+export default function FlashMessage({message, onClose}: Props): JSX.Element {
   function closeClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
     onClose(message.id);

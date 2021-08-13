@@ -9,7 +9,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function WithPagination({pagination, currentPage, onPageChange, children}: Props) {
+export default function WithPagination({pagination, currentPage, onPageChange, children}: Props): JSX.Element {
   return (
     pagination ?
       <div>

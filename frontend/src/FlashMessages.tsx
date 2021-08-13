@@ -7,7 +7,7 @@ interface Props {
   onClose: (messageId: string) => void
 }
 
-export default function FlashMessages({messages, onClose}: Props) {
+export default function FlashMessages({messages, onClose}: Props): JSX.Element {
   return (
     <div className="fixed-alerts">
       {messages.map(message =>

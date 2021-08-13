@@ -11,7 +11,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function Application({children}: Props) {
+export default function Application({children}: Props): JSX.Element {
   const [initialized, setInitialized] = useState<boolean>(false);
   const [flashMessages, setFlashMessages] = useState<Message[]>([]);
   const [user, setUser] = useState<User>();

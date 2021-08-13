@@ -8,7 +8,7 @@ interface Props {
   item: Item
 }
 
-export default function ItemPanel({item}: Props) {
+export default function ItemPanel({item}: Props): JSX.Element {
   const [shorten, setShorten] = useState(true);
 
   const publishedAtString = item.publishedAt ? moment(item.publishedAt).format('YYYY/M/D(ddd) HH:mm') : '-';

@@ -9,7 +9,7 @@ interface Props {
   onClose: () => void
 }
 
-export default function SubscriptionForm({subscription, existingTags, onSave, onClose}: Props) {
+export default function SubscriptionForm({subscription, existingTags, onSave, onClose}: Props): JSX.Element {
   const isNewRecord = !subscription.id;
 
   const [title, setTitle] = useState(isNewRecord ? '' : subscription.title);

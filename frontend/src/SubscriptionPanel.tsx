@@ -12,7 +12,7 @@ interface Props {
   onSave: (savedId: number) => void
 }
 
-function SubscriptionPanel({subscription, tags, onSave, history}: Props & RouteComponentProps) {
+function SubscriptionPanel({subscription, tags, onSave, history}: Props & RouteComponentProps): JSX.Element {
   const [isEdit, setIsEdit] = useState(false);
 
   const isNewRecord = !subscription.id;
