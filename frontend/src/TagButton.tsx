@@ -10,15 +10,15 @@ interface Props {
 }
 
 export default function TagButton({tag, active, onSelect, onToggle}: Props) {
+  const classes = classNames('btn', `btn-${active ? 'info' : 'light'}`, {active: active});
+
   return (
     <span className='btn-group btn-group-sm tag-button'>
-      <a className={classNames('btn', `btn-${active ? 'info' : 'default'}`, {active: active})}
-         onClick={() => { onSelect(); }}>
-        <span className='glyphicon glyphicon-tag'/>
-        {tag.name} ({tag.count})
+      <a className={classes} onClick={() => { onSelect(); }}>
+        🔖 {tag.name} ({tag.count})
       </a>
-      <a className='btn btn-default' onClick={() => { onToggle(); }}>
-        <span className={classNames('glyphicon', `glyphicon-${active ? 'minus' : 'plus'}`)}/>
+      <a className={classes} onClick={() => { onToggle(); }}>
+        {active ? '-' : '+'}
       </a>
     </span>
   );
