@@ -42,12 +42,13 @@ export default function LoginFilter({onLogin, onLoginFailure}: Props): JSX.Eleme
 
   return (
     <div>
-      <h2 className="page-header">Sign in</h2>
+      <h2>Sign in</h2>
+      <hr/>
 
-      <div className="jumbotron">
+      <div className="bg-light p-5 rounded">
         <form onSubmit={(e) => submit(e)} method="post">
-          <div className="form-group">
-            <label htmlFor="user_email">Email<br/></label>
+          <div className="my-2">
+            <label className="form-label" htmlFor="user_email">Email<br/></label>
             <input
               id="user_email"
               type="email"
@@ -57,8 +58,8 @@ export default function LoginFilter({onLogin, onLoginFailure}: Props): JSX.Eleme
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="user_password">Password<br/></label>
+          <div className="my-2">
+            <label className="form-label" htmlFor="user_password">Password<br/></label>
             <input
               id="user_password"
               type="password"
@@ -67,19 +68,18 @@ export default function LoginFilter({onLogin, onLoginFailure}: Props): JSX.Eleme
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="user_remember_me">
+          <div className="my-2">
+            <label className="form-label" htmlFor="user_remember_me">
               <input
                 id="user_remember_me"
                 type="checkbox"
                 checked={form.rememberMe}
                 onChange={(e) => updateForm("rememberMe", e.target.checked)}
-              />
-              Remember me
+              /> Remember me
             </label>
           </div>
 
-          <div><input type="submit" name="commit" value="Sign in" className="btn btn-default"/></div>
+          <div><input type="submit" name="commit" value="Sign in" className="btn btn-primary"/></div>
         </form>
       </div>
     </div>

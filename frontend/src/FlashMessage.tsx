@@ -8,19 +8,12 @@ interface Props {
 }
 
 export default function FlashMessage({message, onClose}: Props): JSX.Element {
-  function closeClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    e.preventDefault();
-    onClose(message.id);
-  }
-
   const flashToAlertTypes: { [key: string]: string } = {notice: 'success', alert: 'danger'};
   const alertType = flashToAlertTypes[message.type];
 
   return (
     <div className={classNames("alert", "alert-dismissable", `alert-${alertType}`)}>
-      <button className="close" area-hidden="true" onClick={(e) => {
-        closeClicked(e)
-      }}> &times;{' '}</button>
+      <button className="btn-close" area-hidden="true" onClick={() => { onClose(message.id) }}/>
       {message.text}
     </div>
   );
