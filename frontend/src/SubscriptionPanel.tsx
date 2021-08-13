@@ -44,27 +44,30 @@ function SubscriptionPanel({subscription, tags, onSave, history}: Props & RouteC
   };
 
   return (
-    <div className='well'>
-      <div className='feed'>
+    <div className='card my-3 p-3'>
+      <div className='feed my-2'>
         {!isNewRecord ? (
-          <div className='pull-right'>
+          <div className='float-end'>
             <a className='btn btn-danger' onClick={unsubscribeClicked}>
-              <span className='glyphicon glyphicon-trash'/>
-              登録解除
+              🗑 登録解除
             </a>
           </div>
         ) : null}
+
         <h1>
           <a target='_blank' href={subscription.feed.linkUrl}>
             {subscription.feed.title}
           </a>
-          <a target='_blank' href={subscription.feed.url}>
-            <span className='glyphicon glyphicon-file'/>
-          </a>
+          <small className="mx-1">
+            <a target='_blank' href={subscription.feed.url}>
+              📃
+            </a>
+          </small>
         </h1>
+
         {/* TODO: dangerousなのなんとかする */}
         {subscription.feed.description ?
-          <div className='description well' dangerouslySetInnerHTML={{__html: subscription.feed.description}}/> :
+          <div className='description card p-2' dangerouslySetInnerHTML={{__html: subscription.feed.description}}/> :
           null}
       </div>
 
@@ -79,12 +82,12 @@ function SubscriptionPanel({subscription, tags, onSave, history}: Props & RouteC
       ) : (
         <div className='show-subscription'>
           {subscription.tags.map(tag =>
-            <span key={tag.id} className='label label-default' style={{margin: '2px'}}>
+            <span key={tag.id} className='badge bg-secondary' style={{margin: '2px'}}>
               {tag.name}
             </span>
           )}
-          <button className='btn btn-default pull-right' onClick={() => { setIsEdit(true); }}>
-            <span className='glyphicon glyphicon-edit'/>編集
+          <button className='btn btn-secondary float-end' onClick={() => { setIsEdit(true); }}>
+            ✎ 編集
           </button>
           <div className='clearfix'/>
         </div>

@@ -57,8 +57,8 @@ const ApplicationRoute = () => {
         <Route path="/items/:page/:tags*" component={ItemsPageRoute}/>
         <Route path="/feeds/:page/:tags*" component={FeedsPageRoute}/>
         <Route path="/subscriptions/import/" component={ImportPage}/>
-        <Route path="/subscriptions/new/:encodedUrl" component={SubscriptionPageRoute}/>
-        <Route path="/subscriptions/:page/:id" component={NewSubscriptionPageRoute}/>
+        <Route path="/subscriptions/new/:encodedUrl" component={NewSubscriptionPageRoute}/>
+        <Route path="/subscriptions/:page/:id" component={SubscriptionPageRoute}/>
       </Switch>
     </Application>
   );

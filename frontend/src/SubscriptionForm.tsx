@@ -44,8 +44,8 @@ export default function SubscriptionForm({subscription, existingTags, onSave, on
 
   return (
     <form onSubmit={submit}>
-      <div className='form-group'>
-        <label htmlFor="subscription_title">Title</label>
+      <div className='my-2'>
+        <label className="form-label" htmlFor="subscription_title">Title</label>
         <input
           className="form-control"
           placeholder={subscription.feed.title}
@@ -56,9 +56,9 @@ export default function SubscriptionForm({subscription, existingTags, onSave, on
           id="subscription_title"
         />
       </div>
-      <div className='form-group'>
+      <div className='my-2'>
         <div>
-          <label htmlFor="subscription_tag_list">Tags</label>
+          <label className="form-label" htmlFor="subscription_tag_list">Tags</label>
           <input
             className="form-control"
             type="text"
@@ -67,30 +67,28 @@ export default function SubscriptionForm({subscription, existingTags, onSave, on
             name="subscription[tag_list]"
             id="subscription_tag_list"
           />
-          <div className='owned-tags'>
+          <div className='owned-tags my-1'>
             {existingTags.map(tag =>
-              <button key={tag.id} className='btn btn-default btn-xs' type='button' onClick={() => { addTag(tag); }}>
+              <button key={tag.id} className='btn btn-secondary btn-sm m-1' type='button' onClick={() => { addTag(tag); }}>
                 {tag.name} ({tag.count})
               </button>
             )}
           </div>
         </div>
       </div>
-      <div className="form-group">
+      <div className="my-2">
         <label>
           <input type="checkbox" checked={hideDefault} onChange={e => { setHideDefault(e.target.checked); }} />
           トップページに表示しない
         </label>
       </div>
-      <div className='form-group pull-right'>
-        <button className='btn btn-primary' type='submit'>
-          <span className='glyphicon glyphicon-ok'/>
-          {isNewRecord ? '登録' : '更新'}する
+      <div className='my-2 float-end'>
+        <button className='btn btn-primary mx-2' type='submit'>
+          ✓ {isNewRecord ? '登録' : '更新'}する
         </button>
         {!isNewRecord ?
-          <button className='btn btn-default' type='button' onClick={onClose}>
-            <span className='glyphicon glyphicon-remove'/>
-            閉じる
+          <button className='btn btn-secondary' type='button' onClick={onClose}>
+            ✗ 閉じる
           </button> :
           null
         }
