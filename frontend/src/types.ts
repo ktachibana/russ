@@ -17,6 +17,10 @@ export interface FeedsResponse {
   pagination: PaginationValue
 }
 
+export interface SubscriptionResponse {
+  id: number
+}
+
 export interface Tag {
   id: number
   name: string

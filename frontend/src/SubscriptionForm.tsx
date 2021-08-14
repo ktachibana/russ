@@ -1,6 +1,6 @@
 import React, {FormEvent, useState} from 'react';
 import api from './Api';
-import {Subscription, Tag} from "./types";
+import {Subscription, SubscriptionResponse, Tag} from "./types";
 
 interface Props {
   subscription: Subscription
@@ -21,7 +21,7 @@ export default function SubscriptionForm({subscription, existingTags, onSave, on
     setTags([...currentTags, tag.name].join(', '));
   }
 
-  const submit = (e: FormEvent<HTMLFormElement>) => {
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const subscriptionData = {
@@ -29,21 +29,28 @@ export default function SubscriptionForm({subscription, existingTags, onSave, on
       tag_list: tags,
       hide_default: (hideDefault ? 'true' : 'false')
     };
-    if (isNewRecord) {
-      Object.assign(subscriptionData, {
-        feed_attributes: {
-          url: subscription.feed.url
-        }
-      });
-    }
 
-    api.subscribeFeed(subscription.id, subscriptionData).then(({id}) => {
-      onSave(id);
-    });
+    const {id} = await submitSubscription(subscriptionData)
+    onSave(id);
+  }
+
+  function submitSubscription(subscriptionData: { tag_list: string; title: string; hide_default: string }): Promise<SubscriptionResponse> {
+    if (isNewRecord) {
+      return api.subscribeFeed({
+        ...subscriptionData,
+        ...{
+          feed_attributes: {
+            url: subscription.feed.url
+          }
+        }
+      })
+    } else {
+      return api.updateSubscription(subscription.id, subscriptionData);
+    }
   }
 
   return (
-    <form onSubmit={submit}>
+    <form onSubmit={(e) => { submit(e) }}>
       <div className='my-2'>
         <label className="form-label" htmlFor="subscription_title">Title</label>
         <input

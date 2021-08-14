@@ -63,6 +63,7 @@ function SubscriptionPage({id, page, encodedUrl, history}: Props & RouteComponen
   }, []);
 
   const goToSavedSubScription = (id: number) => {
+    // TODO: 確実にリロードしないと更新内容が読み込めない
     history.push(`/subscriptions/1/${id}`);
   }
 

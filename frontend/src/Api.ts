@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import {EventEmitter2} from 'eventemitter2';
-import {Feed, FeedsResponse, InitialState, ItemsResponse, Subscription, Tag} from "./types";
-import { stringify as qsStringify } from 'query-string';
+import {Feed, FeedsResponse, InitialState, ItemsResponse, Subscription, SubscriptionResponse, Tag} from "./types";
+import {stringify as qsStringify} from 'query-string';
 
 interface Parameter<T = any> {
   [key: string]: T;
@@ -91,6 +91,10 @@ class Api extends EventEmitter2 {
     return this.request(path, 'POST', JSON.stringify(parameter))
   }
 
+  private async patch(path: string, parameter?: Parameter) {
+    return this.request(path, 'PATCH', JSON.stringify(parameter))
+  }
+
   private async delete(path: string) {
     return this.request(path, 'DELETE');
   }
@@ -119,15 +123,12 @@ class Api extends EventEmitter2 {
     return await this.get('/tags')
   }
 
-  subscribeFeed(subscriptionId: number | undefined, subscription: Parameter) {
-    const url = subscriptionId ? `/subscriptions/${subscriptionId}` : '/subscriptions';
-    const method = subscriptionId ? 'patch' : 'post';
+  async subscribeFeed(subscription: Parameter): Promise<SubscriptionResponse> {
+    return this.post('/subscriptions', {subscription});
+  }
 
-    return $.ajax(url, {
-      type: method,
-      dataType: 'json',
-      data: {subscription}
-    });
+  async updateSubscription(subscriptionId: number, subscription: Parameter): Promise<SubscriptionResponse> {
+    return this.patch(`/subscriptions/${subscriptionId}`, {subscription})
   }
 
   unsubscribeFeed(subscriptionId: number) {
