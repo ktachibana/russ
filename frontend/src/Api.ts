@@ -120,7 +120,7 @@ class Api extends EventEmitter2 {
   }
 
   async loadTags(): Promise<Tag[]> {
-    return await this.get('/tags')
+    return this.get('/tags')
   }
 
   async subscribeFeed(subscription: Parameter): Promise<SubscriptionResponse> {
@@ -131,11 +131,8 @@ class Api extends EventEmitter2 {
     return this.patch(`/subscriptions/${subscriptionId}`, {subscription})
   }
 
-  unsubscribeFeed(subscriptionId: number) {
-    return $.ajax(`/subscriptions/${subscriptionId}`, {
-      type: 'delete',
-      dataType: 'json'
-    });
+  async unsubscribeFeed(subscriptionId: number) {
+    return this.delete(`/subscriptions/${subscriptionId}`);
   }
 
   async fetchFeed(feedUrl: string): Promise<Feed> {

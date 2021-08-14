@@ -18,17 +18,16 @@ function SubscriptionPanel({subscription, tags, onSave, history}: Props & RouteC
   const isNewRecord = !subscription.id;
   const isEditing = isNewRecord || isEdit;
 
-  const unsubscribeClicked = (e: MouseEvent<HTMLAnchorElement>) => {
+  async function unsubscribeClicked(e: MouseEvent<HTMLAnchorElement>) {
     e.preventDefault();
 
     if (!confirm('登録解除してよろしいですか？')) {
       return;
     }
 
-    api.unsubscribeFeed(subscription.id).then(() => {
-      history.push('/feeds/1/');
-    });
-  };
+    await api.unsubscribeFeed(subscription.id);
+    history.push('/feeds/1/');
+  }
 
   const closeForm = () => {
     setIsEdit(false);
