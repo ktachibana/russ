@@ -4,7 +4,7 @@ import ItemPanel from './ItemPanel';
 import TagButtons from './TagButtons';
 import WithPagination from './WithPagination';
 import api from './Api';
-import {PaginationValue, Tag, Item} from "./types";
+import {Item, PaginationValue, Tag} from "./types";
 
 export default withRouter(ItemsPage);
 
@@ -29,16 +29,14 @@ function ItemsPage({currentPage, currentTagNames, history}: Props & RouteCompone
     return allTags.filter(tag => tagNames.includes(tag.name));
   }
 
-  function updateItems() {
-    const parameter = {
+  async function loadItems() {
+    const {items, pagination} = await api.loadItems({
       tag: currentTagNames,
       page: currentPage,
       hide_default: true
-    };
-    api.loadItems(parameter).then(({items, pagination}: { items: Item[], pagination: PaginationValue }) => {
-      setItems(items);
-      setPagination(pagination);
     });
+    setItems(items);
+    setPagination(pagination);
   }
 
   useEffect(() => {
@@ -48,7 +46,7 @@ function ItemsPage({currentPage, currentTagNames, history}: Props & RouteCompone
   }, []);
 
   useEffect(() => {
-    updateItems();
+    loadItems();
   }, [currentPage, currentTagNames]);
 
   function pushHistory({newPage = currentPage, newTags = currentTags}) {

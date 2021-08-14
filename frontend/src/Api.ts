@@ -1,9 +1,18 @@
 import $ from 'jquery';
 import {EventEmitter2} from 'eventemitter2';
-import {InitialState, Tag, User} from "./types";
+import {Feed, FeedsResponse, InitialState, ItemsResponse, Subscription, Tag} from "./types";
+import { stringify as qsStringify } from 'query-string';
 
 interface Parameter<T = any> {
   [key: string]: T;
+}
+
+function buildURL(path: string, parameter?: Parameter) {
+  if (parameter) {
+    return `${path}?${(qsStringify(parameter, {arrayFormat: 'bracket'}))}`;
+  } else {
+    return path
+  }
 }
 
 class Api extends EventEmitter2 {
@@ -55,7 +64,7 @@ class Api extends EventEmitter2 {
     if (response.ok) {
       return await response.json();
     } else {
-      throw (await response.json()).error;
+      throw await response.json();
     }
   }
 
@@ -75,7 +84,7 @@ class Api extends EventEmitter2 {
   }
 
   private async get(path: string, parameter?: Parameter) {
-    return this.request(path, 'GET');
+    return this.request(buildURL(path, parameter), 'GET');
   }
 
   private async post(path: string, parameter?: Parameter) {
@@ -98,12 +107,12 @@ class Api extends EventEmitter2 {
     return await this.delete('/users/sign_out');
   }
 
-  loadItems(parameter: Parameter) {
-    return $.getJSON('/items', parameter);
+  async loadItems(parameter: Parameter): Promise<ItemsResponse> {
+    return this.get('/items', parameter);
   }
 
-  loadFeeds(parameter: Parameter) {
-    return $.getJSON('/feeds', parameter);
+  async loadFeeds(parameter: Parameter): Promise<FeedsResponse> {
+    return this.get('/feeds', parameter);
   }
 
   async loadTags(): Promise<Tag[]> {
@@ -128,12 +137,12 @@ class Api extends EventEmitter2 {
     });
   }
 
-  loadSubscription(id: number, parameter: Parameter) {
-    return $.getJSON(`/subscriptions/${id}`, parameter);
+  async fetchFeed(feedUrl: string): Promise<Feed> {
+    return this.get('/subscriptions/new', {url: feedUrl});
   }
 
-  fetchFeed(feedUrl: string) {
-    return $.getJSON('/subscriptions/new', {url: feedUrl});
+  async loadSubscription(id: number, parameter: Parameter): Promise<Subscription> {
+    return this.get(`/subscriptions/${id}`, parameter);
   }
 
   importOPML(file: File) {

@@ -4,7 +4,7 @@ import TagButtons from './TagButtons';
 import WithPagination from './WithPagination';
 import {SubscriptionRow} from './SubscriptionRow'
 import api from './Api';
-import {PaginationValue, Subscription, Tag} from "./types";
+import {FeedsResponse, PaginationValue, Subscription, Tag} from "./types";
 
 export default withRouter(FeedsPage);
 
@@ -20,14 +20,13 @@ function FeedsPage({page, currentTagNames, history}: Props & RouteComponentProps
 
   const currentTags = tags.filter(tag => currentTagNames.includes(tag.name));
 
-  function updateFeeds() {
-    api.loadFeeds({
+  async function updateFeeds() {
+    const {subscriptions, pagination} = await api.loadFeeds({
       page: page,
       tag: currentTagNames
-    }).then(({subscriptions, pagination}: { subscriptions: Subscription[], pagination: PaginationValue }) => {
-      setSubscriptions(subscriptions);
-      setPagination(pagination);
     });
+    setSubscriptions(subscriptions);
+    setPagination(pagination);
   }
 
   async function updateTags() {

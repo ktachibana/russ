@@ -7,6 +7,16 @@ export interface InitialState {
   tags: Tag[]
 }
 
+export interface ItemsResponse {
+  items: Item[]
+  pagination: PaginationValue
+}
+
+export interface FeedsResponse {
+  subscriptions: Subscription[]
+  pagination: PaginationValue
+}
+
 export interface Tag {
   id: number
   name: string

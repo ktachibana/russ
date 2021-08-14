@@ -25,30 +25,40 @@ function SubscriptionPage({id, page, encodedUrl, history}: Props & RouteComponen
     setTags(tags);
   }
 
+  async function loadNewFeed(encodedUrl: string) {
+    const url = decodeURIComponent(encodedUrl);
+    try {
+      const feed = await api.fetchFeed(url)
+      if (feed.id) {
+        history.push(`/subscriptions/1/${feed.id}`);
+      } else {
+        setSubscription({feed} as Subscription);
+        setItems(feed.items);
+        setPagination(undefined);
+      }
+    } catch (e) {
+      if (e?.type == 'feedNotFound') {
+        history.push('/items/1/');
+      } else {
+        throw e;
+      }
+    }
+  }
+
+  async function updateSubscription(id: number, parameter: Object) {
+    const subscription = await api.loadSubscription(id, parameter);
+    setSubscription(subscription);
+    setItems(subscription.feed.items);
+    setPagination(subscription.pagination);
+  }
+
   useEffect(() => {
     updateTags();
 
     if (encodedUrl) {
-      const url = decodeURIComponent(encodedUrl);
-      api.fetchFeed(url).then((feed: Feed) => {
-        if (feed.id) {
-          history.push(`/subscriptions/1/${feed.id}`);
-        } else {
-          setSubscription({feed} as Subscription);
-          setItems(feed.items);
-          setPagination(undefined);
-        }
-      }, (xhr) => {
-        if (xhr.responseJSON.type === 'feedNotFound') {
-          history.push('/items/1/');
-        }
-      });
+      loadNewFeed(encodedUrl);
     } else if (id && page) {
-      api.loadSubscription(id, {page}).then((subscription: Subscription) => {
-        setSubscription(subscription);
-        setItems(subscription.feed.items);
-        setPagination(subscription.pagination);
-      });
+      updateSubscription(id, {page});
     }
   }, []);
 
