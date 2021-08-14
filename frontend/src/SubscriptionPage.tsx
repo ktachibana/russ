@@ -20,10 +20,13 @@ function SubscriptionPage({id, page, encodedUrl, history}: Props & RouteComponen
   const [items, setItems] = useState<Item[]>([]);
   const [pagination, setPagination] = useState<PaginationValue>();
 
+  async function updateTags() {
+    const tags = await api.loadTags();
+    setTags(tags);
+  }
+
   useEffect(() => {
-    api.loadInitial().then(({tags}) => {
-      setTags(tags);
-    });
+    updateTags();
 
     if (encodedUrl) {
       const url = decodeURIComponent(encodedUrl);

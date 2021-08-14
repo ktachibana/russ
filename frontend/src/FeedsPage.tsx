@@ -30,10 +30,13 @@ function FeedsPage({page, currentTagNames, history}: Props & RouteComponentProps
     });
   }
 
+  async function updateTags() {
+    const tags = await api.loadTags();
+    setTags(tags);
+  }
+
   useEffect(() => {
-    api.loadInitial().then(({tags}: { tags: Tag[] }) => {
-      setTags(tags);
-    });
+    updateTags();
   }, []);
 
   useEffect(() => {

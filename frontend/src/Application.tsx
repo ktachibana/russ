@@ -6,6 +6,7 @@ import FlashMessages from './FlashMessages';
 import Layout from './Layout';
 import api from './Api';
 import {InitialState, Message, User} from "./types";
+import {Listener} from "eventemitter2";
 
 interface Props {
   children: React.ReactNode
@@ -17,10 +18,18 @@ export default function Application({children}: Props): JSX.Element {
   const [user, setUser] = useState<User>();
 
   useEffect(() => {
-    api.on('flashMessages', (rawMessages: [string, string][]) => {
-      const messages = rawMessages.map(message => createFlashMessage(message[0], message[1]));
-      addFlashMessages(messages);
-    });
+    const listener = api.on(
+      'flashMessages',
+      (rawMessages: [string, string][]) => {
+        const messages = rawMessages.map(message => createFlashMessage(message[0], message[1]));
+        addFlashMessages(messages);
+      },
+      {objectify: true}
+    ) as Listener;
+
+    return () => {
+      listener.off();
+    };
   }, []);
 
   useEffect(() => {
@@ -47,15 +56,16 @@ export default function Application({children}: Props): JSX.Element {
     }, 3000);
   }
 
-  function fetchInitialState() {
-    return api.loadInitial().then((data) => {
+  async function fetchInitialState() {
+    try {
+      const {user} = await api.loadInitial();
       setInitialized(true);
-      setUser(data.user);
-    }, (xhr, type, statusText) => {
+      setUser(user);
+    } catch (e) {
       // TODO: show error message.
       setInitialized(true);
       setUser(undefined);
-    });
+    }
   }
 
   function loggedIn(initialState: InitialState) {
@@ -66,7 +76,8 @@ export default function Application({children}: Props): JSX.Element {
     addFlashMessages([createFlashMessage('alert', message)]);
   }
 
-  function logout() {
+  async function logout() {
+    // TODO: cookieではなくtokenを使ってクライアント側でログイン状態を消せるように
     const clearUser = () => {
       setUser(undefined);
     };

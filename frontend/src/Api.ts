@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import {EventEmitter2} from 'eventemitter2';
-import {InitialState} from "./types";
+import {InitialState, Tag, User} from "./types";
 
 interface Parameter<T = any> {
   [key: string]: T;
@@ -36,32 +36,66 @@ class Api extends EventEmitter2 {
     });
   }
 
-  loadInitial() {
-    return $.getJSON('/initial');
+  private async request(path: string, method: string, body?: string) {
+    const response = await fetch(
+      path,
+      {
+        method: method,
+        headers: new Headers({
+          'X-CSRF-Token': this.token!,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }),
+        body: body
+      }
+    );
+
+    this.handleCompletedResponse(response);
+
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw (await response.json()).error;
+    }
   }
 
-  login(user: Parameter) {
-    return new Promise<InitialState>((resolve, reject) => {
-      $.ajax('/users/sign_in', {
-        method: 'post',
-        dataType: 'json',
-        data: {user}
-      }).then(
-        (data: InitialState) => {
-          resolve(data);
-        },
-        (xhr, type, errorThrown) => {
-          if (xhr.responseJSON && xhr.responseJSON.error) {
-            reject(xhr.responseJSON.error);
-          } else {
-            reject(`${type}: ${errorThrown}`);
-          }
-        });
-    });
+  private handleCompletedResponse(response: Response) {
+    const token = response.headers.get('X-CSRF-Token');
+    if (token) {
+      this.token = token;
+    }
+
+    const encodedJSONMessages = response.headers.get('X-Flash-Messages');
+    if (encodedJSONMessages) {
+      const flashMessages = JSON.parse(decodeURIComponent(encodedJSONMessages));
+      if (flashMessages && flashMessages.length) {
+        this.emit('flashMessages', flashMessages);
+      }
+    }
   }
 
-  logout() {
-    return $.ajax('/users/sign_out', {method: 'delete'});
+  private async get(path: string, parameter?: Parameter) {
+    return this.request(path, 'GET');
+  }
+
+  private async post(path: string, parameter?: Parameter) {
+    return this.request(path, 'POST', JSON.stringify(parameter))
+  }
+
+  private async delete(path: string) {
+    return this.request(path, 'DELETE');
+  }
+
+  async loadInitial(): Promise<InitialState> {
+    return await this.get('/initial');
+  }
+
+  async signIn(user: Parameter): Promise<InitialState> {
+    return await this.post('/users/sign_in', {user});
+  }
+
+  async logout(): Promise<any> {
+    return await this.delete('/users/sign_out');
   }
 
   loadItems(parameter: Parameter) {
@@ -72,8 +106,8 @@ class Api extends EventEmitter2 {
     return $.getJSON('/feeds', parameter);
   }
 
-  loadTags() {
-    return $.getJSON('/tags')
+  async loadTags(): Promise<Tag[]> {
+    return await this.get('/tags')
   }
 
   subscribeFeed(subscriptionId: number | undefined, subscription: Parameter) {

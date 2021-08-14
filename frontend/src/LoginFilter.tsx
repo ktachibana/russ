@@ -20,7 +20,7 @@ export default function LoginFilter({onLogin, onLoginFailure}: Props): JSX.Eleme
     rememberMe: true
   } as FormValue)
 
-  function submit(e: React.FormEvent<HTMLFormElement>) {
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const params = {
@@ -29,11 +29,12 @@ export default function LoginFilter({onLogin, onLoginFailure}: Props): JSX.Eleme
       remember_me: form.rememberMe ? '1' : '0'
     };
 
-    api.login(params).then((initialState: InitialState) => {
+    try {
+      const initialState = await api.signIn(params)
       onLogin(initialState);
-    }, (errorMessage) => {
-      onLoginFailure(errorMessage);
-    });
+    } catch (e) {
+      onLoginFailure(e.toString());
+    }
   }
 
   function updateForm(name: string, value: string | boolean) {
@@ -53,6 +54,7 @@ export default function LoginFilter({onLogin, onLoginFailure}: Props): JSX.Eleme
               id="user_email"
               type="email"
               className="form-control"
+              autoComplete="username"
               autoFocus={true}
               onChange={(e) => updateForm("email", e.target.value)}
             />
@@ -64,6 +66,7 @@ export default function LoginFilter({onLogin, onLoginFailure}: Props): JSX.Eleme
               id="user_password"
               type="password"
               className="form-control"
+              autoComplete="current-password"
               onChange={(e) => updateForm("password", e.target.value)}
             />
           </div>
