@@ -15,6 +15,11 @@ export default function HeaderNav({userId, onLogoutClick}: Props): JSX.Element {
     return `javascript:${js}`;
   }
 
+  function copyBookmarklet(e: React.MouseEvent<HTMLAnchorElement>) {
+    e.preventDefault();
+    navigator.clipboard.writeText(subscriptionBookmarklet());
+  }
+
   // TODO: PC版でもちゃんとしたレイアウト
   return (
     <nav className="navbar navbar-expand-sm navbar-light bg-light">
@@ -42,8 +47,8 @@ export default function HeaderNav({userId, onLogoutClick}: Props): JSX.Element {
 
               <ul className="dropdown-menu">
                 <li>
-                  <a href={subscriptionBookmarklet()} className="dropdown-item">
-                    RuSS (Bookmarklet)
+                  <a href="#" onClick={(e) => { copyBookmarklet(e); }} className="dropdown-item">
+                    Russ Bookmarklet
                   </a>
                 </li>
                 <li>
