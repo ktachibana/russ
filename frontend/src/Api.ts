@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import {EventEmitter2} from 'eventemitter2';
 import {Feed, FeedsResponse, InitialState, ItemsResponse, Subscription, SubscriptionResponse, Tag} from "./types";
 import {stringify as qsStringify} from 'query-string';
@@ -17,33 +16,6 @@ function buildURL(path: string, parameter?: Parameter) {
 
 class Api extends EventEmitter2 {
   private token?: string;
-
-  constructor() {
-    super();
-
-    $.ajaxPrefilter((options, originalOptions, xhr) => {
-      if (!options.crossDomain && this.token) {
-        xhr.setRequestHeader('X-CSRF-Token', this.token);
-      }
-    });
-
-    $.ajaxSetup({
-      complete: (xhr) => {
-        const token = xhr.getResponseHeader('X-CSRF-Token');
-        if (token) {
-          this.token = token;
-        }
-
-        const flash = xhr.getResponseHeader('X-Flash-Messages');
-        if (flash) {
-          const flashMessages = JSON.parse(decodeURIComponent(flash));
-          if (flashMessages && flashMessages.length) {
-            this.emit('flashMessages', flashMessages);
-          }
-        }
-      }
-    });
-  }
 
   private async request(path: string, method: string, body?: string | FormData) {
     const headers = {
