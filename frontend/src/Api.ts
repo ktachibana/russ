@@ -45,16 +45,20 @@ class Api extends EventEmitter2 {
     });
   }
 
-  private async request(path: string, method: string, body?: string) {
+  private async request(path: string, method: string, body?: string | FormData) {
+    const headers = {
+      'X-CSRF-Token': this.token!,
+      'Accept': 'application/json'
+    } as { [key: string]: string };
+    if (!(body instanceof FormData)) {
+      headers['Content-Type'] = 'application/json'
+    }
+
     const response = await fetch(
       path,
       {
         method: method,
-        headers: new Headers({
-          'X-CSRF-Token': this.token!,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }),
+        headers: headers,
         body: body
       }
     );
@@ -89,6 +93,10 @@ class Api extends EventEmitter2 {
 
   private async post(path: string, parameter?: Parameter) {
     return this.request(path, 'POST', JSON.stringify(parameter))
+  }
+
+  private async postFile(path: string, formData: FormData) {
+    return this.request(path, 'POST', formData);
   }
 
   private async patch(path: string, parameter?: Parameter) {
@@ -143,26 +151,10 @@ class Api extends EventEmitter2 {
     return this.get(`/subscriptions/${id}`, parameter);
   }
 
-  importOPML(file: File) {
-    return new Promise((resolve, reject) => {
-      const data = new FormData();
-      data.append('file', file);
-      $.ajax('/subscriptions/import', {
-        type: 'post',
-        dataType: 'json',
-        data: data,
-        processData: false,
-        contentType: false
-      }).then(
-        resolve,
-        (xhr, type, errorThrown) => {
-          const errorMessage = (xhr.responseJSON && xhr.responseJSON.error) ?
-            xhr.responseJSON.error :
-            `${type}: ${errorThrown}`;
-          reject(errorMessage);
-        }
-      );
-    });
+  async importOPML(file: File) {
+    const data = new FormData();
+    data.append('file', file);
+    return this.postFile('/subscriptions/import', data);
   }
 }
 

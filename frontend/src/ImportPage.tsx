@@ -7,7 +7,7 @@ export default withRouter(ImportPage);
 function ImportPage({history}: RouteComponentProps): JSX.Element {
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
+  async function submitForm(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const file = fileRef.current?.files ? fileRef.current.files[0] : null;
@@ -16,14 +16,12 @@ function ImportPage({history}: RouteComponentProps): JSX.Element {
       return;
     }
 
-    api.importOPML(file).then(
-      () => {
-        history.push('/feeds/1/');
-      },
-      (errorMessage) => {
-        alert(errorMessage);
-      }
-    );
+    try {
+      await api.importOPML(file)
+      history.push('/feeds/1/');
+    } catch (e) {
+      alert((e?.error) || e.toString());
+    }
   }
 
   return (
