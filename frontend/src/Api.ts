@@ -80,15 +80,15 @@ class Api extends EventEmitter2 {
   }
 
   async loadInitial(): Promise<InitialState> {
-    return await this.get('/initial');
+    return this.get('/initial');
   }
 
   async signIn(user: Parameter): Promise<InitialState> {
-    return await this.post('/users/sign_in', {user});
+    return this.post('/users/sign_in', {user});
   }
 
   async logout(): Promise<any> {
-    return await this.delete('/users/sign_out');
+    return this.delete('/users/sign_out');
   }
 
   async loadItems(parameter: Parameter): Promise<ItemsResponse> {

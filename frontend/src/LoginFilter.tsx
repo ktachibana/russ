@@ -33,7 +33,7 @@ export default function LoginFilter({onLogin, onLoginFailure}: Props): JSX.Eleme
       const initialState = await api.signIn(params)
       onLogin(initialState);
     } catch (e) {
-      onLoginFailure(e.toString());
+      onLoginFailure((e?.error || e) .toString());
     }
   }
 
