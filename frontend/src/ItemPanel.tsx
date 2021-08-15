@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
-import moment from 'moment';
+import {parseJSON, format} from 'date-fns';
 import classNames from 'classnames';
 import {Item} from "./types";
 
@@ -11,7 +11,7 @@ interface Props {
 export default function ItemPanel({item}: Props): JSX.Element {
   const [shorten, setShorten] = useState(true);
 
-  const publishedAtString = item.publishedAt ? moment(item.publishedAt).format('YYYY/M/D(ddd) HH:mm') : '-';
+  const publishedAtString = item.publishedAt ? format(parseJSON(item.publishedAt), 'yyyy/M/d(EEE) HH:mm') : '-';
 
   return (
     <div className='card my-2 item'>
