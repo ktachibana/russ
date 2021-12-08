@@ -203,5 +203,5 @@ ja:
     pagination:
       truncate: '&hellip;'
   messages:
-    feed_already_registed: '%{url}はすでに登録されています。'
+    feed_already_registered: '%{url}はすでに登録されています。'
     feed_not_found: 'フィードが見つかりませんでした。'

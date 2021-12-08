@@ -25,6 +25,35 @@ class Subscription < ApplicationRecord
   scope :url, ->(url) { joins(:feed).merge(Feed.where(url: url)) }
   scope :default, -> { where(hide_default: false) }
 
+  class AlreadySubscribed < StandardError
+    attr_reader :subscription
+
+    def initialize(subscription)
+      @subscription = subscription
+    end
+  end
+
+  class FeedNotFound < StandardError; end
+
+  def self.prefetch(url)
+    require_not_subscribed(url)
+
+    feed_url = Feedbag.find(url)[0]
+    raise FeedNotFound unless feed_url
+    require_not_subscribed(feed_url)
+
+    feed = Feed.find_or_initialize_by(url: feed_url)
+    feed.load! if feed.new_record?
+
+    new(feed: feed)
+  end
+
+  def self.require_not_subscribed(url)
+    url(url).first.try! do |subscription|
+      raise AlreadySubscribed.new(subscription)
+    end
+  end
+
   # XXX: もっとスマートにしたい
   def subscribe!
     persisted_feed = Feed.find_by(url: feed.url)

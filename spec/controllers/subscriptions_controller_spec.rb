@@ -81,7 +81,7 @@ RSpec.describe SubscriptionsController, type: :controller do
         action
         expect(JSON.parse(response.body)).to eq('id' => subscription.id)
         flash_messages = JSON.parse(Rack::Utils.unescape(response.headers['X-Flash-Messages']))
-        expect(flash_messages).to eq([['notice', I18n.t('messages.feed_already_registed', url: mock_rss_url)]])
+        expect(flash_messages).to eq([['notice', I18n.t('messages.feed_already_registered', url: mock_rss_url)]])
       end
 
       it '再読み込みはしない' do
