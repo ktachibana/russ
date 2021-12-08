@@ -22,7 +22,7 @@ Ruby RSS Reader.
 
 Chromeを用いたsystem testあり。
 
-https://sites.google.com/a/chromium.org/chromedriver/downloads
+https://sites.google.com/chromium.org/driver/
 から、Chromeのバージョンに合わせたものをDLしてパスに置く。
 
 ### その他なるべく自動化されたセットアップ
