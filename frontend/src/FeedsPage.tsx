@@ -4,7 +4,7 @@ import TagButtons from './TagButtons';
 import WithPagination from './WithPagination';
 import {SubscriptionRow} from './SubscriptionRow'
 import api from './Api';
-import {FeedsResponse, PaginationValue, Subscription, Tag} from "./types";
+import {SubscriptionsResponse, PaginationValue, ShowSubscriptionResponse, Tag} from "./types";
 
 export default withRouter(FeedsPage);
 
@@ -15,13 +15,13 @@ interface Props {
 
 function FeedsPage({page, currentTagNames, history}: Props & RouteComponentProps): JSX.Element {
   const [tags, setTags] = useState<Tag[]>([]);
-  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [subscriptions, setSubscriptions] = useState<ShowSubscriptionResponse[]>([]);
   const [pagination, setPagination] = useState<PaginationValue>()
 
   const currentTags = tags.filter(tag => currentTagNames.includes(tag.name));
 
-  async function updateFeeds() {
-    const {subscriptions, pagination} = await api.loadFeeds({
+  async function loadSubscriptions() {
+    const {subscriptions, pagination} = await api.loadSubscriptions({
       page: page,
       tag: currentTagNames
     });
@@ -29,17 +29,17 @@ function FeedsPage({page, currentTagNames, history}: Props & RouteComponentProps
     setPagination(pagination);
   }
 
-  async function updateTags() {
+  async function loadTags() {
     const tags = await api.loadTags();
     setTags(tags);
   }
 
   useEffect(() => {
-    updateTags();
+    loadTags();
   }, []);
 
   useEffect(() => {
-    updateFeeds();
+    loadSubscriptions();
   }, [page, currentTagNames]);
 
   const changeUrl = ({newPage = page, newTagNames = currentTagNames}: { newPage: number, newTagNames?: string[] }) => {

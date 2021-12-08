@@ -1,18 +1,21 @@
 json.subscriptions @subscriptions do |subscription|
-  json.call(subscription, :id, :user_title)
+  json.partial! 'users_subscription', users_subscription: subscription
 
   json.feed do
     feed = subscription.feed
-    json.call(feed, :id, :title)
 
-    subscription.feed.latest_item.try do |item|
+    json.partial! 'feed', feed: feed
+
+    feed.latest_item.try! do |latest_item|
       json.latest_item do
-        json.call(item, :title)
+        json.partial! 'item', item: latest_item
       end
     end
   end
-  json.tags subscription.tags do |tag|
-    json.partial!('tags/tags', tag: tag)
+
+  json.tags do
+    json.partial!('tags', tags: subscription.tags)
   end
 end
+
 json.partial! 'pagination', scope: @subscriptions

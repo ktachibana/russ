@@ -49,23 +49,28 @@ RSpec.describe SubscriptionsController, type: :controller do
       action
 
       is_expected.to respond_with(:ok)
+
       data = JSON.parse(response.body, symbolize_names: true)
-      expect(data).to be_a(Hash)
-      expect(data[:id]).to be(nil)
-      expect(data[:url]).to eq(mock_rss_url)
-      expect(data[:title]).to eq('RSS Title')
-      expect(data[:linkUrl]).to eq('http://test.com/content')
-      expect(data[:description]).to eq('My description')
+      data[:feed].tap do |feed|
+        expect(feed).to be_a(Hash)
+        expect(feed[:id]).to be(nil)
+        expect(feed[:url]).to eq(mock_rss_url)
+        expect(feed[:title]).to eq('RSS Title')
+        expect(feed[:linkUrl]).to eq('http://test.com/content')
+        expect(feed[:description]).to eq('My description')
 
-      items = data[:items]
-      expect(items.length).to eq(1)
+        feed[:items].tap do |items|
+          expect(items.length).to eq(1)
 
-      item = items[0]
-      expect(item[:title]).to eq('Item Title')
-      expect(item[:link]).to eq('http://test.com/content/1')
-      expect(item[:guid]).to eq('1')
-      expect(Time.zone.parse(item[:publishedAt])).to eq(Time.parse('Mon, 20 Feb 2012 16:04:19 +0900').utc)
-      expect(item[:description]).to eq('Item description')
+          items[0].tap do |item|
+            expect(item[:title]).to eq('Item Title')
+            expect(item[:link]).to eq('http://test.com/content/1')
+            expect(item[:guid]).to eq('1')
+            expect(Time.zone.parse(item[:publishedAt])).to eq(Time.parse('Mon, 20 Feb 2012 16:04:19 +0900').utc)
+            expect(item[:description]).to eq('Item description')
+          end
+        end
+      end
     end
 
     context '登録済みのフィードのURLを指定したとき' do
@@ -105,9 +110,10 @@ RSpec.describe SubscriptionsController, type: :controller do
           action
 
           data = JSON.parse(response.body, symbolize_names: true)
-          expect(data[:id]).to be(nil)
-          expect(data[:url]).to eq(mock_rss_url)
-          expect(data[:title]).to eq('RSS Title')
+          feed = data[:feed]
+          expect(feed[:id]).to be(nil)
+          expect(feed[:url]).to eq(mock_rss_url)
+          expect(feed[:title]).to eq('RSS Title')
         end
       end
 

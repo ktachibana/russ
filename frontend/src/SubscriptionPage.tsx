@@ -4,7 +4,7 @@ import ItemPanel from './ItemPanel';
 import SubscriptionPanel from './SubscriptionPanel';
 import WithPagination from './WithPagination';
 import api from './Api';
-import {Feed, Subscription, Item, PaginationValue, Tag} from "./types";
+import {Feed, ShowSubscriptionResponse, Item, PaginationValue, Tag} from "./types";
 
 export default withRouter(SubscriptionPage);
 
@@ -16,7 +16,7 @@ interface Props {
 
 function SubscriptionPage({id, page, encodedUrl, history}: Props & RouteComponentProps): JSX.Element {
   const [tags, setTags] = useState<Tag[]>([]);
-  const [subscription, setSubscription] = useState<Subscription>();
+  const [subscription, setSubscription] = useState<ShowSubscriptionResponse>();
   const [items, setItems] = useState<Item[]>([]);
   const [pagination, setPagination] = useState<PaginationValue>();
 
@@ -28,12 +28,12 @@ function SubscriptionPage({id, page, encodedUrl, history}: Props & RouteComponen
   async function loadNewFeed(encodedUrl: string) {
     const url = decodeURIComponent(encodedUrl);
     try {
-      const feed = await api.fetchFeed(url)
-      if (feed.id) {
-        history.push(`/subscriptions/1/${feed.id}`);
+      const subscriptionResponse = await api.fetchFeed(url)
+      if (subscriptionResponse.id) {
+        history.push(`/subscriptions/1/${subscriptionResponse.id}`);
       } else {
-        setSubscription({feed} as Subscription);
-        setItems(feed.items);
+        setSubscription(subscriptionResponse);
+        setItems(subscriptionResponse.items);
         setPagination(undefined);
       }
     } catch (e) {

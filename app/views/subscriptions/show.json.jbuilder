@@ -1,11 +1,15 @@
-json.call(@subscription, :id, :title, :hide_default)
+json.partial! 'subscription', subscription: @subscription
+
 json.feed do
-  json.call(@subscription.feed, :url, :title, :link_url, :description)
+  json.partial! 'feed', feed: @subscription.feed
+
   json.items @items do |item|
-    json.partial!(item)
+    json.partial!('item', item: item)
   end
 end
-json.partial! 'pagination', scope: @items
-json.tags @subscription.tags do |tag|
-  json.partial!('tags/tags', tag: tag)
+
+json.partial! 'pagination', scope: @items if @subscription.persisted?
+
+json.tags do
+  json.partial!('tags', tags: @subscription.tags)
 end

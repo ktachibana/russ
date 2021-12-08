@@ -1,5 +1,5 @@
 import {EventEmitter2} from 'eventemitter2';
-import {Feed, FeedsResponse, InitialState, ItemsResponse, Subscription, SubscriptionResponse, Tag} from "./types";
+import {Feed, SubscriptionsResponse, InitialState, ItemsResponse, ShowSubscriptionResponse, UpdateSubscriptionResponse, Tag} from "./types";
 import {stringify as qsStringify} from 'query-string';
 
 interface Parameter<T = any> {
@@ -95,19 +95,19 @@ class Api extends EventEmitter2 {
     return this.get('/items', parameter);
   }
 
-  async loadFeeds(parameter: Parameter): Promise<FeedsResponse> {
-    return this.get('/feeds', parameter);
+  async loadSubscriptions(parameter: Parameter): Promise<SubscriptionsResponse> {
+    return this.get('/feeds', parameter); // TODO: URLはやっぱり/subscriptionsでよさそう
   }
 
   async loadTags(): Promise<Tag[]> {
     return this.get('/tags')
   }
 
-  async subscribeFeed(subscription: Parameter): Promise<SubscriptionResponse> {
+  async subscribeFeed(subscription: Parameter): Promise<UpdateSubscriptionResponse> {
     return this.post('/subscriptions', {subscription});
   }
 
-  async updateSubscription(subscriptionId: number, subscription: Parameter): Promise<SubscriptionResponse> {
+  async updateSubscription(subscriptionId: number, subscription: Parameter): Promise<UpdateSubscriptionResponse> {
     return this.patch(`/subscriptions/${subscriptionId}`, {subscription})
   }
 
@@ -115,11 +115,11 @@ class Api extends EventEmitter2 {
     return this.delete(`/subscriptions/${subscriptionId}`);
   }
 
-  async fetchFeed(feedUrl: string): Promise<Feed> {
+  async fetchFeed(feedUrl: string): Promise<ShowSubscriptionResponse> {
     return this.get('/subscriptions/new', {url: feedUrl});
   }
 
-  async loadSubscription(id: number, parameter: Parameter): Promise<Subscription> {
+  async loadSubscription(id: number, parameter: Parameter): Promise<ShowSubscriptionResponse> {
     return this.get(`/subscriptions/${id}`, parameter);
   }
 

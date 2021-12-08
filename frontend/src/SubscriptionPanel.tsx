@@ -2,12 +2,12 @@ import React, {useState, MouseEvent} from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 import SubscriptionForm from './SubscriptionForm';
 import api from './Api';
-import {Subscription, Tag} from "./types";
+import {ShowSubscriptionResponse, Tag} from "./types";
 
 export default withRouter(SubscriptionPanel);
 
 interface Props {
-  subscription: Subscription
+  subscription: ShowSubscriptionResponse
   tags: Tag[]
   onSave: (savedId: number) => void
 }

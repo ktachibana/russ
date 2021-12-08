@@ -17,9 +17,11 @@ class SubscriptionsController < ApplicationController
     end
     render_if_already_registed(feed_url) && return
 
-    @feed = Feed.find_or_initialize_by(url: feed_url)
-    @feed.load! if @feed.new_record?
-    @subscription = current_user.subscriptions.build(feed: @feed)
+    feed = Feed.find_or_initialize_by(url: feed_url)
+    feed.load! if feed.new_record?
+    @subscription = current_user.subscriptions.build(feed: feed)
+    @items = feed.items.first(Kaminari.config.default_per_page)
+    render :show
   end
 
   def render_if_already_registed(url)

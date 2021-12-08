@@ -8,16 +8,25 @@ export interface InitialState {
 }
 
 export interface ItemsResponse {
-  items: Item[]
+  items: (Item & {
+    feed: Feed & {
+      usersSubscription: Subscription
+    }
+  })[]
   pagination: PaginationValue
 }
 
-export interface FeedsResponse {
-  subscriptions: Subscription[]
+export interface SubscriptionsResponse {
+  subscription: Subscription & {
+    feed: Feed & {
+      latestItem?: Item
+    }
+    tags: Tag[]
+  }
   pagination: PaginationValue
 }
 
-export interface SubscriptionResponse {
+export interface UpdateSubscriptionResponse {
   id: number
 }
 
@@ -30,8 +39,11 @@ export interface Tag {
 export interface Subscription {
   id: number
   title: string
-  userTitle: string
   hideDefault: boolean
+  userTitle: string
+}
+
+export interface ShowSubscriptionResponse extends Subscription {
   feed: Feed
   tags: Tag[]
   pagination: PaginationValue
@@ -43,8 +55,6 @@ export interface Feed {
   title: string
   linkUrl: string
   description: string
-  items: Item[]
-  latestItem?: Item
 }
 
 export interface UserFeed {

@@ -1,9 +1,9 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import {Subscription} from "./types";
+import {ShowSubscriptionResponse} from "./types";
 
 interface Props {
-  subscription: Subscription
+  subscription: ShowSubscriptionResponse
 }
 
 export function SubscriptionRow({subscription}: Props): JSX.Element {

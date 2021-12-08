@@ -1,9 +1,9 @@
 import React, {FormEvent, useState} from 'react';
 import api from './Api';
-import {Subscription, SubscriptionResponse, Tag} from "./types";
+import {ShowSubscriptionResponse, UpdateSubscriptionResponse, Tag} from "./types";
 
 interface Props {
-  subscription: Subscription
+  subscription: ShowSubscriptionResponse
   existingTags: Tag[]
   onSave: (savedId: number) => void
   onClose: () => void
@@ -34,7 +34,7 @@ export default function SubscriptionForm({subscription, existingTags, onSave, on
     onSave(id);
   }
 
-  function submitSubscription(subscriptionData: { tag_list: string; title: string; hide_default: string }): Promise<SubscriptionResponse> {
+  function submitSubscription(subscriptionData: { tag_list: string; title: string; hide_default: string }): Promise<UpdateSubscriptionResponse> {
     if (isNewRecord) {
       return api.subscribeFeed({
         ...subscriptionData,

@@ -5,7 +5,7 @@ require 'open-uri'
 class Feed < ApplicationRecord
   has_many :items, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
-  has_one :latest_item, class_name: 'Item'
+  has_one :latest_item, class_name: 'Item' # TODO: limit(1)が要るはず
 
   accepts_nested_attributes_for :items
 
