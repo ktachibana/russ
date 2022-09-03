@@ -6,10 +6,8 @@ class Item < ApplicationRecord
   default_scope { order(published_at: :desc) }
 
   def self.search(user, conditions = {})
-    feed_subscriptions = user.subscriptions.preload(:feed).index_by(&:feed_id)
-
-    scope = self
-    scope = scope.where(feed_id: feed_subscriptions.keys)
+    scope = all
+    scope = scope.where(feed_id: user.subscriptions.select(:feed_id))
     conditions[:tag].presence.try do |tags|
       scope = scope.where(feed_id: Subscription.tagged_with(tags).select(:feed_id))
     end
@@ -24,6 +22,7 @@ class Item < ApplicationRecord
 
     scope = scope.page(conditions[:page])
     scope = scope.preload(:feed)
+    feed_subscriptions = user.subscriptions.preload(:feed).index_by(&:feed_id)
     scope.each do |item|
       item.feed.users_subscription = feed_subscriptions[item.feed_id]
     end
